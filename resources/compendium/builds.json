@@ -5,23 +5,23 @@
     "name": "Strength Scaling",
     "tier": "S",
     "rating": 92,
-    "summary": "Stack Strength and end fights with one giant Heavy Blade.",
+    "summary": "Stack Strength and end fights with one giant hit.",
     "archetypeTags": ["strength", "attack"],
-    "keyCards": ["INFLAME", "HEAVY_BLADE", "ANGER", "UPPERCUT"],
-    "keyRelics": ["VAJRA", "BURNING_BLOOD"],
-    "howToPlay": "Pick up Strength sources early (Inflame, Vajra), then convert with Heavy Blade and multi-hit attacks. Thin the deck so you draw your payoffs every turn."
+    "keyCards": ["INFLAME", "DEMON_FORM", "HEAVY_BLADE", "MANGLE", "RUPTURE"],
+    "keyRelics": ["GIRYA", "VAJRA", "BURNING_BLOOD"],
+    "howToPlay": "Grab a Strength source as early as possible — Inflame on turn 1, then Demon Form for runaway scaling. Thin the deck hard so you redraw your payoffs (Heavy Blade, Mangle) every turn. Vajra and Girya add free Strength; once you're at high Strength, a single big attack closes most fights. Vulnerable from Bash/Mangle multiplies the finisher."
   },
   {
     "id": "ic_block",
     "character": "ironclad",
-    "name": "Barricade Block",
+    "name": "Barricade Wall",
     "tier": "A",
     "rating": 80,
-    "summary": "Out-sustain everything by keeping Block turn over turn.",
-    "archetypeTags": ["block-scaling", "exhaust"],
-    "keyCards": ["BASH"],
-    "keyRelics": ["BURNING_BLOOD"],
-    "howToPlay": "Lean on Block retention and Thorns/Plated Armor. Survive the long game while chip damage and Strength close it out."
+    "summary": "Keep Block across turns and convert it into damage.",
+    "archetypeTags": ["block-scaling", "block", "exhaust"],
+    "keyCards": ["BARRICADE", "BODY_SLAM", "JUGGERNAUT", "FEEL_NO_PAIN", "IMPERVIOUS"],
+    "keyRelics": ["BURNING_BLOOD", "SELF_FORMING_CLAY"],
+    "howToPlay": "Find Barricade so Block stops expiring, then pile it up turn over turn. Juggernaut turns that Block into chip damage and Body Slam turns it into a finisher. Feel No Pain rewards exhausting your junk. You out-last everything — great into hard-hitting bosses where survival is the whole problem."
   },
   {
     "id": "si_poison",
@@ -31,9 +31,9 @@
     "rating": 90,
     "summary": "Apply enough Poison that the math is already over.",
     "archetypeTags": ["poison"],
-    "keyCards": ["DEADLY_POISON"],
-    "keyRelics": [],
-    "howToPlay": "Front-load Poison application, then survive. Catalyst-style multipliers turn a few stacks into lethal. Great into bosses with big HP pools."
+    "keyCards": ["DEADLY_POISON", "NOXIOUS_FUMES", "ENVENOM", "BOUNCING_FLASK"],
+    "keyRelics": ["ROYAL_POISON", "TWISTED_FUNNEL"],
+    "howToPlay": "Front-load Poison: Noxious Fumes stacks it every turn for free, Deadly Poison and Bouncing Flask spike it on demand. Then just survive — Poison does the killing on its own, which is ideal against high-HP elites and bosses. Envenom adds Poison to every attack so your normal hits also ramp it."
   },
   {
     "id": "si_shiv",
@@ -41,11 +41,11 @@
     "name": "Shiv Storm",
     "tier": "A",
     "rating": 82,
-    "summary": "Flood the turn with free Shivs and Strength-per-Shiv payoffs.",
+    "summary": "Flood each turn with free Shivs and per-Shiv payoffs.",
     "archetypeTags": ["shiv", "draw-cycle"],
-    "keyCards": [],
-    "keyRelics": [],
-    "howToPlay": "Generate Shivs, draw aggressively, and add per-Shiv damage boosts. Fast clears keep you healthy through the act."
+    "keyCards": ["BLADE_DANCE", "INFINITE_BLADES", "ACCURACY", "CLOAK_AND_DAGGER"],
+    "keyRelics": ["RING_OF_THE_SNAKE", "NINJA_SCROLL"],
+    "howToPlay": "Infinite Blades gives a Shiv every turn; Blade Dance and Cloak and Dagger dump a fistful at once. Accuracy makes each Shiv hit hard, turning chip into real damage. Draw aggressively so you keep playing Shivs — fast clears keep you healthy through the act."
   },
   {
     "id": "de_lightning",
@@ -55,9 +55,9 @@
     "rating": 88,
     "summary": "Channel Lightning, crank Focus, let the orbs do the work.",
     "archetypeTags": ["orb-gen", "focus", "lightning"],
-    "keyCards": ["DUALCAST"],
-    "keyRelics": [],
-    "howToPlay": "Build Focus early, channel Lightning for scaling AoE, and use Dualcast/evoke to spike damage on demand."
+    "keyCards": ["BALL_LIGHTNING", "DEFRAGMENT", "BIASED_COGNITION", "DUALCAST"],
+    "keyRelics": ["CRACKED_CORE", "DATA_DISK"],
+    "howToPlay": "Build Focus early (Defragment, Biased Cognition) so every orb is worth more. Channel Lightning for scaling, auto-targeting AoE, and use Dualcast/evoke to spike a big single turn when needed. Data Disk gives you a Focus head start. Mind Biased Cognition's drawback and close before it bites."
   },
   {
     "id": "de_frost",
@@ -65,11 +65,11 @@
     "name": "Frost Tank",
     "tier": "B",
     "rating": 72,
-    "summary": "Stall behind a wall of Frost while a slow win condition matures.",
+    "summary": "Stall behind a wall of Frost while a slow win matures.",
     "archetypeTags": ["orb-gen", "focus", "frost"],
-    "keyCards": ["DUALCAST"],
-    "keyRelics": [],
-    "howToPlay": "Channel Frost for near-unkillable defense, raise Focus, and grind out fights you can't lose."
+    "keyCards": ["GLACIER", "COOLHEADED", "HAILSTORM", "ICE_LANCE"],
+    "keyRelics": ["CRACKED_CORE", "DATA_DISK"],
+    "howToPlay": "Channel Frost for near-unkillable Block and raise Focus so each orb blocks more. Coolheaded keeps the orbs (and your draw) flowing. You won't kill fast, so pair it with a chip or scaling win condition and grind out fights you simply can't lose."
   },
   {
     "id": "re_stars",
@@ -77,11 +77,11 @@
     "name": "Star Decrees",
     "tier": "A",
     "rating": 83,
-    "summary": "Bank Stars and unload game-swinging Decrees.",
+    "summary": "Bank Stars and unload game-swinging payoffs.",
     "archetypeTags": ["star-gen", "star-spend", "decree"],
-    "keyCards": [],
-    "keyRelics": [],
-    "howToPlay": "Generate Stars consistently, then spend on high-impact Decrees at the right moment. Court summons buy time to bank resources."
+    "keyCards": ["FALLING_STAR", "DYING_STAR", "CHILD_OF_THE_STARS", "GATHER_LIGHT"],
+    "keyRelics": ["REGALITE", "GALACTIC_DUST"],
+    "howToPlay": "Generate Stars consistently (Gather Light, Child of the Stars) so your big Star-cost cards stay online. Falling Star and Dying Star are your payoffs — hold Stars for the turn you need a swing. Regalite smooths your Star economy so you're never stuck unable to spend."
   },
   {
     "id": "ne_minions",
@@ -90,9 +90,9 @@
     "tier": "A",
     "rating": 84,
     "summary": "Keep a full board of minions and buff them wide.",
-    "archetypeTags": ["minion", "minion-buff", "corpse-gen"],
-    "keyCards": [],
-    "keyRelics": [],
-    "howToPlay": "Summon early and often, protect your board, and stack minion buffs. Corpse generation refills the engine after sacrifices."
+    "archetypeTags": ["minion", "minion-buff", "corpse-gen", "sacrifice"],
+    "keyCards": ["REANIMATE", "LEGION_OF_BONE", "NECRO_MASTERY", "SACRIFICE"],
+    "keyRelics": ["BONE_FLUTE", "UNDYING_SIGIL"],
+    "howToPlay": "Summon early and often (Legion of Bone, Reanimate) and keep the board full — Necro Mastery buffs them all at once. Sacrifice converts dying minions into value, and corpse generation refills the engine so the swarm never runs dry."
   }
 ]
