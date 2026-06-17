@@ -1,0 +1,45 @@
+name: Release
+
+# Build a Windows installer and publish a GitHub Release on every push to main.
+# Installed apps auto-update from these releases (electron-updater).
+on:
+  push:
+    branches: [main]
+
+# Allow the built-in token to create releases — no PAT needed.
+permissions:
+  contents: write
+
+# Never run two releases at once (avoids version/tag races).
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Version = <major.minor from package.json>.<run number>, so every push
+      # gets a unique, increasing version without manual bumping.
+      - name: Set build version
+        shell: pwsh
+        run: |
+          $base = node -p "require('./package.json').version.split('.').slice(0,2).join('.')"
+          $ver = "$base.${{ github.run_number }}"
+          npm version $ver --no-git-tag-version --allow-same-version
+          Write-Host "Building Spirebound $ver"
+
+      - name: Build & publish
+        shell: pwsh
+        run: npm run dist -- --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -99,8 +99,9 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "YOUR_GITHUB_USERNAME",
-        "repo": "spirebound"
+        "owner": "Wassim-ElBalbissi",
+        "repo": "SlayOverlay",
+        "releaseType": "release"
       }
     ]
   }
