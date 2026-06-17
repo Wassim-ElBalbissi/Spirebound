@@ -1,0 +1,36 @@
+{
+  "state_type": "monster",
+  "run": { "act": 1, "floor": 5, "ascension": 0 },
+  "player": {
+    "character": "The Ironclad",
+    "hp": 72,
+    "max_hp": 80,
+    "block": 0,
+    "gold": 99,
+    "energy": 3,
+    "max_energy": 3,
+    "status": [],
+    "relics": [],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "battle": {
+    "round": 1,
+    "turn": "player",
+    "is_play_phase": true,
+    "enemies": [
+      {
+        "entity_id": "JAW_WORM_0",
+        "combat_id": 42,
+        "name": "Jaw Worm",
+        "hp": 44,
+        "max_hp": 44,
+        "block": 0,
+        "status": [],
+        "intents": [
+          { "type": "Attack", "label": "11", "title": "Attack", "description": "Deals 11 damage." }
+        ]
+      }
+    ]
+  }
+}

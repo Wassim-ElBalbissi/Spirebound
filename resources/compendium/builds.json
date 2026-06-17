@@ -1,0 +1,98 @@
+[
+  {
+    "id": "ic_strength",
+    "character": "ironclad",
+    "name": "Strength Scaling",
+    "tier": "S",
+    "rating": 92,
+    "summary": "Stack Strength and end fights with one giant Heavy Blade.",
+    "archetypeTags": ["strength", "attack"],
+    "keyCards": ["INFLAME", "HEAVY_BLADE", "ANGER", "UPPERCUT"],
+    "keyRelics": ["VAJRA", "BURNING_BLOOD"],
+    "howToPlay": "Pick up Strength sources early (Inflame, Vajra), then convert with Heavy Blade and multi-hit attacks. Thin the deck so you draw your payoffs every turn."
+  },
+  {
+    "id": "ic_block",
+    "character": "ironclad",
+    "name": "Barricade Block",
+    "tier": "A",
+    "rating": 80,
+    "summary": "Out-sustain everything by keeping Block turn over turn.",
+    "archetypeTags": ["block-scaling", "exhaust"],
+    "keyCards": ["BASH"],
+    "keyRelics": ["BURNING_BLOOD"],
+    "howToPlay": "Lean on Block retention and Thorns/Plated Armor. Survive the long game while chip damage and Strength close it out."
+  },
+  {
+    "id": "si_poison",
+    "character": "silent",
+    "name": "Poison Inevitability",
+    "tier": "S",
+    "rating": 90,
+    "summary": "Apply enough Poison that the math is already over.",
+    "archetypeTags": ["poison"],
+    "keyCards": ["DEADLY_POISON"],
+    "keyRelics": [],
+    "howToPlay": "Front-load Poison application, then survive. Catalyst-style multipliers turn a few stacks into lethal. Great into bosses with big HP pools."
+  },
+  {
+    "id": "si_shiv",
+    "character": "silent",
+    "name": "Shiv Storm",
+    "tier": "A",
+    "rating": 82,
+    "summary": "Flood the turn with free Shivs and Strength-per-Shiv payoffs.",
+    "archetypeTags": ["shiv", "draw-cycle"],
+    "keyCards": [],
+    "keyRelics": [],
+    "howToPlay": "Generate Shivs, draw aggressively, and add per-Shiv damage boosts. Fast clears keep you healthy through the act."
+  },
+  {
+    "id": "de_lightning",
+    "character": "defect",
+    "name": "Focused Lightning",
+    "tier": "S",
+    "rating": 88,
+    "summary": "Channel Lightning, crank Focus, let the orbs do the work.",
+    "archetypeTags": ["orb-gen", "focus", "lightning"],
+    "keyCards": ["DUALCAST"],
+    "keyRelics": [],
+    "howToPlay": "Build Focus early, channel Lightning for scaling AoE, and use Dualcast/evoke to spike damage on demand."
+  },
+  {
+    "id": "de_frost",
+    "character": "defect",
+    "name": "Frost Tank",
+    "tier": "B",
+    "rating": 72,
+    "summary": "Stall behind a wall of Frost while a slow win condition matures.",
+    "archetypeTags": ["orb-gen", "focus", "frost"],
+    "keyCards": ["DUALCAST"],
+    "keyRelics": [],
+    "howToPlay": "Channel Frost for near-unkillable defense, raise Focus, and grind out fights you can't lose."
+  },
+  {
+    "id": "re_stars",
+    "character": "regent",
+    "name": "Star Decrees",
+    "tier": "A",
+    "rating": 83,
+    "summary": "Bank Stars and unload game-swinging Decrees.",
+    "archetypeTags": ["star-gen", "star-spend", "decree"],
+    "keyCards": [],
+    "keyRelics": [],
+    "howToPlay": "Generate Stars consistently, then spend on high-impact Decrees at the right moment. Court summons buy time to bank resources."
+  },
+  {
+    "id": "ne_minions",
+    "character": "necrobinder",
+    "name": "Minion Swarm",
+    "tier": "A",
+    "rating": 84,
+    "summary": "Keep a full board of minions and buff them wide.",
+    "archetypeTags": ["minion", "minion-buff", "corpse-gen"],
+    "keyCards": [],
+    "keyRelics": [],
+    "howToPlay": "Summon early and often, protect your board, and stack minion buffs. Corpse generation refills the engine after sacrifices."
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "state_type": "treasure",
+  "run": { "act": 1, "floor": 9, "ascension": 0 },
+  "player": {
+    "character": "The Ironclad",
+    "hp": 65,
+    "max_hp": 80,
+    "block": 0,
+    "gold": 145,
+    "status": [],
+    "relics": [],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "treasure": { "message": "Opening chest..." }
+}

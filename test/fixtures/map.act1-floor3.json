@@ -1,0 +1,58 @@
+{
+  "state_type": "map",
+  "run": { "act": 1, "floor": 3, "ascension": 0 },
+  "player": {
+    "character": "The Silent",
+    "hp": 55,
+    "max_hp": 70,
+    "block": 0,
+    "gold": 60,
+    "status": [],
+    "relics": [],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "map": {
+    "current_position": { "col": 3, "row": 2, "type": "Monster" },
+    "visited": [
+      { "col": 3, "row": 0, "type": "Start" },
+      { "col": 3, "row": 1, "type": "Monster" },
+      { "col": 3, "row": 2, "type": "Monster" }
+    ],
+    "next_options": [
+      {
+        "index": 0,
+        "col": 2,
+        "row": 3,
+        "type": "RestSite",
+        "leads_to": [
+          { "col": 1, "row": 4, "type": "Elite" },
+          { "col": 3, "row": 4, "type": "Shop" }
+        ]
+      },
+      {
+        "index": 1,
+        "col": 4,
+        "row": 3,
+        "type": "Event",
+        "leads_to": [{ "col": 4, "row": 4, "type": "Monster" }]
+      }
+    ],
+    "nodes": [
+      { "col": 3, "row": 0, "type": "Start", "children": [[3, 1]] },
+      { "col": 3, "row": 1, "type": "Monster", "children": [[3, 2]] },
+      { "col": 3, "row": 2, "type": "Monster", "children": [[2, 3], [4, 3]] },
+      { "col": 2, "row": 3, "type": "RestSite", "children": [[1, 4], [3, 4]] },
+      { "col": 4, "row": 3, "type": "Event", "children": [[4, 4]] },
+      { "col": 1, "row": 4, "type": "Elite", "children": [[2, 5]] },
+      { "col": 3, "row": 4, "type": "Shop", "children": [[2, 5]] },
+      { "col": 4, "row": 4, "type": "Monster", "children": [[3, 5]] },
+      { "col": 2, "row": 5, "type": "Monster", "children": [] },
+      { "col": 3, "row": 5, "type": "Monster", "children": [] }
+    ],
+    "boss": { "col": 3, "row": 15, "id": "ENCOUNTER.VANTOM_BOSS", "name": "Vantom" },
+    "bosses": [
+      { "col": 3, "row": 15, "id": "ENCOUNTER.VANTOM_BOSS", "name": "Vantom" }
+    ]
+  }
+}

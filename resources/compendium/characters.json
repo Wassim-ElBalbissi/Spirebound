@@ -1,0 +1,43 @@
+[
+  {
+    "id": "ironclad",
+    "name": "The Ironclad",
+    "blurb": "A resilient bruiser who scales raw Strength and self-sustains through blood.",
+    "archetypes": ["strength", "block-scaling", "exhaust", "self-damage", "attack"],
+    "starterRelic": "BURNING_BLOOD",
+    "description": "The Ironclad trades HP for power and leans on Strength scaling, big single-target hits, and exhaust synergies. Burning Blood keeps him alive between fights.",
+    "imageUrl": "https://spire-archive.com/images/sts2/characters/ironclad.jpg"
+  },
+  {
+    "id": "silent",
+    "name": "The Silent",
+    "blurb": "A cunning rogue who wins through poison stacks, shivs, and relentless card cycling.",
+    "archetypes": ["poison", "shiv", "discard", "draw-cycle", "weak"],
+    "description": "The Silent plays a long game — stacking poison for inevitable kills or flooding the board with shivs — while drawing and discarding to find her engine pieces.",
+    "imageUrl": "https://spire-archive.com/images/sts2/characters/silent.jpg"
+  },
+  {
+    "id": "defect",
+    "name": "The Defect",
+    "blurb": "An automaton that channels orbs and amplifies them with Focus.",
+    "archetypes": ["orb-gen", "focus", "frost", "lightning", "evoke"],
+    "description": "The Defect builds an orb engine — Lightning for damage, Frost for defense — and multiplies their value with Focus and well-timed evokes.",
+    "imageUrl": "https://spire-archive.com/images/sts2/characters/defect.jpg"
+  },
+  {
+    "id": "regent",
+    "name": "The Regent",
+    "blurb": "A monarch who generates and spends Stars to summon the court and issue decrees.",
+    "archetypes": ["star-gen", "star-spend", "court-summon", "decree"],
+    "description": "The Regent accumulates Stars as a resource, summons court allies, and cashes in with powerful decrees that swing combats.",
+    "imageUrl": "https://spire-archive.com/images/sts2/characters/regent.jpg"
+  },
+  {
+    "id": "necrobinder",
+    "name": "The Necrobinder",
+    "blurb": "A summoner who fields minions, sacrifices them, and harvests corpses.",
+    "archetypes": ["minion", "sacrifice", "corpse-gen", "minion-buff"],
+    "description": "The Necrobinder commands a board of minions, sacrificing and re-summoning them while corpse generation fuels recurring value.",
+    "imageUrl": "https://spire-archive.com/images/sts2/characters/necrobinder.jpg"
+  }
+]

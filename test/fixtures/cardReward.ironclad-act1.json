@@ -1,0 +1,73 @@
+{
+  "state_type": "card_reward",
+  "run": { "act": 1, "floor": 4, "ascension": 0 },
+  "player": {
+    "character": "The Ironclad",
+    "hp": 72,
+    "max_hp": 80,
+    "block": 0,
+    "gold": 99,
+    "status": [],
+    "relics": [
+      {
+        "id": "BURNING_BLOOD",
+        "name": "Burning Blood",
+        "description": "Heal 6 HP after each combat.",
+        "counter": null,
+        "keywords": []
+      }
+    ],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "card_reward": {
+    "cards": [
+      {
+        "index": 0,
+        "id": "UPPERCUT",
+        "name": "Uppercut",
+        "type": "Attack",
+        "cost": "2",
+        "star_cost": null,
+        "description": "Deal 13 damage. Apply 1 Weak. Apply 1 Vulnerable.",
+        "target_type": "AnyEnemy",
+        "can_play": false,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Uncommon",
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "id": "HEAVY_BLADE",
+        "name": "Heavy Blade",
+        "type": "Attack",
+        "cost": "2",
+        "star_cost": null,
+        "description": "Deal 14 damage. Strength affects this card 3 times.",
+        "target_type": "AnyEnemy",
+        "can_play": false,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Common",
+        "keywords": []
+      },
+      {
+        "index": 2,
+        "id": "INTIMIDATE",
+        "name": "Intimidate",
+        "type": "Skill",
+        "cost": "0",
+        "star_cost": null,
+        "description": "Apply 1 Weak to ALL enemies. Exhaust.",
+        "target_type": "None",
+        "can_play": false,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Uncommon",
+        "keywords": []
+      }
+    ],
+    "can_skip": true
+  }
+}

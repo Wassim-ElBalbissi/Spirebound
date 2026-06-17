@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "0.4.0-bundled",
+  "fetchedAt": 0,
+  "cards": {
+    "STRIKE_R": {
+      "id": "STRIKE_R",
+      "name": "Strike",
+      "character": "ironclad",
+      "rarity": "starter",
+      "tags": ["strike", "attack"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "DEFEND_R": {
+      "id": "DEFEND_R",
+      "name": "Defend",
+      "character": "ironclad",
+      "rarity": "starter",
+      "tags": ["defend", "skill"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "BASH": {
+      "id": "BASH",
+      "name": "Bash",
+      "character": "ironclad",
+      "rarity": "starter",
+      "tags": ["vulnerable", "attack"],
+      "tier": "B",
+      "blendedScore": 55,
+      "perSource": [{ "source": "fallback", "scoreRaw": 55, "fetchedAt": 0 }]
+    },
+    "UPPERCUT": {
+      "id": "UPPERCUT",
+      "name": "Uppercut",
+      "character": "ironclad",
+      "rarity": "uncommon",
+      "tags": ["attack", "vulnerable", "weak"],
+      "tier": "B",
+      "blendedScore": 62,
+      "perSource": [{ "source": "fallback", "scoreRaw": 62, "fetchedAt": 0 }]
+    },
+    "HEAVY_BLADE": {
+      "id": "HEAVY_BLADE",
+      "name": "Heavy Blade",
+      "character": "ironclad",
+      "rarity": "common",
+      "tags": ["attack", "strength"],
+      "tier": "A",
+      "blendedScore": 78,
+      "commentary": "Scales hard with every point of Strength — your primary payoff for any Strength build. Mediocre without enablers, so prioritize it once you have a Strength source.",
+      "author": "SlayOverlay",
+      "perSource": [{ "source": "fallback", "scoreRaw": 78, "fetchedAt": 0 }]
+    },
+    "INTIMIDATE": {
+      "id": "INTIMIDATE",
+      "name": "Intimidate",
+      "character": "ironclad",
+      "rarity": "uncommon",
+      "tags": ["weak", "skill", "exhaust"],
+      "tier": "B",
+      "blendedScore": 58,
+      "perSource": [{ "source": "fallback", "scoreRaw": 58, "fetchedAt": 0 }]
+    },
+    "INFLAME": {
+      "id": "INFLAME",
+      "name": "Inflame",
+      "character": "ironclad",
+      "rarity": "uncommon",
+      "tags": ["strength", "power"],
+      "tier": "A",
+      "blendedScore": 82,
+      "commentary": "A one-card Strength engine that pays off immediately and compounds with every attack. Strong early pick that anchors the whole Strength archetype.",
+      "author": "SlayOverlay",
+      "perSource": [{ "source": "fallback", "scoreRaw": 82, "fetchedAt": 0 }]
+    },
+    "ANGER": {
+      "id": "ANGER",
+      "name": "Anger",
+      "character": "ironclad",
+      "rarity": "common",
+      "tags": ["attack", "strength"],
+      "tier": "B",
+      "blendedScore": 55,
+      "perSource": [{ "source": "fallback", "scoreRaw": 55, "fetchedAt": 0 }]
+    },
+    "POMMEL_STRIKE": {
+      "id": "POMMEL_STRIKE",
+      "name": "Pommel Strike",
+      "character": "ironclad",
+      "rarity": "common",
+      "tags": ["attack", "draw"],
+      "tier": "B",
+      "blendedScore": 60,
+      "perSource": [{ "source": "fallback", "scoreRaw": 60, "fetchedAt": 0 }]
+    },
+    "FLEX": {
+      "id": "FLEX",
+      "name": "Flex",
+      "character": "ironclad",
+      "rarity": "common",
+      "tags": ["strength"],
+      "tier": "C",
+      "blendedScore": 40,
+      "perSource": [{ "source": "fallback", "scoreRaw": 40, "fetchedAt": 0 }]
+    },
+    "STRIKE_G": {
+      "id": "STRIKE_G",
+      "name": "Strike",
+      "character": "silent",
+      "rarity": "starter",
+      "tags": ["strike", "attack"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "DEFEND_G": {
+      "id": "DEFEND_G",
+      "name": "Defend",
+      "character": "silent",
+      "rarity": "starter",
+      "tags": ["defend", "skill"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "DEADLY_POISON": {
+      "id": "DEADLY_POISON",
+      "name": "Deadly Poison",
+      "character": "silent",
+      "rarity": "common",
+      "tags": ["poison", "skill"],
+      "tier": "A",
+      "blendedScore": 72,
+      "perSource": [{ "source": "fallback", "scoreRaw": 72, "fetchedAt": 0 }]
+    },
+    "STRIKE_B": {
+      "id": "STRIKE_B",
+      "name": "Strike",
+      "character": "defect",
+      "rarity": "starter",
+      "tags": ["strike", "attack"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "DEFEND_B": {
+      "id": "DEFEND_B",
+      "name": "Defend",
+      "character": "defect",
+      "rarity": "starter",
+      "tags": ["defend", "skill"],
+      "tier": "F",
+      "blendedScore": 15,
+      "perSource": [{ "source": "fallback", "scoreRaw": 15, "fetchedAt": 0 }]
+    },
+    "DUALCAST": {
+      "id": "DUALCAST",
+      "name": "Dualcast",
+      "character": "defect",
+      "rarity": "starter",
+      "tags": ["orb", "evoke"],
+      "tier": "B",
+      "blendedScore": 55,
+      "perSource": [{ "source": "fallback", "scoreRaw": 55, "fetchedAt": 0 }]
+    }
+  },
+  "relics": {
+    "BURNING_BLOOD": {
+      "id": "BURNING_BLOOD",
+      "name": "Burning Blood",
+      "rarity": "starter",
+      "tags": ["sustain"],
+      "tier": "A",
+      "blendedScore": 75,
+      "perSource": [{ "source": "fallback", "scoreRaw": 75, "fetchedAt": 0 }]
+    },
+    "BLACK_STAR": {
+      "id": "BLACK_STAR",
+      "name": "Black Star",
+      "rarity": "boss",
+      "tags": ["elite-farm", "value"],
+      "tier": "A",
+      "blendedScore": 78,
+      "commentary": "Turns every elite into double relics — exceptional in long runs where you can route through extra elites. Snowballs your whole relic economy.",
+      "author": "SlayOverlay",
+      "perSource": [{ "source": "fallback", "scoreRaw": 78, "fetchedAt": 0 }]
+    },
+    "RUNIC_DOME": {
+      "id": "RUNIC_DOME",
+      "name": "Runic Dome",
+      "rarity": "boss",
+      "tags": ["energy", "risk"],
+      "tier": "C",
+      "blendedScore": 45,
+      "perSource": [{ "source": "fallback", "scoreRaw": 45, "fetchedAt": 0 }]
+    },
+    "SOZU": {
+      "id": "SOZU",
+      "name": "Sozu",
+      "rarity": "boss",
+      "tags": ["energy", "anti-potion"],
+      "tier": "C",
+      "blendedScore": 42,
+      "perSource": [{ "source": "fallback", "scoreRaw": 42, "fetchedAt": 0 }]
+    },
+    "VAJRA": {
+      "id": "VAJRA",
+      "name": "Vajra",
+      "rarity": "common",
+      "tags": ["strength"],
+      "tier": "B",
+      "blendedScore": 62,
+      "perSource": [{ "source": "fallback", "scoreRaw": 62, "fetchedAt": 0 }]
+    }
+  }
+}

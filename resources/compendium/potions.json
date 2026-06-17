@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ASHWATER",
+    "name": "Ashwater",
+    "rarity": "uncommon",
+    "description": "Exhaust any number of cards in your Hand.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/ashwater.png"
+  },
+  {
+    "id": "ATTACK_POTION",
+    "name": "Attack Potion",
+    "rarity": "common",
+    "description": "Choose 1 of 3 random Attack cards to add into your Hand. It's free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/attack_potion.png"
+  },
+  {
+    "id": "BEETLE_JUICE",
+    "name": "Beetle Juice",
+    "rarity": "rare",
+    "description": "Enemy's attacks deal 30% less damage for the next 4 turns.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/beetle_juice.png"
+  },
+  {
+    "id": "BLESSING_OF_THE_FORGE",
+    "name": "Blessing of the Forge",
+    "rarity": "uncommon",
+    "description": "Upgrade all cards in your Hand for the rest of combat.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/blessing_of_the_forge.png"
+  },
+  {
+    "id": "BLOCK_POTION",
+    "name": "Block Potion",
+    "rarity": "common",
+    "description": "Gain 12 Block.",
+    "tags": [
+      "block"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/block_potion.png"
+  },
+  {
+    "id": "BLOOD_POTION",
+    "name": "Blood Potion",
+    "rarity": "common",
+    "description": "Heal for 20% of your Max HP.",
+    "tags": [
+      "sustain"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/blood_potion.png"
+  },
+  {
+    "id": "BONE_BREW",
+    "name": "Bone Brew",
+    "rarity": "uncommon",
+    "description": "Summon 15.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/bone_brew.png"
+  },
+  {
+    "id": "BOTTLED_POTENTIAL",
+    "name": "Bottled Potential",
+    "rarity": "rare",
+    "description": "Shuffle ALL your cards into your Draw Pile. Draw 5 cards.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/bottled_potential.png"
+  },
+  {
+    "id": "CLARITY",
+    "name": "Clarity Extract",
+    "rarity": "uncommon",
+    "description": "Draw 1 card. At the start of your next 3 turns, draw 1 additional card.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/clarity.png"
+  },
+  {
+    "id": "COLORLESS_POTION",
+    "name": "Colorless Potion",
+    "rarity": "common",
+    "description": "Choose 1 of 3 random Colorless cards to add into your Hand. It's free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/colorless_potion.png"
+  },
+  {
+    "id": "COSMIC_CONCOCTION",
+    "name": "Cosmic Concoction",
+    "rarity": "rare",
+    "description": "Add 3 Upgraded Colorless cards into your Hand.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/cosmic_concoction.png"
+  },
+  {
+    "id": "CUNNING_POTION",
+    "name": "Cunning Potion",
+    "rarity": "uncommon",
+    "description": "Add 3 Upgraded Shivs into your Hand.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/cunning_potion.png"
+  },
+  {
+    "id": "CURE_ALL",
+    "name": "Cure All",
+    "rarity": "uncommon",
+    "description": "Gain [E]. Draw 2 cards.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/cure_all.png"
+  },
+  {
+    "id": "DEXTERITY_POTION",
+    "name": "Dexterity Potion",
+    "rarity": "common",
+    "description": "Gain 2 Dexterity.",
+    "tags": [
+      "dexterity"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/dexterity_potion.png"
+  },
+  {
+    "id": "DISTILLED_CHAOS",
+    "name": "Distilled Chaos",
+    "rarity": "rare",
+    "description": "Play the top 3 cards of your Draw Pile.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/distilled_chaos.png"
+  },
+  {
+    "id": "DROPLET_OF_PRECOGNITION",
+    "name": "Droplet of Precognition",
+    "rarity": "rare",
+    "description": "Choose a card in your Draw Pile and add it into your Hand.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/droplet_of_precognition.png"
+  },
+  {
+    "id": "DUPLICATOR",
+    "name": "Duplicator",
+    "rarity": "uncommon",
+    "description": "This turn, your next card is played an extra time.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/duplicator.png"
+  },
+  {
+    "id": "ENERGY_POTION",
+    "name": "Energy Potion",
+    "rarity": "common",
+    "description": "Gain [E][E].",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/energy_potion.png"
+  },
+  {
+    "id": "ENTROPIC_BREW",
+    "name": "Entropic Brew",
+    "rarity": "rare",
+    "description": "Fill all your empty potion slots with random potions.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/entropic_brew.png"
+  },
+  {
+    "id": "ESSENCE_OF_DARKNESS",
+    "name": "Essence of Darkness",
+    "rarity": "rare",
+    "description": "Channel a Dark for each of your Orb Slots.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/essence_of_darkness.png"
+  },
+  {
+    "id": "EXPLOSIVE_AMPOULE",
+    "name": "Explosive Ampoule",
+    "rarity": "common",
+    "description": "Deal 10 damage to ALL enemies.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/explosive_ampoule.png"
+  },
+  {
+    "id": "FAIRY_IN_A_BOTTLE",
+    "name": "Fairy in a Bottle",
+    "rarity": "rare",
+    "description": "When your HP would be reduced to 0, instead this potion is discarded and you heal to 30% of your Max HP.",
+    "tags": [
+      "sustain"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/fairy_in_a_bottle.png"
+  },
+  {
+    "id": "FIRE_POTION",
+    "name": "Fire Potion",
+    "rarity": "common",
+    "description": "Deal 20 damage.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/fire_potion.png"
+  },
+  {
+    "id": "FLEX_POTION",
+    "name": "Flex Potion",
+    "rarity": "common",
+    "description": "Gain 5 Strength. At the end of your turn, lose 5 Strength.",
+    "tags": [
+      "strength"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/flex_potion.png"
+  },
+  {
+    "id": "FOCUS_POTION",
+    "name": "Focus Potion",
+    "rarity": "common",
+    "description": "Gain 2 Focus.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/focus_potion.png"
+  },
+  {
+    "id": "FORTIFIER",
+    "name": "Fortifier",
+    "rarity": "uncommon",
+    "description": "Triple your Block.",
+    "tags": [
+      "block"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/fortifier.png"
+  },
+  {
+    "id": "FOUL_POTION",
+    "name": "Foul Potion",
+    "rarity": "event",
+    "description": "Deal 12 damage to ALL players and enemies.\nCan be thrown at the Merchant for 100 Gold instead.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/foul_potion.png"
+  },
+  {
+    "id": "FRUIT_JUICE",
+    "name": "Fruit Juice",
+    "rarity": "rare",
+    "description": "Gain 5 Max HP.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/fruit_juice.png"
+  },
+  {
+    "id": "FYSH_OIL",
+    "name": "Fysh Oil",
+    "rarity": "uncommon",
+    "description": "Gain 1 Strength and 1 Dexterity.",
+    "tags": [
+      "strength",
+      "dexterity"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/fysh_oil.png"
+  },
+  {
+    "id": "GAMBLERS_BREW",
+    "name": "Gambler's Brew",
+    "rarity": "uncommon",
+    "description": "Discard any number of cards, then draw that many.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/gamblers_brew.png"
+  },
+  {
+    "id": "GHOST_IN_A_JAR",
+    "name": "Ghost in a Jar",
+    "rarity": "rare",
+    "description": "Gain 1 Intangible.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/ghost_in_a_jar.png"
+  },
+  {
+    "id": "GIGANTIFICATION_POTION",
+    "name": "Gigantification Potion",
+    "rarity": "rare",
+    "description": "The next Attack you play deals triple damage.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/gigantification_potion.png"
+  },
+  {
+    "id": "GLOWWATER_POTION",
+    "name": "Glowwater Potion",
+    "rarity": "event",
+    "description": "Exhaust your Hand. Draw 10 cards.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/glowwater_potion.png"
+  },
+  {
+    "id": "HEART_OF_IRON",
+    "name": "Heart of Iron",
+    "rarity": "uncommon",
+    "description": "Gain 7 Plating.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/heart_of_iron.png"
+  },
+  {
+    "id": "KINGS_COURAGE",
+    "name": "King's Courage",
+    "rarity": "uncommon",
+    "description": "Forge 15.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/kings_courage.png"
+  },
+  {
+    "id": "LIQUID_BRONZE",
+    "name": "Liquid Bronze",
+    "rarity": "uncommon",
+    "description": "Gain 3 Thorns.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/liquid_bronze.png"
+  },
+  {
+    "id": "LIQUID_MEMORIES",
+    "name": "Liquid Memories",
+    "rarity": "rare",
+    "description": "Put a card from your Discard Pile into your Hand. It's free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/liquid_memories.png"
+  },
+  {
+    "id": "LUCKY_TONIC",
+    "name": "Lucky Tonic",
+    "rarity": "rare",
+    "description": "Gain 1 Buffer.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/lucky_tonic.png"
+  },
+  {
+    "id": "MAZALETHS_GIFT",
+    "name": "Mazaleth's Gift",
+    "rarity": "rare",
+    "description": "Gain 1 Ritual.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/mazaleths_gift.png"
+  },
+  {
+    "id": "OROBIC_ACID",
+    "name": "Orobic Acid",
+    "rarity": "rare",
+    "description": "Add a random Attack, Skill, and Power into your Hand. They're free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/orobic_acid.png"
+  },
+  {
+    "id": "POISON_POTION",
+    "name": "Poison Potion",
+    "rarity": "common",
+    "description": "Apply 6 Poison.",
+    "tags": [
+      "poison"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/poison_potion.png"
+  },
+  {
+    "id": "POT_OF_GHOULS",
+    "name": "Pot of Ghouls",
+    "rarity": "rare",
+    "description": "Add 2 Souls into your Hand.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/pot_of_ghouls.png"
+  },
+  {
+    "id": "POTION_OF_BINDING",
+    "name": "Potion of Binding",
+    "rarity": "uncommon",
+    "description": "Apply 1 Weak and 1 Vulnerable to ALL enemies.",
+    "tags": [
+      "weak",
+      "vulnerable"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/potion_of_binding.png"
+  },
+  {
+    "id": "POTION_OF_CAPACITY",
+    "name": "Potion of Capacity",
+    "rarity": "uncommon",
+    "description": "Gain 2 Orb Slots.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/potion_of_capacity.png"
+  },
+  {
+    "id": "POTION_OF_DOOM",
+    "name": "Potion of Doom",
+    "rarity": "common",
+    "description": "Apply 33 Doom.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/potion_of_doom.png"
+  },
+  {
+    "id": "POTION_SHAPED_ROCK",
+    "name": "Potion-Shaped Rock",
+    "rarity": "common",
+    "description": "Deal 15 damage.",
+    "tags": [
+      "damage"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/potion_shaped_rock.png"
+  },
+  {
+    "id": "POWDERED_DEMISE",
+    "name": "Powdered Demise",
+    "rarity": "uncommon",
+    "description": "Enemy loses 9 HP at the end of each of its turns.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/powdered_demise.png"
+  },
+  {
+    "id": "POWER_POTION",
+    "name": "Power Potion",
+    "rarity": "common",
+    "description": "Choose 1 of 3 random Power cards to add into your Hand. It's free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/power_potion.png"
+  },
+  {
+    "id": "RADIANT_TINCTURE",
+    "name": "Radiant Tincture",
+    "rarity": "uncommon",
+    "description": "Gain [E]. Gain an additional [E] at the start of your next 3 turns.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/radiant_tincture.png"
+  },
+  {
+    "id": "REGEN_POTION",
+    "name": "Regen Potion",
+    "rarity": "uncommon",
+    "description": "Gain 5 Regen.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/regen_potion.png"
+  },
+  {
+    "id": "SHACKLING_POTION",
+    "name": "Shackling Potion",
+    "rarity": "rare",
+    "description": "ALL enemies lose 7 Strength this turn.",
+    "tags": [
+      "strength"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/shackling_potion.png"
+  },
+  {
+    "id": "SHIP_IN_A_BOTTLE",
+    "name": "Ship in a Bottle",
+    "rarity": "rare",
+    "description": "Gain 10 Block. Next turn, gain 10 Block.",
+    "tags": [
+      "block"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/ship_in_a_bottle.png"
+  },
+  {
+    "id": "SKILL_POTION",
+    "name": "Skill Potion",
+    "rarity": "common",
+    "description": "Choose 1 of 3 random Skill cards to add into your Hand. It's free to play this turn.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/skill_potion.png"
+  },
+  {
+    "id": "SNECKO_OIL",
+    "name": "Snecko Oil",
+    "rarity": "rare",
+    "description": "Draw 7 cards. Randomize the cost of cards in your Hand this turn.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/snecko_oil.png"
+  },
+  {
+    "id": "SOLDIERS_STEW",
+    "name": "Soldier's Stew",
+    "rarity": "rare",
+    "description": "All cards containing Strike gain 1 Replay this combat.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/soldiers_stew.png"
+  },
+  {
+    "id": "SPEED_POTION",
+    "name": "Speed Potion",
+    "rarity": "common",
+    "description": "Gain 5 Dexterity. At the end of your turn, lose 5 Dexterity.",
+    "tags": [
+      "dexterity"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/speed_potion.png"
+  },
+  {
+    "id": "STABLE_SERUM",
+    "name": "Stable Serum",
+    "rarity": "uncommon",
+    "description": "Retain your Hand for 2 turns.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/stable_serum.png"
+  },
+  {
+    "id": "STAR_POTION",
+    "name": "Star Potion",
+    "rarity": "common",
+    "description": "Gain [S][S][S].",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/star_potion.png"
+  },
+  {
+    "id": "STRENGTH_POTION",
+    "name": "Strength Potion",
+    "rarity": "common",
+    "description": "Gain 2 Strength.",
+    "tags": [
+      "strength"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/strength_potion.png"
+  },
+  {
+    "id": "SWIFT_POTION",
+    "name": "Swift Potion",
+    "rarity": "common",
+    "description": "Draw 3 cards.",
+    "tags": [
+      "draw"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/swift_potion.png"
+  },
+  {
+    "id": "TOUCH_OF_INSANITY",
+    "name": "Touch of Insanity",
+    "rarity": "uncommon",
+    "description": "Choose a card in your Hand. It is free to play this combat.",
+    "tags": [],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/touch_of_insanity.png"
+  },
+  {
+    "id": "VULNERABLE_POTION",
+    "name": "Vulnerable Potion",
+    "rarity": "common",
+    "description": "Apply 3 Vulnerable.",
+    "tags": [
+      "vulnerable"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/vulnerable_potion.png"
+  },
+  {
+    "id": "WEAK_POTION",
+    "name": "Weak Potion",
+    "rarity": "common",
+    "description": "Apply 3 Weak.",
+    "tags": [
+      "weak"
+    ],
+    "imageUrl": "https://spire-archive.com/images/sts2/potions/weak_potion.png"
+  }
+]

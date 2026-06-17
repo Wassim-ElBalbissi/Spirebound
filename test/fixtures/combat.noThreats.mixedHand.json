@@ -1,0 +1,116 @@
+{
+  "state_type": "monster",
+  "run": { "act": 1, "floor": 6, "ascension": 0 },
+  "player": {
+    "character": "The Defect",
+    "hp": 82,
+    "max_hp": 86,
+    "block": 0,
+    "gold": 75,
+    "energy": 3,
+    "max_energy": 3,
+    "hand": [
+      {
+        "index": 0,
+        "id": "DEFEND_B",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Starter",
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "id": "STRIKE_B",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage.",
+        "target_type": "AnyEnemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Starter",
+        "keywords": []
+      },
+      {
+        "index": 2,
+        "id": "DEFEND_B",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Starter",
+        "keywords": []
+      },
+      {
+        "index": 3,
+        "id": "DUALCAST",
+        "name": "Dualcast",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Evoke your next Orb twice.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Starter",
+        "keywords": ["Evoke"]
+      },
+      {
+        "index": 4,
+        "id": "STRIKE_B",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage.",
+        "target_type": "AnyEnemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "rarity": "Starter",
+        "keywords": []
+      }
+    ],
+    "draw_pile_count": 5,
+    "discard_pile_count": 0,
+    "exhaust_pile_count": 0,
+    "status": [],
+    "relics": [],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "battle": {
+    "round": 3,
+    "turn": "player",
+    "is_play_phase": true,
+    "enemies": [
+      {
+        "entity_id": "TOADPOLE_0",
+        "combat_id": 7,
+        "name": "Toadpole",
+        "hp": 21,
+        "max_hp": 24,
+        "block": 0,
+        "status": [],
+        "intents": [
+          { "type": "Buff", "label": "+2", "title": "Buff", "description": "Gains 2 Strength." }
+        ]
+      }
+    ]
+  }
+}

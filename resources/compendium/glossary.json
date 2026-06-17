@@ -1,0 +1,1628 @@
+[
+  {
+    "id": "ACCELERANT_POWER",
+    "name": "Accelerant",
+    "description": "Poison is triggered an additional time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ACCURACY_POWER",
+    "name": "Accuracy",
+    "description": "Shivs deal additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ADAPTABLE_POWER",
+    "name": "Adaptable",
+    "description": "When this creature would be defeated, it instead revives even stronger.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ADROIT",
+    "name": "Adroit",
+    "description": "Gain X Block.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "AFTERIMAGE_POWER",
+    "name": "Afterimage",
+    "description": "Whenever you play a card, gain 1 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "AGGRESSION_POWER",
+    "name": "Aggression",
+    "description": "At the start of your turn, put a random Attack from your Discard Pile into your Hand and Upgrade it for the rest of combat.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ARSENAL_POWER",
+    "name": "Arsenal",
+    "description": "Whenever you create a card, gain 1 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ARTIFACT_POWER",
+    "name": "Artifact",
+    "description": "Negates debuffs.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ASLEEP_POWER",
+    "name": "Asleep",
+    "description": "TODO",
+    "kind": "Buff"
+  },
+  {
+    "id": "AUTOMATION_POWER",
+    "name": "Automation",
+    "description": "Every 10 cards you draw, gain Energy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BACK_ATTACK_LEFT_POWER",
+    "name": "Back Attack",
+    "description": "Deals 50% more damage when it is attacking you from behind.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BARRICADE_POWER",
+    "name": "Barricade",
+    "description": "Block is not removed at the start of this creature's turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BEACON_OF_HOPE_POWER",
+    "name": "Beacon of Hope",
+    "description": "Whenever you gain Block on your turn, other players gain half that much Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BIASED_COGNITION_POWER",
+    "name": "Biased Cognition",
+    "description": "At the start of your turn, lose 1 Focus.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "BLACK_HOLE_POWER",
+    "name": "Black Hole",
+    "description": "Whenever you spend or gain [S], deal 3 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BLOCK_NEXT_TURN_POWER",
+    "name": "Block Next Turn",
+    "description": "At the start of your next turn, gain 4 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BLUR_POWER",
+    "name": "Blur",
+    "description": "Block is not removed at the start of your next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BORROWED_TIME_POWER",
+    "name": "Borrowed Time",
+    "description": "Cards cost an additional Energy this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "BUFFER_POWER",
+    "name": "Buffer",
+    "description": "Prevent the next time you would lose HP.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BURROWED_POWER",
+    "name": "Burrowed",
+    "description": "Block is not removed at the start of this creature's turn. Stunned if all Block is removed.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BURST_POWER",
+    "name": "Burst",
+    "description": "This turn, your next Skill is played an extra time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CALAMITY_POWER",
+    "name": "Calamity",
+    "description": "Whenever you play an Attack, add a random Attack into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CALCIFY_POWER",
+    "name": "Calcify",
+    "description": "Osty's attacks deal additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CALL_OF_THE_VOID_POWER",
+    "name": "Call of the Void",
+    "description": "At the start of your turn, add 1 random card into your Hand and apply Ethereal to it.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CHAINS_OF_BINDING_POWER",
+    "name": "Chains of Binding",
+    "description": "The first 3 cards drawn each turn are Afflicted with Bound.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "CHILD_OF_THE_STARS_POWER",
+    "name": "Child of the Stars",
+    "description": "Gain 1 Block for each [S] spent.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CLARITY_POWER",
+    "name": "Clarity",
+    "description": "At the start of your next turn, draw 1 additional card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CLONE",
+    "name": "Clone",
+    "description": "This card can be duplicated at Rest Sites.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "COLOSSUS_POWER",
+    "name": "Colossus",
+    "description": "You receive 50% less damage from Vulnerable enemies this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CONFUSED_POWER",
+    "name": "Confused",
+    "description": "The costs of your cards are randomized on draw, from 0 to 3.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "CONQUEROR_POWER",
+    "name": "Conqueror",
+    "description": "Sovereign Blade deals double damage to the enemy this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "CONSTRICT_POWER",
+    "name": "Constrict",
+    "description": "While the Slithering Strangler is alive, at the end of your turn, take 1 damage.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "CONSUMING_SHADOW_POWER",
+    "name": "Consuming Shadow",
+    "description": "At the end of your turn, Evoke your leftmost Orb.",
+    "kind": "Buff"
+  },
+  {
+    "id": "COOLANT_POWER",
+    "name": "Coolant",
+    "description": "At the start of your turn, gain 3 Block for each unique Orb you have.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CORROSIVE_WAVE_POWER",
+    "name": "Corrosive Wave",
+    "description": "Whenever you draw a card this turn, apply 2 Poison to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CORRUPTED",
+    "name": "Corrupted",
+    "description": "Deal 50% more damage, but lose 2 HP.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "CORRUPTION_POWER",
+    "name": "Corruption",
+    "description": "Skills cost 0.\nWhenever you play a Skill, Exhaust it.",
+    "kind": "Buff"
+  },
+  {
+    "id": "COUNTDOWN_POWER",
+    "name": "Countdown",
+    "description": "At the start of your turn, apply 6 Doom to a random enemy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "COVERED_POWER",
+    "name": "Covered",
+    "description": "An ally is covering you. All attacks that would be directed to you are redirected to them instead.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CRAB_RAGE_POWER",
+    "name": "Crab Rage",
+    "description": "When an ally dies, this creature gains 5 Strength and 99 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CREATIVE_AI_POWER",
+    "name": "Creative AI",
+    "description": "At the start of your turn, add a random Power into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CRIMSON_MANTLE_POWER",
+    "name": "Crimson Mantle",
+    "description": "At the start of your turn, lose HP and gain Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CRUELTY_POWER",
+    "name": "Cruelty",
+    "description": "Vulnerable enemies take additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CURIOUS_POWER",
+    "name": "Curious",
+    "description": "Powers cost 1 [E] less.",
+    "kind": "Buff"
+  },
+  {
+    "id": "CURL_UP_POWER",
+    "name": "Curl Up",
+    "description": "When damaged, rolls up and gains block. (Once per combat)",
+    "kind": "Buff"
+  },
+  {
+    "id": "DAMPEN_POWER",
+    "name": "Dampen",
+    "description": "While Magi Knight is alive, ALL your cards are Downgraded.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "DANSE_MACABRE_POWER",
+    "name": "Danse Macabre",
+    "description": "Whenever you play a card that costs 2 Energy or more, gain 7 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DARK_EMBRACE_POWER",
+    "name": "Dark Embrace",
+    "description": "Whenever a card is Exhausted, draw 1 card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DEBILITATE_POWER",
+    "name": "Debilitate",
+    "description": "Vulnerable and Weak are twice as effective for the next 2 turns.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "DEMESNE_POWER",
+    "name": "Demesne",
+    "description": "At the start of your turn, gain 1 Energy and draw 1 additional card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DEMISE_POWER",
+    "name": "Demise",
+    "description": "At the end of its turn, this creature X loses HP.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "DEMON_FORM_POWER",
+    "name": "Demon Form",
+    "description": "At the start of your turn, gain 2 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DEVOUR_LIFE_POWER",
+    "name": "Devour Life",
+    "description": "Whenever you play a Soul, Summon 1.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DEXTERITY_POWER",
+    "name": "Dexterity",
+    "description": "Dexterity improves Block gained from cards.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DIAMOND_DIADEM_POWER",
+    "name": "Diamond Diadem",
+    "description": "Enemies deal 50% less damage this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DIE_FOR_YOU_POWER",
+    "name": "Die for You",
+    "description": "Osty absorbs all unblocked attack damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DISINTEGRATION_POWER",
+    "name": "Disintegration",
+    "description": "At the end of your turn, take 5 damage.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "DOOM_POWER",
+    "name": "Doom",
+    "description": "At the end of the enemy turn, if it has at least as much Doom as HP, it dies.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "DOUBLE_DAMAGE_POWER",
+    "name": "Double Damage",
+    "description": "This turn, Attacks deal double damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DRAW_CARDS_NEXT_TURN_POWER",
+    "name": "Draw Cards Next Turn",
+    "description": "At the start of your next turn, draw 1 additional card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DRUM_OF_BATTLE_POWER",
+    "name": "Drum of Battle",
+    "description": "At the start of your turn, Exhaust the top card of your Draw Pile.",
+    "kind": "Buff"
+  },
+  {
+    "id": "DUPLICATION_POWER",
+    "name": "Duplication",
+    "description": "Your next card is played an extra time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ECHO_FORM_POWER",
+    "name": "Echo Form",
+    "description": "The first card you play each turn is played an extra time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ENERGY_NEXT_TURN_POWER",
+    "name": "Energy Next Turn",
+    "description": "Gain additional Energy next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ENRAGE_POWER",
+    "name": "Enrage",
+    "description": "Whenever you play a Skill, gains 2 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ENTROPY_POWER",
+    "name": "Entropy",
+    "description": "At the start of your turn, Transform 1 card in your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ENVENOM_POWER",
+    "name": "Envenom",
+    "description": "Whenever you deal unblocked attack damage, apply 1 Poison.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ESCAPE_ARTIST_POWER",
+    "name": "Escape Artist",
+    "description": "Exits the combat after 4 turns.",
+    "kind": "Buff"
+  },
+  {
+    "id": "KW_ETHEREAL",
+    "name": "Ethereal",
+    "description": "If this card is in your hand at the end of your turn, it is Exhausted.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "KW_EXHAUST",
+    "name": "Exhaust",
+    "description": "When played, this card leaves your deck for the rest of combat.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "FAN_OF_KNIVES_POWER",
+    "name": "Fan of Knives",
+    "description": "Shivs hit ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FASTEN_POWER",
+    "name": "Fasten",
+    "description": "Gain an additional 4 Block from Defend cards.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FEEL_NO_PAIN_POWER",
+    "name": "Feel No Pain",
+    "description": "Whenever a card is Exhausted, gain 3 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FERAL_POWER",
+    "name": "Feral",
+    "description": "The first time you play a 0[E] Attack each turn, return it to your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FLAME_BARRIER_POWER",
+    "name": "Flame Barrier",
+    "description": "Whenever you are attacked this turn, deal 4 damage back.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FLANKING_POWER",
+    "name": "Flanking",
+    "description": "Other allies deal 2x more attack damage to this enemy this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "FLUTTER_POWER",
+    "name": "Flutter",
+    "description": "Receives 50% less damage from Attacks.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FOCUS_POWER",
+    "name": "Focus",
+    "description": "Increases the effectiveness of Orbs.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FORBIDDEN_GRIMOIRE_POWER",
+    "name": "Forbidden Grimoire",
+    "description": "At the end of combat, remove a card from your Deck.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FOREGONE_CONCLUSION_POWER",
+    "name": "Foregone Conclusion",
+    "description": "Next turn, put 3 cards from your Draw Pile into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FRAIL_POWER",
+    "name": "Frail",
+    "description": "While Frail, gain 25% less Block from cards.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "FREE_ATTACK_POWER",
+    "name": "Free Attack",
+    "description": "Your next Attack costs 0 [E].",
+    "kind": "Buff"
+  },
+  {
+    "id": "FREE_POWER_POWER",
+    "name": "Free Power",
+    "description": "The next Power you play costs 0 [E].",
+    "kind": "Buff"
+  },
+  {
+    "id": "FREE_SKILL_POWER",
+    "name": "Free Skill",
+    "description": "The next Skill you play costs 0 [E].",
+    "kind": "Buff"
+  },
+  {
+    "id": "FRIENDSHIP_POWER",
+    "name": "Friendship",
+    "description": "Gain 1 Energy at the start of each turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "FURNACE_POWER",
+    "name": "Furnace",
+    "description": "At the start of your turn, Forge 5.",
+    "kind": "Buff"
+  },
+  {
+    "id": "GALVANIC_POWER",
+    "name": "Galvanic",
+    "description": "Powers are afflicted with Galvanized.",
+    "kind": "Buff"
+  },
+  {
+    "id": "GENESIS_POWER",
+    "name": "Genesis",
+    "description": "At the start of your turn, gain [S].",
+    "kind": "Buff"
+  },
+  {
+    "id": "GIGANTIFICATION_POWER",
+    "name": "Gigantification",
+    "description": "The next Attack you play deals triple damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "GLAM",
+    "name": "Glam",
+    "description": "This card has Replay once per combat.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "GOOPY",
+    "name": "Goopy",
+    "description": "This card gains Exhaust. When played, permanently increase this card's Block by 1.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "GRASP_POWER",
+    "name": "Grasp",
+    "description": "Whenever you play a card, lose 1 Energy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "GRAVITY_POWER",
+    "name": "Gravity",
+    "description": "Whenever you play a card this turn, deal 2 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "GUARDED_POWER",
+    "name": "Guarded",
+    "description": "Take half damage from enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HAILSTORM_POWER",
+    "name": "Hailstorm",
+    "description": "At the end of your turn, if you have Frost, deal 6 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HAMMER_TIME_POWER",
+    "name": "Hammer Time",
+    "description": "Whenever you Forge, all allies Forge as well.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HANG_POWER",
+    "name": "Hang",
+    "description": "All Hangs deal 2 times more damage to this enemy.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "HARD_TO_KILL_POWER",
+    "name": "Hard to Kill",
+    "description": "Reduce all damage taken and HP lost by Exoskeleton to 9.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HARDENED_SHELL_POWER",
+    "name": "Hardened Shell",
+    "description": "This creature cannot lose more than 20 HP each turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HATCH_POWER",
+    "name": "Hatch",
+    "description": "Hatches after X turns.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HAUNT_POWER",
+    "name": "Haunt",
+    "description": "Whenever you play a Soul, a random enemy loses 3 HP.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HEIST_POWER",
+    "name": "Heist",
+    "description": "When killed, returns all the stolen Gold.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HELLO_WORLD_POWER",
+    "name": "Hello World",
+    "description": "At the start of your turn, add 1 random Common card into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HELLRAISER_POWER",
+    "name": "Hellraiser",
+    "description": "Whenever you draw a card containing \"Strike\", it is played against a random enemy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HEX_POWER",
+    "name": "Hex",
+    "description": "While Spectral Knight is alive, ALL your cards are Ethereal.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "HIGH_VOLTAGE_POWER",
+    "name": "High Voltage",
+    "description": "At the start of this creature's turn, it gains 2 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "HUNGER_POWER",
+    "name": "Hunger",
+    "description": "Whenever you play an Attack or Skill, it is Exhausted.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ILLUSION_POWER",
+    "name": "Illusion",
+    "description": "When this dies, it revives next turn at full HP.",
+    "kind": "Buff"
+  },
+  {
+    "id": "IMBALANCED_POWER",
+    "name": "Imbalanced",
+    "description": "If this creature's attacks are fully blocked by any player, it becomes Stunned.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "IMBUED",
+    "name": "Imbued",
+    "description": "This card is played automatically at the start of each combat.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "IMPROVEMENT_POWER",
+    "name": "Improvement",
+    "description": "At the end of combat, Upgrade a random card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "INFERNO_POWER",
+    "name": "Inferno",
+    "description": "At the start of your turn, lose 1 HP. Whenever you lose HP on your turn, deal 4 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "INFESTED_POWER",
+    "name": "Infested",
+    "description": "Upon dying, summons... something.",
+    "kind": "Buff"
+  },
+  {
+    "id": "INFINITE_BLADES_POWER",
+    "name": "Infinite Blades",
+    "description": "At the start of your turn, add a Shiv into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "INKY",
+    "name": "Inky",
+    "description": "This card deals 2 additional damage and applies 1 Weak.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "KW_INNATE",
+    "name": "Innate",
+    "description": "Starts in your opening hand.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "INSTINCT",
+    "name": "Instinct",
+    "description": "This card's attack damage is doubled.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "INTANGIBLE_POWER",
+    "name": "Intangible",
+    "description": "Reduce all damage taken and HP loss to 1 this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "INTERCEPT_POWER",
+    "name": "Intercept",
+    "description": "You are covering another player. All attacks that would be directed towards them are redirected towards you.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ITERATION_POWER",
+    "name": "Iteration",
+    "description": "The first time you draw a Status each turn, draw more cards.",
+    "kind": "Buff"
+  },
+  {
+    "id": "JUGGERNAUT_POWER",
+    "name": "Juggernaut",
+    "description": "Whenever you gain Block, deal 5 damage to a random enemy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "JUGGLING_POWER",
+    "name": "Juggling",
+    "description": "Add a copy of the third Attack you play each turn into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "KNOCKDOWN_POWER",
+    "name": "Knockdown",
+    "description": "This creature takes X times the damage from other players this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "LEADERSHIP_POWER",
+    "name": "Leadership",
+    "description": "All other allies deal 1 additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "LETHALITY_POWER",
+    "name": "Lethality",
+    "description": "The first Attack each turn deals 50% additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "LIGHTNING_ROD_POWER",
+    "name": "Lightning Rod",
+    "description": "At the start of the next 2 turns, Channel 1 Lightning.",
+    "kind": "Buff"
+  },
+  {
+    "id": "LOOP_POWER",
+    "name": "Loop",
+    "description": "At the start of your turn, trigger the passive ability of your next Orb.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MACHINE_LEARNING_POWER",
+    "name": "Machine Learning",
+    "description": "At the start of your turn, draw 1 additional card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MAGIC_BOMB_POWER",
+    "name": "Magic Bomb",
+    "description": "Take 20 damage at the end of your turn. Is cleared if the Magi Knight dies.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "MASTER_PLANNER_POWER",
+    "name": "Master Planner",
+    "description": "When you play a Skill, it gains Sly.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MAYHEM_POWER",
+    "name": "Mayhem",
+    "description": "At the start of your turn, play the top card of your Draw Pile.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MIND_ROT_POWER",
+    "name": "Mind Rot",
+    "description": "Draw 1 fewer card each turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "MINION_POWER",
+    "name": "Minion",
+    "description": "Minions abandon combat without their leader.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MOMENTUM",
+    "name": "Momentum",
+    "description": "Increase this card's attack damage by X this combat when played.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "MONARCHS_GAZE_POWER",
+    "name": "Monarch's Gaze",
+    "description": "Whenever you attack an enemy, it loses 1 Strength this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "MONOLOGUE_POWER",
+    "name": "Monologue",
+    "description": "Whenever you play a card this turn, gain 1 Strength this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "NECRO_MASTERY_POWER",
+    "name": "Necro Mastery",
+    "description": "Whenever Osty loses HP, ALL enemies lose that much HP as well.",
+    "kind": "Buff"
+  },
+  {
+    "id": "NEMESIS_POWER",
+    "name": "Nemesis",
+    "description": "At the end of every other turn, gains Intangible 1.",
+    "kind": "Buff"
+  },
+  {
+    "id": "NEUROSURGE_POWER",
+    "name": "Neurosurge",
+    "description": "At the start of your turn, apply 3 Doom to yourself.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "NIGHTMARE_POWER",
+    "name": "Nightmare",
+    "description": "Add 3 of a chosen card into your Hand next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "NIMBLE",
+    "name": "Nimble",
+    "description": "Increases Block gained from this card by X.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "NO_BLOCK_POWER",
+    "name": "No Block",
+    "description": "You cannot gain Block from cards.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "NO_DRAW_POWER",
+    "name": "No Draw",
+    "description": "You may not draw any more cards this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "NO_ENERGY_GAIN_POWER",
+    "name": "No Energy Gain",
+    "description": "You cannot gain additional [E] this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "NOSTALGIA_POWER",
+    "name": "Nostalgia",
+    "description": "The first Attack or Skill you play each turn is placed on top of your Draw Pile.",
+    "kind": "Buff"
+  },
+  {
+    "id": "NOXIOUS_FUMES_POWER",
+    "name": "Noxious Fumes",
+    "description": "At the start of your turn, apply 2 Poison to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "OBLIVION_POWER",
+    "name": "Oblivion",
+    "description": "Whenever you play a card, this enemy gains 1 Doom.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "ONE_TWO_PUNCH_POWER",
+    "name": "One-Two Punch",
+    "description": "Your next Attack is played an extra time this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ORBIT_POWER",
+    "name": "Orbit",
+    "description": "Every 4 Energy you spend, gain an Energy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "OUTBREAK_POWER",
+    "name": "Outbreak",
+    "description": "Every 10 times you apply Poison, deal damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PAGESTORM_POWER",
+    "name": "Pagestorm",
+    "description": "Whenever you draw an Ethereal card, draw 1 card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PAINFUL_STABS_POWER",
+    "name": "Painful Stabs",
+    "description": "Shuffle 1 Wound into your Discard Pile each time you receive unblocked attack damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PALE_BLUE_DOT_POWER",
+    "name": "Pale Blue Dot",
+    "description": "If you play enough cards in a turn, draw additional cards at the start of your next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PANACHE_POWER",
+    "name": "Panache",
+    "description": "If you play 5 cards this turn, deal damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PAPER_CUTS_POWER",
+    "name": "Paper Cuts",
+    "description": "Whenever this creature deals unblocked attack damage to you, you lose 1 Max HP.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PARRY_POWER",
+    "name": "Parry",
+    "description": "Whenever you play Sovereign Blade, gain 8 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PERFECT_FIT",
+    "name": "Perfect Fit",
+    "description": "Whenever this would be shuffled into your Draw Pile, place it on the top instead.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "PERSONAL_HIVE_POWER",
+    "name": "Personal Hive",
+    "description": "Whenever this enemy is hit by an Attack, add Dazed into your Draw Pile.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PHANTOM_BLADES_POWER",
+    "name": "Phantom Blades",
+    "description": "Shivs gain Retain.\nThe first Shiv you play each turn deals 9 additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PILLAR_OF_CREATION_POWER",
+    "name": "Pillar of Creation",
+    "description": "Whenever you create a card, gain 5 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PLATING_POWER",
+    "name": "Plating",
+    "description": "At the end of your turn, gain Block. Plating is reduced by 1 at the start of your turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PLOW_POWER",
+    "name": "Plow",
+    "description": "The first time this creature's HP reaches 150 or below, it becomes Stunned.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "POISON_POWER",
+    "name": "Poison",
+    "description": "Poisoned creatures lose HP at the start of their turn. Each turn, Poison is reduced by 1.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "POSSESS_SPEED_POWER",
+    "name": "Possess Speed",
+    "description": "When killed, return all stolen Dexterity to the player.",
+    "kind": "Buff"
+  },
+  {
+    "id": "POSSESS_STRENGTH_POWER",
+    "name": "Possess Strength",
+    "description": "When killed, return all stolen Strength to the player.",
+    "kind": "Buff"
+  },
+  {
+    "id": "PREP_TIME_POWER",
+    "name": "Prep Time",
+    "description": "At the start of your turn, gain 4 Vigor.",
+    "kind": "Buff"
+  },
+  {
+    "id": "KW_PURGE",
+    "name": "Purge",
+    "description": "Permanently removes the card from your deck.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "PYRE_POWER",
+    "name": "Pyre",
+    "description": "Gain 1 Energy at the start of each turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RADIANCE_POWER",
+    "name": "Radiance",
+    "description": "Gain an additional Energy next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RAGE_POWER",
+    "name": "Rage",
+    "description": "Whenever you play an Attack this turn, gain 3 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RAMPART_POWER",
+    "name": "Rampart",
+    "description": "At the start of the player's turn, Turret Operator gains 25 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RAVENOUS_POWER",
+    "name": "Ravenous",
+    "description": "When an enemy dies, Corpse Slug immediately eats it, becoming Stunned and gaining 1 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "REAPER_FORM_POWER",
+    "name": "Reaper Form",
+    "description": "Whenever Attacks deal damage, they also apply that much Doom.",
+    "kind": "Buff"
+  },
+  {
+    "id": "REATTACH_POWER",
+    "name": "Reattach",
+    "description": "If other segments are still alive, revives in 2 turns with 25 HP.",
+    "kind": "Buff"
+  },
+  {
+    "id": "REBOUND_POWER",
+    "name": "Rebound",
+    "description": "The next card you play this turn is placed on the top of your Draw Pile.",
+    "kind": "Buff"
+  },
+  {
+    "id": "REFLECT_POWER",
+    "name": "Reflect",
+    "description": "Blocked damage is reflected to your attacker.",
+    "kind": "Buff"
+  },
+  {
+    "id": "REGEN_POWER",
+    "name": "Regen",
+    "description": "Regen heals HP at the end of your turn. Each turn, Regen is reduced by 1.",
+    "kind": "Buff"
+  },
+  {
+    "id": "KW_REPLAY",
+    "name": "Replay",
+    "description": "Plays this card an additional time.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "KW_RETAIN",
+    "name": "Retain",
+    "description": "This card is not discarded at the end of your turn.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "RETAIN_HAND_POWER",
+    "name": "Retain Hand",
+    "description": "Retain your Hand for the next 2 turns.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RINGING_POWER",
+    "name": "Ringing",
+    "description": "You can only play 1 card this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "RITUAL_POWER",
+    "name": "Ritual",
+    "description": "Gain Strength at the end of your turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ROLLING_BOULDER_POWER",
+    "name": "Rolling Boulder",
+    "description": "At the start of your turn, deal 5 damage to ALL enemies and increase this damage by 5.",
+    "kind": "Buff"
+  },
+  {
+    "id": "ROYALLY_APPROVED",
+    "name": "Royally Approved",
+    "description": "This card has Innate and Retain.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "ROYALTIES_POWER",
+    "name": "Royalties",
+    "description": "At the end of combat, gain 25 Gold.",
+    "kind": "Buff"
+  },
+  {
+    "id": "RUPTURE_POWER",
+    "name": "Rupture",
+    "description": "Whenever you lose HP on your turn, gain 1 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SANDPIT_POWER",
+    "name": "Sandpit",
+    "description": "A power used by The Insatiable.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SCRUTINY_POWER",
+    "name": "Scrutiny",
+    "description": "You cannot draw additional cards during your turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SEEKING_EDGE_POWER",
+    "name": "Seeking Edge",
+    "description": "Sovereign Blade now hits ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SELF_FORMING_CLAY_POWER",
+    "name": "Self-Forming Clay",
+    "description": "Gain 3 Block next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SENTRY_MODE_POWER",
+    "name": "Sentry Mode",
+    "description": "At the start of your turn, add 1 Sweeping Gaze into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SERPENT_FORM_POWER",
+    "name": "Serpent Form",
+    "description": "Whenever you play a card, deal 4 damage to a random enemy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SHADOW_STEP_POWER",
+    "name": "Shadow Step",
+    "description": "Next turn, Attacks deal double damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SHADOWMELD_POWER",
+    "name": "Shadowmeld",
+    "description": "Double your Block gain this turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SHARP",
+    "name": "Sharp",
+    "description": "Increases damage on this card by X.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SHRIEK_POWER",
+    "name": "Shriek",
+    "description": "The first time this creature's HP reaches 50% or below, it becomes Stunned.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SHRINK_POWER",
+    "name": "Shrink",
+    "description": "This creature's Attacks deal 30% less damage for the next 3 turns.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SHROUD_POWER",
+    "name": "Shroud",
+    "description": "Whenever you apply Doom, gain 3 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SIC_EM_POWER",
+    "name": "Sic 'Em",
+    "description": "Whenever Osty hits this enemy this turn, Summon 3.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SIGNAL_BOOST_POWER",
+    "name": "Signal Boost",
+    "description": "Your next Power is played an extra time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SKITTISH_POWER",
+    "name": "Skittish",
+    "description": "The first time this creature is hit each turn, it gains 1 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SLEIGHT_OF_FLESH_POWER",
+    "name": "Sleight of Flesh",
+    "description": "Whenever you apply a debuff to an enemy, they take 13 damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SLIPPERY_POWER",
+    "name": "Slippery",
+    "description": "The next time this creature loses HP, it only loses 1 HP instead.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SLITHER",
+    "name": "Slither",
+    "description": "When you draw this card, randomize its cost from 0 to 3.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SLOTH_POWER",
+    "name": "Sloth",
+    "description": "You cannot play more than 3 cards each turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SLOW_POWER",
+    "name": "Slow",
+    "description": "Whenever you play a card, this enemy receives 10% more damage from Attacks this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SLUMBER_POWER",
+    "name": "Slumber",
+    "description": "Awakens upon taking turns or losing HP 3 times.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SLUMBERING_ESSENCE",
+    "name": "Slumbering Essence",
+    "description": "If this card is in your hand at the end of turn, reduce its cost by 1 until it is played.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SMOGGY_POWER",
+    "name": "Smoggy",
+    "description": "You can only play 1 Skill per turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SMOKESTACK_POWER",
+    "name": "Smokestack",
+    "description": "Whenever you create a Status, deal damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SNEAKY_POWER",
+    "name": "Sneaky",
+    "description": "Whenever another player attacks an enemy, gain Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SOAR_POWER",
+    "name": "Soar",
+    "description": "Receives 50% less attack damage until it lands.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SOULS_POWER",
+    "name": "Soul's Power",
+    "description": "This card loses Exhaust.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SOWN",
+    "name": "Sown",
+    "description": "The first time you play this card each combat, gain [E].",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SPECTRUM_SHIFT_POWER",
+    "name": "Spectrum Shift",
+    "description": "At the start of your turn, add 1 random Colorless card into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SPEEDSTER_POWER",
+    "name": "Speedster",
+    "description": "Whenever you draw a card during your turn, deal 1 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SPINNER_POWER",
+    "name": "Spinner",
+    "description": "At the start of your turn, Channel 1 Glass.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SPIRAL",
+    "name": "Spiral",
+    "description": "This card gains Replay 1.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SPIRIT_OF_ASH_POWER",
+    "name": "Spirit of Ash",
+    "description": "Whenever you play an Ethereal card, gain 4 Block.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STAMPEDE_POWER",
+    "name": "Stampede",
+    "description": "At the end of your turn, 1 random Attack in your Hand is played against a random enemy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STAR_NEXT_TURN_POWER",
+    "name": "Star Next Turn",
+    "description": "Gain 1 [S] next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STEADY",
+    "name": "Steady",
+    "description": "This card gains Retain.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "STEAM_ERUPTION_POWER",
+    "name": "Steam Eruption",
+    "description": "When killed, deals damage at the end of your next turn.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STOCK_POWER",
+    "name": "Stock",
+    "description": "When killed, a new Axebot is summoned in its place.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STORM_POWER",
+    "name": "Storm",
+    "description": "Whenever you play a Power, Channel 1 Lightning.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STRANGLE_POWER",
+    "name": "Strangle",
+    "description": "Whenever you play a card this turn, this enemy loses 2 HP.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "STRATAGEM_POWER",
+    "name": "Stratagem",
+    "description": "Whenever you shuffle your Draw Pile, choose 1 card from it to put into your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "STRENGTH_POWER",
+    "name": "Strength",
+    "description": "Strength adds additional damage to Attacks.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SUBROUTINE_POWER",
+    "name": "Subroutine",
+    "description": "Whenever you play a Power, gain 1 [E].",
+    "kind": "Buff"
+  },
+  {
+    "id": "SUCK_POWER",
+    "name": "Suck",
+    "description": "Whenever this creature deals unblocked attack damage, it gains 1 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SUMMON_NEXT_TURN_POWER",
+    "name": "Summon Next Turn",
+    "description": "At the start of your next turn, Summon 2.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SURPRISE_POWER",
+    "name": "Surprise",
+    "description": "Something is off about this creature...",
+    "kind": "Buff"
+  },
+  {
+    "id": "SURROUNDED_POWER",
+    "name": "Surrounded",
+    "description": "Receive 50% more damage if attacked from behind. Use targeting cards or potions to change your orientation.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "SWIFT",
+    "name": "Swift",
+    "description": "The first time you play this card, draw X card.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "SWIPE_POWER",
+    "name": "Swipe",
+    "description": "Upon killing this enemy, the stolen card is returned.",
+    "kind": "Buff"
+  },
+  {
+    "id": "SWORD_SAGE_POWER",
+    "name": "Sword Sage",
+    "description": "Sovereign Blade now hits 1 additional time.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TAG_TEAM_POWER",
+    "name": "Tag Team",
+    "description": "The next Attack another player plays on the enemy is played an extra time.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TANGLED_POWER",
+    "name": "Tangled",
+    "description": "Attacks cost 1 additional Energy this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TANK_POWER",
+    "name": "Tank",
+    "description": "Take double damage from enemies. Allies take half damage from enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TEMPORARY_DEXTERITY_POWER",
+    "name": "Temporary Dexterity",
+    "description": "Gain Dexterity until the end of this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TEMPORARY_FOCUS_POWER",
+    "name": "Temporary Focus",
+    "description": "Gain Focus until the end of this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TEMPORARY_STRENGTH_POWER",
+    "name": "Temporary Strength",
+    "description": "Gain Strength until the end of this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TENDER_POWER",
+    "name": "Tender",
+    "description": "Whenever you play a card, lose 1 Strength and 1 Dexterity this turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "TERRITORIAL_POWER",
+    "name": "Territorial",
+    "description": "At the end of its turn, gains 1 Strength.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TEZCATARAS_EMBER",
+    "name": "Tezcatara's Ember",
+    "description": "Costs 0 and gains Eternal.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "THE_BOMB_POWER",
+    "name": "The Bomb",
+    "description": "At the end of 3 turns, deal 40 damage to ALL enemies.",
+    "kind": "Buff"
+  },
+  {
+    "id": "THE_GAMBIT_POWER",
+    "name": "The Gambit",
+    "description": "If you take unblocked attack damage this combat, die.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "THE_HUNT_POWER",
+    "name": "The Hunt",
+    "description": "Gain 1 additional card reward at the end of combat.",
+    "kind": "Buff"
+  },
+  {
+    "id": "THE_SEALED_THRONE_POWER",
+    "name": "The Sealed Throne",
+    "description": "Whenever you play a card, gain [S].",
+    "kind": "Buff"
+  },
+  {
+    "id": "THIEVERY_POWER",
+    "name": "Thievery",
+    "description": "Steals Gold when Attacking.",
+    "kind": "Buff"
+  },
+  {
+    "id": "THORNS_POWER",
+    "name": "Thorns",
+    "description": "When hit by an attack, deal damage back.",
+    "kind": "Buff"
+  },
+  {
+    "id": "THUNDER_POWER",
+    "name": "Thunder",
+    "description": "Whenever you Evoke Lightning, deal 8 damage to each enemy hit.",
+    "kind": "Buff"
+  },
+  {
+    "id": "BATTLEWORN_DUMMY_TIME_LIMIT_POWER",
+    "name": "Time Limit",
+    "description": "You have 3 more turns to defeat the Battleworn Dummy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TOOLS_OF_THE_TRADE_POWER",
+    "name": "Tools of the Trade",
+    "description": "At the start of your turn, draw 1 card and discard 1 card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TORIC_TOUGHNESS_POWER",
+    "name": "Toric Toughness",
+    "description": "Gain 5 Block at the start of the next 2 turns.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TRACKING_POWER",
+    "name": "Tracking",
+    "description": "Weak enemies take 2 times more damage from Attacks.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TRASH_TO_TREASURE_POWER",
+    "name": "Trash to Treasure",
+    "description": "Whenever you create a Status, Channel 1 random Orb.",
+    "kind": "Buff"
+  },
+  {
+    "id": "TYRANNY_POWER",
+    "name": "Tyranny",
+    "description": "At the start of your turn, draw a card and Exhaust a card from your Hand.",
+    "kind": "Buff"
+  },
+  {
+    "id": "UNMOVABLE_POWER",
+    "name": "Unmovable",
+    "description": "The first time you gain Block from a card each turn, double the amount gained.",
+    "kind": "Buff"
+  },
+  {
+    "id": "KW_UNPLAYABLE",
+    "name": "Unplayable",
+    "description": "This card cannot be played.",
+    "kind": "Keyword"
+  },
+  {
+    "id": "VEILPIERCER_POWER",
+    "name": "Veilpiercer",
+    "description": "The next Ethereal card you play costs 0.",
+    "kind": "Buff"
+  },
+  {
+    "id": "VICIOUS_POWER",
+    "name": "Vicious",
+    "description": "Whenever you apply Vulnerable, draw 1 card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "VIGOR_POWER",
+    "name": "Vigor",
+    "description": "Your next Attack deals additional damage.",
+    "kind": "Buff"
+  },
+  {
+    "id": "VIGOROUS",
+    "name": "Vigorous",
+    "description": "The first time this card is played, it deals X additional damage.",
+    "kind": "Enchantment"
+  },
+  {
+    "id": "VITAL_SPARK_POWER",
+    "name": "Vital Spark",
+    "description": "The first time this enemy takes Attack damage each turn, the attacker gains 1 Energy.",
+    "kind": "Buff"
+  },
+  {
+    "id": "VOID_FORM_POWER",
+    "name": "Void Form",
+    "description": "The first 2 cards you play each turn are free to play.",
+    "kind": "Buff"
+  },
+  {
+    "id": "VULNERABLE_POWER",
+    "name": "Vulnerable",
+    "description": "Vulnerable creatures take 50% more damage from Attacks.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "WASTE_AWAY_POWER",
+    "name": "Waste Away",
+    "description": "Gain 1 less Energy per turn.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "WEAK_POWER",
+    "name": "Weak",
+    "description": "Weakened creatures deal 25% less damage with Attacks.",
+    "kind": "Debuff"
+  },
+  {
+    "id": "WELL_LAID_PLANS_POWER",
+    "name": "Well-Laid Plans",
+    "description": "At the end of your turn, Retain up to 1 card.",
+    "kind": "Buff"
+  },
+  {
+    "id": "WRAITH_FORM_POWER",
+    "name": "Wraith Form",
+    "description": "At the start of your turn, lose 1 Dexterity.",
+    "kind": "Debuff"
+  }
+]

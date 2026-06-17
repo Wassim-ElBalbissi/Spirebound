@@ -1,0 +1,56 @@
+{
+  "state_type": "relic_select",
+  "run": { "act": 1, "floor": 17, "ascension": 0 },
+  "player": {
+    "character": "The Ironclad",
+    "hp": 60,
+    "max_hp": 80,
+    "block": 0,
+    "gold": 220,
+    "status": [],
+    "relics": [
+      {
+        "id": "BURNING_BLOOD",
+        "name": "Burning Blood",
+        "description": "Heal 6 HP after each combat.",
+        "counter": null,
+        "keywords": []
+      }
+    ],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "relic_select": {
+    "prompt": "Choose a relic.",
+    "relics": [
+      {
+        "index": 0,
+        "id": "BLACK_STAR",
+        "name": "Black Star",
+        "description": "Elites drop an additional relic.",
+        "counter": null,
+        "rarity": "Boss",
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "id": "RUNIC_DOME",
+        "name": "Runic Dome",
+        "description": "Gain 1 Energy at the start of each turn. You can no longer see enemy Intents.",
+        "counter": null,
+        "rarity": "Boss",
+        "keywords": []
+      },
+      {
+        "index": 2,
+        "id": "SOZU",
+        "name": "Sozu",
+        "description": "Gain 1 Energy at the start of each turn. You can no longer obtain potions.",
+        "counter": null,
+        "rarity": "Boss",
+        "keywords": []
+      }
+    ],
+    "can_skip": true
+  }
+}

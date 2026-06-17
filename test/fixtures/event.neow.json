@@ -1,0 +1,53 @@
+{
+  "state_type": "event",
+  "run": { "act": 1, "floor": 0, "ascension": 0 },
+  "player": {
+    "character": "The Defect",
+    "hp": 75,
+    "max_hp": 75,
+    "block": 0,
+    "gold": 99,
+    "status": [],
+    "relics": [],
+    "potions": [],
+    "max_potion_slots": 3
+  },
+  "event": {
+    "event_id": "NEOW",
+    "event_name": "Neow",
+    "is_ancient": true,
+    "in_dialogue": false,
+    "body": "Neow speaks of fortune.",
+    "options": [
+      {
+        "index": 0,
+        "title": "Max HP",
+        "description": "Gain 10 Max HP.",
+        "is_locked": false,
+        "is_proceed": false,
+        "was_chosen": false,
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "title": "Relic",
+        "description": "Obtain a random Common relic.",
+        "is_locked": false,
+        "is_proceed": false,
+        "was_chosen": false,
+        "relic_name": "Vajra",
+        "relic_description": "At the start of each combat, gain 1 Strength.",
+        "keywords": []
+      },
+      {
+        "index": 2,
+        "title": "Card",
+        "description": "Choose a card to add to your deck.",
+        "is_locked": false,
+        "is_proceed": false,
+        "was_chosen": false,
+        "keywords": []
+      }
+    ]
+  }
+}

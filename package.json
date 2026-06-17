@@ -1,0 +1,107 @@
+{
+  "name": "spirebound",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Spirebound — a Slay the Spire 2 hub: browse cards, relics, potions, builds, and a deck builder (in-game overlay coming soon)",
+  "author": "wasse",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "smoke:cardReward": "cross-env MOCK_STATE=test/fixtures/cardReward.ironclad-act1.json electron-vite dev",
+    "smoke:map": "cross-env MOCK_STATE=test/fixtures/map.act1-floor3.json electron-vite dev",
+    "smoke:event": "cross-env MOCK_STATE=test/fixtures/event.neow.json electron-vite dev",
+    "smoke:relicSelect": "cross-env MOCK_STATE=test/fixtures/relicSelect.bossRelics.json electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "start": "electron-vite preview",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts,.tsx src",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "pack": "electron-vite build && electron-builder --dir",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "dependencies": {
+    "electron-store": "^10.0.0",
+    "electron-updater": "^6.8.9",
+    "pino": "^9.5.0",
+    "undici": "^7.0.0",
+    "xxhash-wasm": "^1.1.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "electron": "^42.0.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^5.0.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.2",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^7.0.0",
+    "vitest": "^3.0.0"
+  },
+  "build": {
+    "appId": "io.wasse.spirebound",
+    "productName": "Spirebound",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/tier-cache",
+        "to": "tier-cache"
+      },
+      {
+        "from": "resources/spire-archive",
+        "to": "spire-archive"
+      },
+      {
+        "from": "resources/compendium",
+        "to": "compendium"
+      },
+      {
+        "from": "resources/mod",
+        "to": "mod"
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "YOUR_GITHUB_USERNAME",
+        "repo": "spirebound"
+      }
+    ]
+  }
+}
