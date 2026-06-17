@@ -40,6 +40,24 @@ export interface EventEntry {
   tags?: string[]
 }
 
+/** A reference to where a build's strategy is sourced / can be read about. */
+export interface BuildSource {
+  /** Human-readable label, e.g. "spire-archive.com — card & relic data". */
+  label: string
+  /** Optional link opened in the browser. */
+  url?: string
+}
+
+/** Phase-by-phase piloting plan, shown in the build detail view. */
+export interface BuildGamePlan {
+  /** Act 1 / opening: what to set up first. */
+  early?: string
+  /** Act 2: how the engine comes online. */
+  mid?: string
+  /** Act 3 / bosses: how you actually close games. */
+  late?: string
+}
+
 /** A curated, rateable build/archetype for a character. */
 export interface BuildEntry {
   id: string
@@ -57,8 +75,22 @@ export interface BuildEntry {
   keyCards?: string[]
   /** Signature relic ids. */
   keyRelics?: string[]
-  /** How to pilot the build. */
+  /** Short paragraph: how to pilot the build. */
   howToPlay?: string
+  /** Piloting difficulty for newcomers. */
+  difficulty?: 'Easy' | 'Medium' | 'Hard'
+  /** The single thing that actually wins the game with this deck. */
+  winCondition?: string
+  /** Phase-by-phase plan across the run. */
+  gamePlan?: BuildGamePlan
+  /** Ordered pickup priorities — what to grab, and roughly when. */
+  priorities?: string[]
+  /** Short, concrete piloting tips. */
+  tips?: string[]
+  /** Common mistakes that sink the build. */
+  pitfalls?: string[]
+  /** Where the strategy is sourced / further reading. */
+  sources?: BuildSource[]
 }
 
 /** A buff / debuff / status / keyword and what it does. */

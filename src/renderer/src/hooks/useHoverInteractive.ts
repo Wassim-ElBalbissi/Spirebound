@@ -4,15 +4,22 @@ const LEAVE_GRACE_MS = 250
 
 /**
  * Click-through-when-idle interaction model: hovering the returned ref
- * disables ignore-mouse-events so the user can click inside the advice card.
- * A short grace period on leave prevents flicker when the cursor crosses a gap.
+ * disables ignore-mouse-events so the user can click inside that region; the
+ * rest of the overlay stays click-through. A short grace period on leave
+ * prevents flicker when the cursor crosses a gap.
+ *
+ * `enabled` lets a caller gate a region that mounts/unmounts (e.g. the settings
+ * panel) — the listeners (re)attach whenever it flips true with the element
+ * present, and detach (releasing interactivity) when it flips false.
  */
-export function useHoverInteractive<T extends HTMLElement>(): React.RefObject<T | null> {
+export function useHoverInteractive<T extends HTMLElement>(
+  enabled = true
+): React.RefObject<T | null> {
   const ref = useRef<T | null>(null)
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !window.overlay) return
+    if (!enabled || !el || !window.overlay) return
 
     let leaveTimer: number | null = null
     let interactive = false
@@ -47,7 +54,7 @@ export function useHoverInteractive<T extends HTMLElement>(): React.RefObject<T 
       if (leaveTimer !== null) window.clearTimeout(leaveTimer)
       if (interactive) void window.overlay!.setInteractive(false)
     }
-  }, [])
+  }, [enabled])
 
   return ref
 }

@@ -4,6 +4,8 @@ import { join } from 'path'
 import { rankCardOffers, sweetDeckSize } from '../../src/main/services/recommender/cardPick'
 import type { CardInstance } from '../../src/main/types/gameState'
 import type { TierBundle } from '../../src/main/types/tierData'
+import type { BuildMatch } from '../../src/main/services/recommender/buildMatch'
+import type { BuildEntry } from '../../src/main/types/compendium'
 
 function loadBundle(): TierBundle {
   const p = join(__dirname, '..', '..', 'resources', 'tier-cache', 'bundle.json')
@@ -77,6 +79,37 @@ describe('rankCardOffers', () => {
     expect(ranked.find((r) => r.id === 'COMPLETELY_MADE_UP')?.score).toBeGreaterThan(
       0
     )
+  })
+
+  it('boosts a key card of the matched build, bounded, with buildId', () => {
+    const bundle = loadBundle()
+    const matchedBuild: BuildMatch = {
+      build: {
+        id: 'ic_strength',
+        character: 'ironclad',
+        name: 'Strength Scaling',
+        keyCards: ['HEAVY_BLADE']
+      } as BuildEntry,
+      score: 0.6,
+      cardOverlap: new Set(),
+      relicOverlap: new Set()
+    }
+    const withBuild = rankCardOffers(
+      OFFERS,
+      { character: 'ironclad', deck: [], act: 1, floor: 4, matchedBuild },
+      bundle
+    ).find((r) => r.id === 'HEAVY_BLADE')!
+    const withoutBuild = rankCardOffers(
+      OFFERS,
+      { character: 'ironclad', deck: [], act: 1, floor: 4 },
+      bundle
+    ).find((r) => r.id === 'HEAVY_BLADE')!
+
+    expect(withBuild.breakdown.buildBonus).toBeGreaterThan(0)
+    expect(withBuild.breakdown.buildBonus).toBeLessThanOrEqual(12)
+    expect(withBuild.score).toBeGreaterThan(withoutBuild.score)
+    expect(withBuild.buildId).toBe('ic_strength')
+    expect(withoutBuild.breakdown.buildBonus).toBe(0)
   })
 
   it('sweetDeckSize grows with the act', () => {

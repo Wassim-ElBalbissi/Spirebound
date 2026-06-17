@@ -52,7 +52,7 @@
       "tier": "A",
       "blendedScore": 78,
       "commentary": "Scales hard with every point of Strength — your primary payoff for any Strength build. Mediocre without enablers, so prioritize it once you have a Strength source.",
-      "author": "SlayOverlay",
+      "author": "Wassim-ElBalbissi",
       "perSource": [{ "source": "fallback", "scoreRaw": 78, "fetchedAt": 0 }]
     },
     "INTIMIDATE": {
@@ -74,7 +74,7 @@
       "tier": "A",
       "blendedScore": 82,
       "commentary": "A one-card Strength engine that pays off immediately and compounds with every attack. Strong early pick that anchors the whole Strength archetype.",
-      "author": "SlayOverlay",
+      "author": "Wassim-ElBalbissi",
       "perSource": [{ "source": "fallback", "scoreRaw": 82, "fetchedAt": 0 }]
     },
     "ANGER": {
@@ -186,7 +186,7 @@
       "tier": "A",
       "blendedScore": 78,
       "commentary": "Turns every elite into double relics — exceptional in long runs where you can route through extra elites. Snowballs your whole relic economy.",
-      "author": "SlayOverlay",
+      "author": "Wassim-ElBalbissi",
       "perSource": [{ "source": "fallback", "scoreRaw": 78, "fetchedAt": 0 }]
     },
     "RUNIC_DOME": {

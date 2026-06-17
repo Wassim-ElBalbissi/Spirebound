@@ -45,6 +45,7 @@ export interface OverlayApi {
   calibrationClick(point: { x: number; y: number }): Promise<void>
   onCalibrationState(cb: (state: CalibrationStatePayload) => void): () => void
   openHub(): Promise<void>
+  openExternal(url: string): Promise<void>
   copyText(text: string): Promise<void>
   hubMinimize(): Promise<void>
   hubMaximizeToggle(): Promise<boolean>

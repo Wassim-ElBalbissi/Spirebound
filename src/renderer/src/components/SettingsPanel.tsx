@@ -64,7 +64,7 @@ export function SettingsPanel({
         <div className="mt-1 text-[10px] leading-snug text-zinc-500">
           {modProvidesPositions
             ? 'The mod is reporting card pixel positions directly — no calibration needed.'
-            : 'Per-card badges above the in-game hand. Install the SlayOverlay STS2MCP fork for pixel-perfect auto-positioning.'}
+            : 'Per-card badges above the in-game hand. Install the Spirebound STS2MCP fork for pixel-perfect auto-positioning.'}
         </div>
       </div>
 
@@ -73,6 +73,24 @@ export function SettingsPanel({
         value={settings.showPerCardBadges}
         onChange={(showPerCardBadges) => onChange({ showPerCardBadges })}
       />
+
+      <div className="border-t border-zinc-700/40 pt-2">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+          Combat
+        </div>
+        <ToggleRow
+          label="Adjust intents for Weak / Strength"
+          value={settings.applyIntentModifiers}
+          onChange={(applyIntentModifiers) =>
+            onChange({ applyIntentModifiers })
+          }
+        />
+        <div className="mt-1 text-[10px] leading-snug text-zinc-500">
+          Experimental. The mod usually shows the final intent number already —
+          enable only if intent damage looks too low against Weak / Strength
+          enemies.
+        </div>
+      </div>
 
       {!modProvidesPositions && (
         <div className="rounded-md border border-zinc-700/40 bg-zinc-800/30">

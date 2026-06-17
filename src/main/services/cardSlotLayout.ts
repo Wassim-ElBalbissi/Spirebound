@@ -42,7 +42,7 @@ export interface SlotLayoutInput {
   /** Pixel-accurate anchors from click-to-calibrate. If present, anchors win. */
   anchors?: AnchorCalibration | null
   /**
-   * Per-card rects from the SlayOverlay STS2MCP fork. When present and
+   * Per-card rects from the Spirebound STS2MCP fork. When present and
    * length matches handSize, these override everything else (pixel-perfect).
    * Coordinates are in viewport space; we scale to display space using
    * `modViewport` when needed.
@@ -75,7 +75,7 @@ export function estimateCardSlots(input: SlotLayoutInput): SlotRect[] {
   const { handSize, displayWidth, displayHeight } = input
   if (handSize <= 0) return []
 
-  // Mod-provided pixel positions (SlayOverlay STS2MCP fork) — pixel-perfect.
+  // Mod-provided pixel positions (Spirebound STS2MCP fork) — pixel-perfect.
   // Requires every hand card to have a `pos` and a viewport size we can
   // scale against the overlay's display rect.
   if (

@@ -4,12 +4,15 @@ import type {
   RawEnemy,
   RawGameState,
   RawIntent,
+  RawPotion,
   RawPower,
+  RawShop,
   RoomType
 } from '../types/rawState'
 import { canonicalCharacter } from '../types/rawState'
 import type {
   CardInstance,
+  CombatPotion,
   CombatState,
   EnemyState,
   EventChoice,
@@ -112,21 +115,7 @@ export function classifyScreen(raw: RawGameState): Screen {
     case 'fake_merchant': {
       const shop = raw.shop ?? raw.fake_merchant?.shop
       if (!shop || shop.error) return { kind: 'unknown' }
-      return {
-        kind: 'shop',
-        cards: (shop.cards ?? []).map((c) => ({
-          ...toCard(c),
-          price: c.price
-        })),
-        relics: (shop.relics ?? []).map((r) => ({
-          ...toRelic(r),
-          price: r.price
-        })),
-        potions: (shop.potions ?? []).map((p) => ({
-          ...toPotion(p),
-          price: p.price
-        }))
-      }
+      return { kind: 'shop', ...normalizeShopStock(shop) }
     }
 
     case 'rewards':
@@ -198,6 +187,62 @@ function toPotion(p: {
   return { id: p.id, name: p.name, description: p.description }
 }
 
+/**
+ * Normalize a STS2MCP shop into priced card / relic / potion lists.
+ *
+ * The mod ships a single flat `items` array discriminated by `category`
+ * (card / relic / potion / card_removal) with per-category prefixed fields. We
+ * skip out-of-stock rows (already purchased) and `card_removal` (no advice slot
+ * yet). A legacy `cards`/`relics`/`potions` shape is folded in defensively.
+ */
+function normalizeShopStock(shop: RawShop): {
+  cards: (CardInstance & { price: number })[]
+  relics: (RelicInstance & { price: number })[]
+  potions: (PotionInstance & { price: number })[]
+} {
+  const cards: (CardInstance & { price: number })[] = []
+  const relics: (RelicInstance & { price: number })[] = []
+  const potions: (PotionInstance & { price: number })[] = []
+
+  for (const item of shop.items ?? []) {
+    if (item.is_stocked === false) continue
+    const price = item.price ?? 0
+    if (item.category === 'card' && item.card_id) {
+      cards.push({
+        id: item.card_id,
+        name: item.card_name ?? item.card_id,
+        upgraded: false,
+        rarity: item.card_rarity,
+        type: item.card_type,
+        description: item.card_description,
+        price
+      })
+    } else if (item.category === 'relic' && item.relic_id) {
+      relics.push({
+        id: item.relic_id,
+        name: item.relic_name ?? item.relic_id,
+        description: item.relic_description,
+        counter: null,
+        price
+      })
+    } else if (item.category === 'potion' && item.potion_id) {
+      potions.push({
+        id: item.potion_id,
+        name: item.potion_name ?? item.potion_id,
+        description: item.potion_description,
+        price
+      })
+    }
+  }
+
+  // Defensive fallback for any build that exposes separate arrays.
+  for (const c of shop.cards ?? []) cards.push({ ...toCard(c), price: c.price })
+  for (const r of shop.relics ?? []) relics.push({ ...toRelic(r), price: r.price })
+  for (const p of shop.potions ?? []) potions.push({ ...toPotion(p), price: p.price })
+
+  return { cards, relics, potions }
+}
+
 function toEventChoice(o: {
   index: number
   title: string
@@ -249,7 +294,21 @@ function buildCombatState(raw: RawGameState): CombatState | null {
     hand: (player.hand ?? []).map(toHandCard),
     enemies: (battle.enemies ?? []).map(toEnemyState),
     playerStatus: (player.status ?? []).map(toPower),
+    potions: (player.potions ?? [])
+      .filter((p) => p.can_use_in_combat)
+      .map(toCombatPotion),
     viewport: player.viewport
+  }
+}
+
+function toCombatPotion(p: RawPotion): CombatPotion {
+  return {
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    targetType: p.target_type,
+    parsedDamage: parseDamage(p.description),
+    parsedBlock: parseBlock(p.description)
   }
 }
 
@@ -272,6 +331,7 @@ function toHandCard(card: RawCard): HandCard {
     unplayableReason: card.unplayable_reason,
     parsedDamage: parseDamage(card.description),
     parsedBlock: parseBlock(card.description),
+    parsedSelfDamage: parseSelfDamage(card.description),
     pos: card.pos
   }
 }
@@ -285,6 +345,8 @@ function parseCost(cost: string): number | 'X' | null {
 
 const DAMAGE_RE = /Deal\s+(\d+)\s+damage/i
 const BLOCK_RE = /Gain\s+(\d+)\s+Block/i
+// Self-harm: "Lose 6 HP", "lose 3 Health", or "take 2 damage" (e.g. Burn).
+const SELF_DAMAGE_RE = /(?:Lose|Take)\s+(\d+)\s+(?:HP|Health|damage)/i
 
 function parseDamage(description: string): number | null {
   const m = description.match(DAMAGE_RE)
@@ -293,6 +355,11 @@ function parseDamage(description: string): number | null {
 
 function parseBlock(description: string): number | null {
   const m = description.match(BLOCK_RE)
+  return m ? Number(m[1]) : null
+}
+
+function parseSelfDamage(description: string): number | null {
+  const m = description.match(SELF_DAMAGE_RE)
   return m ? Number(m[1]) : null
 }
 

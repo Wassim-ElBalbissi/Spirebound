@@ -105,6 +105,9 @@ const api = {
   openHub(): Promise<void> {
     return ipcRenderer.invoke(IpcChannels.hubOpen)
   },
+  openExternal(url: string): Promise<void> {
+    return ipcRenderer.invoke(IpcChannels.openExternal, url)
+  },
   copyText(text: string): Promise<void> {
     return ipcRenderer.invoke(IpcChannels.clipboardWrite, text)
   },

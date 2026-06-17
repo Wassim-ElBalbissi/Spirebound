@@ -26,6 +26,12 @@ export interface UserSettings {
   showCalibrationGrid: boolean
   /** Pixel-accurate anchors from the click-to-calibrate flow. */
   calibration: CalibrationAnchors | null
+  /**
+   * Adjust enemy intent damage by Weak / Strength in the threat panel.
+   * Off by default — the mod's intent label is believed to already show the
+   * final post-modifier number, so this would double-count until verified.
+   */
+  applyIntentModifiers: boolean
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -35,5 +41,6 @@ export const DEFAULT_SETTINGS: UserSettings = {
   verticalOffsetPct: 0,
   horizontalStretchPct: 0,
   showCalibrationGrid: false,
-  calibration: null
+  calibration: null,
+  applyIntentModifiers: false
 }

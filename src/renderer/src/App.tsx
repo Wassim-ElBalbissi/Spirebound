@@ -3,8 +3,8 @@ import type { CalibrationSource } from '../../main/types/recommendation'
 import { Header } from './components/Header'
 import { ConnectionBadge, ConnectionState } from './components/ConnectionBadge'
 import { CardPickAdvice } from './components/CardPickAdvice'
-import { MapPathAdvice } from './components/MapPathAdvice'
 import { RelicEventAdvice } from './components/RelicEventAdvice'
+import { ShopAdvice } from './components/ShopAdvice'
 import { CombatAdvice } from './components/CombatAdvice'
 import { CombatThreatChip } from './components/CombatThreatChip'
 import { OnboardingPanel } from './components/OnboardingPanel'
@@ -19,12 +19,24 @@ const STALE_MS = 2000
 const BASE_FONT_PX = 14
 
 export function App(): React.JSX.Element {
-  const cardRef = useHoverInteractive<HTMLDivElement>()
   const { state, health, recommendation } = useGameState()
   const showOnboarding = useOnboarding(health)
   const pinned = usePinned()
   const { settings, set } = useSettings()
   const [showSettings, setShowSettings] = useState(false)
+  // The advice body is read-only, so keep it click-through and only make the
+  // title bar interactive/draggable. When a panel with controls is up
+  // (onboarding or settings), make the whole card interactive instead.
+  const bodyInteractive = showOnboarding || showSettings
+  const headerRef = useHoverInteractive<HTMLDivElement>(!bodyInteractive)
+  // Panels with controls take over the whole card — force it interactive while
+  // they're open rather than waiting for a hover that may never re-fire (the
+  // cursor is already inside the card when the panel opens).
+  useEffect(() => {
+    if (!bodyInteractive) return
+    void window.overlay?.setInteractive(true)
+    return () => void window.overlay?.setInteractive(false)
+  }, [bodyInteractive])
   const [calibrationSource, setCalibrationSource] =
     useState<CalibrationSource>('heuristic')
   useEffect(() => {
@@ -53,12 +65,12 @@ export function App(): React.JSX.Element {
       className="h-screen w-screen p-2"
     >
       <div
-        ref={cardRef}
         style={{ backgroundColor: cardBg }}
         className={`h-full w-full rounded-xl border text-zinc-100 shadow-2xl backdrop-blur-md flex flex-col overflow-hidden ${
           pinned ? 'border-sky-500/70' : 'border-zinc-700/60'
         }`}
       >
+        <div ref={headerRef}>
         <Header
           right={
             <span className="flex items-center gap-2">
@@ -91,6 +103,7 @@ export function App(): React.JSX.Element {
             </span>
           }
         />
+        </div>
         <main className="flex-1 overflow-y-auto">
           {showSettings ? (
             <SettingsPanel
@@ -150,11 +163,11 @@ function Body({
           canSkip={recommendation.canSkip}
         />
       )
-    case 'mapPath':
-      return <MapPathAdvice paths={recommendation.paths} />
     case 'relicPick':
     case 'event':
       return <RelicEventAdvice recommendation={recommendation} />
+    case 'shopAdvice':
+      return <ShopAdvice items={recommendation.items} gold={recommendation.gold} />
     case 'combatPlay':
       return compactMode ? (
         <CombatThreatChip result={recommendation.result} />
@@ -179,7 +192,7 @@ function Idle({
       case 'rest':
         return 'Rest site — rest or smith based on your build.'
       case 'shop':
-        return 'Shop — purchase advice coming soon.'
+        return 'Shop — reading the stock…'
       case 'rewards':
         return 'Pick a reward to see card advice.'
       case 'menu':

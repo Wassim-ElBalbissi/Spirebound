@@ -103,7 +103,7 @@ export interface RawPlayer {
   potions: RawPotion[]
   max_potion_slots: number
   /**
-   * Game viewport rendering rect (w × h). Emitted by the SlayOverlay STS2MCP
+   * Game viewport rendering rect (w × h). Emitted by the Spirebound STS2MCP
    * fork alongside per-card `pos` so we can scale viewport → display.
    */
   viewport?: { w: number; h: number }
@@ -224,7 +224,40 @@ export interface RawRelicSelect {
   can_skip: boolean
 }
 
+/**
+ * A single purchasable in the STS2MCP shop. The mod emits one flat `items`
+ * array discriminated by `category`; the id/name/description fields are prefixed
+ * per category (card_*, relic_*, potion_*). `card_removal` rows have no payload
+ * beyond price.
+ */
+export interface RawShopItem {
+  index: number
+  category: 'card' | 'relic' | 'potion' | 'card_removal' | string
+  price: number
+  is_stocked?: boolean
+  can_afford?: boolean
+  on_sale?: boolean
+  card_id?: string
+  card_name?: string
+  card_type?: 'Attack' | 'Skill' | 'Power' | 'Status' | 'Curse' | string
+  card_cost?: string
+  card_star_cost?: string | null
+  card_rarity?: string
+  card_description?: string
+  relic_id?: string
+  relic_name?: string
+  relic_description?: string
+  potion_id?: string
+  potion_name?: string
+  potion_description?: string
+  keywords?: RawKeyword[]
+}
+
 export interface RawShop {
+  /** STS2MCP's flat stock list, discriminated by `category`. */
+  items?: RawShopItem[]
+  can_proceed?: boolean
+  /** Legacy / alternate shape kept as a defensive fallback. */
   cards?: (RawCard & { price: number })[]
   relics?: (RawRelic & { price: number; index: number })[]
   potions?: (RawPotion & { price: number; index: number })[]

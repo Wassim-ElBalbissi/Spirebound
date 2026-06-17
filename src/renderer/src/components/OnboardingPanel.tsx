@@ -48,7 +48,7 @@ export function OnboardingPanel({
           The overlay reads run state from a small mod that exposes the game's
           state on{' '}
           <span className="font-mono text-zinc-300">localhost:15526</span>. The
-          SlayOverlay build also emits hand-card pixel positions for
+          Spirebound build also emits hand-card pixel positions for
           auto-calibration — no clicks required.
         </div>
       </div>

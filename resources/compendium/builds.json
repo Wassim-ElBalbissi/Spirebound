@@ -5,11 +5,40 @@
     "name": "Strength Scaling",
     "tier": "S",
     "rating": 92,
+    "difficulty": "Easy",
     "summary": "Stack Strength and end fights with one giant hit.",
     "archetypeTags": ["strength", "attack"],
-    "keyCards": ["INFLAME", "DEMON_FORM", "HEAVY_BLADE", "MANGLE", "RUPTURE"],
-    "keyRelics": ["GIRYA", "VAJRA", "BURNING_BLOOD"],
-    "howToPlay": "Grab a Strength source as early as possible — Inflame on turn 1, then Demon Form for runaway scaling. Thin the deck hard so you redraw your payoffs (Heavy Blade, Mangle) every turn. Vajra and Girya add free Strength; once you're at high Strength, a single big attack closes most fights. Vulnerable from Bash/Mangle multiplies the finisher."
+    "winCondition": "One Strength-boosted attack — Bludgeon or Hemokinesis — hits hard enough to end the fight, especially through Vulnerable.",
+    "keyCards": ["INFLAME", "DEMON_FORM", "HEMOKINESIS", "BLUDGEON", "RUPTURE"],
+    "keyRelics": ["GIRYA", "VAJRA", "RUINED_HELMET"],
+    "howToPlay": "Grab a Strength source as early as possible — Inflame on turn 1, then Demon Form for runaway scaling. Thin the deck hard so you redraw your payoffs every turn. Vajra and Ruined Helmet front-load Strength; once you're stacked, a single Bludgeon or Hemokinesis closes most fights, especially through Vulnerable from Bash.",
+    "gamePlan": {
+      "early": "Pick up an early Strength source — Inflame is the priority. Vajra gives 1 Strength from turn one, and Ruined Helmet doubles your first Strength gain each combat, so play Inflame before anything else that grants Strength.",
+      "mid": "Land Demon Form as soon as you can afford the 3-energy turn; it snowballs 2 Strength every turn. Thin the deck (remove Strikes/Defends) so you redraw Bludgeon and Hemokinesis reliably. Rupture turns self-damage like Hemokinesis into even more Strength.",
+      "late": "By Act 3 your per-hit Strength is enormous. Bludgeon (32 base) and multi-hit attacks scale per hit, so a single big swing — set up with Vulnerable — closes elites and bosses before they ramp."
+    },
+    "priorities": [
+      "Inflame — your first Strength payoff",
+      "Demon Form — the runaway scaling engine",
+      "A finisher: Bludgeon or Hemokinesis",
+      "Rupture if you run self-damage",
+      "Girya, Vajra, Ruined Helmet when offered"
+    ],
+    "tips": [
+      "Always play Inflame before relics/cards that double or scale Strength.",
+      "Apply Vulnerable (Bash) the turn you swing your finisher — it multiplies the whole hit.",
+      "Multi-hit attacks gain Strength on every hit, so they out-scale single big hits as Strength climbs."
+    ],
+    "pitfalls": [
+      "Don't dilute the deck — extra cards mean you draw Bludgeon less often.",
+      "Demon Form does nothing the turn you play it; only commit when you can survive the tempo loss.",
+      "Strength-down effects can stall you — keep a backup damage source."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "ic_block",
@@ -17,11 +46,81 @@
     "name": "Barricade Wall",
     "tier": "A",
     "rating": 80,
+    "difficulty": "Medium",
     "summary": "Keep Block across turns and convert it into damage.",
     "archetypeTags": ["block-scaling", "block", "exhaust"],
+    "winCondition": "Pile Block sky-high behind Barricade, then cash it in with Body Slam for a one-shot.",
     "keyCards": ["BARRICADE", "BODY_SLAM", "JUGGERNAUT", "FEEL_NO_PAIN", "IMPERVIOUS"],
     "keyRelics": ["BURNING_BLOOD", "SELF_FORMING_CLAY"],
-    "howToPlay": "Find Barricade so Block stops expiring, then pile it up turn over turn. Juggernaut turns that Block into chip damage and Body Slam turns it into a finisher. Feel No Pain rewards exhausting your junk. You out-last everything — great into hard-hitting bosses where survival is the whole problem."
+    "howToPlay": "Find Barricade so Block stops expiring, then pile it up turn over turn. Juggernaut turns that Block into chip damage and Body Slam turns it into a finisher. Feel No Pain rewards exhausting your junk. You out-last everything — great into hard-hitting bosses where survival is the whole problem.",
+    "gamePlan": {
+      "early": "Survive and stay healthy — Burning Blood heals after each fight. Pick block cards and start exhausting junk so Feel No Pain pays off.",
+      "mid": "Barricade is the keystone: once Block stops expiring, every Defend and Iron Wave permanently adds to your wall. Juggernaut converts each Block gain into chip damage so you're not passive.",
+      "late": "Stack Block over several turns, then Body Slam for a finisher equal to your entire wall. Impervious (30 Block) is a panic button against big boss hits."
+    },
+    "priorities": [
+      "Barricade — run-defining; grab it whenever offered",
+      "Body Slam — your Block-into-damage finisher",
+      "Juggernaut — passive damage while you wall up",
+      "Feel No Pain plus exhaust fodder",
+      "Self-Forming Clay and Burning Blood"
+    ],
+    "tips": [
+      "Without Barricade the deck still works as a Juggernaut chip deck — don't be afraid to start the engine early.",
+      "Body Slam scales with the Block you have when you play it, so play your block cards first.",
+      "Feel No Pain rewards exhausting Strikes/Defends you no longer need."
+    ],
+    "pitfalls": [
+      "Body Slam is dead without Block on the board — sequence it last.",
+      "Too many low-impact block cards clog your draws; keep the deck lean.",
+      "You out-last fights but can be slow — watch for time-based enemy ramps."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "ic_exhaust",
+    "character": "ironclad",
+    "name": "Corruption Engine",
+    "tier": "A",
+    "rating": 85,
+    "difficulty": "Hard",
+    "summary": "Make every Skill free, chain your deck, then detonate the exhaust pile.",
+    "archetypeTags": ["exhaust", "block", "attack"],
+    "winCondition": "Corruption plus Dark Embrace turns each free Skill into a draw, Block and chip loop, then Fiend Fire or Ashen Strike detonates the exhaust pile.",
+    "keyCards": ["CORRUPTION", "DARK_EMBRACE", "FEEL_NO_PAIN", "FIEND_FIRE", "ASHEN_STRIKE"],
+    "keyRelics": ["CHARONS_ASHES", "BURNING_BLOOD"],
+    "howToPlay": "Resolve around Corruption — once it's down, Skills are free and self-exhaust, so Dark Embrace turns the turn into a long draw chain. Feel No Pain and Charon's Ashes convert all that exhausting into Block and AoE chip. Cash out with Ashen Strike (scales off the exhaust pile) or Fiend Fire (empties your hand).",
+    "gamePlan": {
+      "early": "Collect exhaust payoffs (Feel No Pain, Charon's Ashes) and a couple of cheap Skills. Without Corruption the deck just grinds — that's fine for Act 1.",
+      "mid": "Corruption is the linchpin: it makes all Skills cost 0 and exhausts them on play. With Dark Embrace down, each free Skill draws a card, so you chain your whole deck in one turn while Feel No Pain and Charon's Ashes pile up Block and AoE damage.",
+      "late": "Ashen Strike scales with a huge exhaust pile; Fiend Fire empties your hand for massive single-target damage. You routinely take a 10+ card turn that both walls and kills."
+    },
+    "priorities": [
+      "Corruption — the build doesn't exist without it",
+      "Dark Embrace — keeps the chain drawing",
+      "Feel No Pain and Charon's Ashes — Block and AoE per exhaust",
+      "A payoff: Fiend Fire or Ashen Strike",
+      "Cheap Skills to fuel the loop"
+    ],
+    "tips": [
+      "Sequence Dark Embrace and Feel No Pain BEFORE you dump Skills so you get the draws and Block.",
+      "Hold Fiend Fire until your hand is full of spent cards for maximum hits.",
+      "Under Corruption even Defend is free card draw with Dark Embrace."
+    ],
+    "pitfalls": [
+      "Drawing Fiend Fire with an empty hand wastes it.",
+      "No Corruption by mid-Act 2 means the deck underperforms — have a backup plan.",
+      "Over-exhausting your own payoffs can deck you out; keep enough cards to function."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "si_poison",
@@ -29,11 +128,40 @@
     "name": "Poison Inevitability",
     "tier": "S",
     "rating": 90,
+    "difficulty": "Easy",
     "summary": "Apply enough Poison that the math is already over.",
     "archetypeTags": ["poison"],
+    "winCondition": "Stack enough Poison that the enemy is dead on the clock before it can threaten you.",
     "keyCards": ["DEADLY_POISON", "NOXIOUS_FUMES", "ENVENOM", "BOUNCING_FLASK"],
-    "keyRelics": ["ROYAL_POISON", "TWISTED_FUNNEL"],
-    "howToPlay": "Front-load Poison: Noxious Fumes stacks it every turn for free, Deadly Poison and Bouncing Flask spike it on demand. Then just survive — Poison does the killing on its own, which is ideal against high-HP elites and bosses. Envenom adds Poison to every attack so your normal hits also ramp it."
+    "keyRelics": ["TWISTED_FUNNEL", "SNECKO_SKULL"],
+    "howToPlay": "Front-load Poison: Noxious Fumes stacks it every turn for free, Deadly Poison and Bouncing Flask spike it on demand. Then just survive — Poison does the killing on its own, which is ideal against high-HP elites and bosses. Envenom adds Poison to every attack so your normal hits also ramp it.",
+    "gamePlan": {
+      "early": "Get Noxious Fumes online fast — it stacks Poison every turn for free and snowballs the longer a fight runs. Twisted Funnel front-loads 4 Poison on all enemies at combat start.",
+      "mid": "Layer on-demand Poison (Deadly Poison, Bouncing Flask) and Snecko Skull (+1 per application). Envenom makes every attack also apply Poison, so your normal hits ramp it too.",
+      "late": "Against high-HP elites and bosses, Poison does the killing while you block and survive. Poison multipliers, if found, make the totals explode."
+    },
+    "priorities": [
+      "Noxious Fumes — free per-turn stacking, top priority",
+      "Deadly Poison / Bouncing Flask — burst Poison",
+      "Envenom — every attack ramps Poison",
+      "Snecko Skull and Twisted Funnel relics",
+      "A few block cards to survive the clock"
+    ],
+    "tips": [
+      "Front-load Poison: it ticks every enemy turn, so applying early is worth far more than late.",
+      "Snecko Skull adds +1 to every Poison application — get it down before mass-application cards.",
+      "You rarely need big attacks — invest in survival and let Poison close."
+    ],
+    "pitfalls": [
+      "Artifact on enemies blocks the first debuff — strip it before committing Poison.",
+      "Short fights undercut Poison; keep some direct damage for trash mobs.",
+      "Don't overdraw attacks — block plus Poison ramp beats raw aggression here."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "si_shiv",
@@ -41,11 +169,81 @@
     "name": "Shiv Storm",
     "tier": "A",
     "rating": 82,
+    "difficulty": "Medium",
     "summary": "Flood each turn with free Shivs and per-Shiv payoffs.",
     "archetypeTags": ["shiv", "draw-cycle"],
-    "keyCards": ["BLADE_DANCE", "INFINITE_BLADES", "ACCURACY", "CLOAK_AND_DAGGER"],
-    "keyRelics": ["RING_OF_THE_SNAKE", "NINJA_SCROLL"],
-    "howToPlay": "Infinite Blades gives a Shiv every turn; Blade Dance and Cloak and Dagger dump a fistful at once. Accuracy makes each Shiv hit hard, turning chip into real damage. Draw aggressively so you keep playing Shivs — fast clears keep you healthy through the act."
+    "winCondition": "Each turn you play a fistful of buffed Shivs; with Accuracy and Phantom Blades they hit like real attacks.",
+    "keyCards": ["BLADE_DANCE", "INFINITE_BLADES", "ACCURACY", "CLOAK_AND_DAGGER", "FAN_OF_KNIVES", "PHANTOM_BLADES"],
+    "keyRelics": ["RING_OF_THE_SNAKE", "NINJA_SCROLL", "HELICAL_DART"],
+    "howToPlay": "Infinite Blades gives a Shiv every turn; Blade Dance and Cloak and Dagger dump a fistful at once. Accuracy makes each Shiv hit hard, turning chip into real damage. Phantom Blades lets you bank Shivs and supercharges the first one. Fan of Knives flips the whole deck into AoE.",
+    "gamePlan": {
+      "early": "Pick up Shiv generators (Blade Dance, Cloak and Dagger) and aim for Accuracy early so Shivs stop being chip. Ninja Scroll and Ring of the Snake fuel the opening hand.",
+      "mid": "Infinite Blades gives a free Shiv every turn; Phantom Blades makes them Retain and supercharges the first one. Helical Dart turns each Shiv into Dexterity, so you also wall up while attacking.",
+      "late": "Fan of Knives makes every Shiv hit all enemies — pair it with Accuracy for board-wide kills. Fast clears keep you healthy through the act."
+    },
+    "priorities": [
+      "Accuracy — turns Shivs from chip into damage",
+      "Infinite Blades — a free Shiv every turn",
+      "Phantom Blades / Fan of Knives — per-Shiv payoff and AoE",
+      "Blade Dance / Cloak and Dagger generators",
+      "Ninja Scroll and Helical Dart relics"
+    ],
+    "tips": [
+      "Get a Shiv damage buff (Accuracy) before flooding Shivs, or you're just spinning your wheels.",
+      "Phantom Blades' Retain lets you bank Shivs for a big alpha strike.",
+      "Fan of Knives makes this a premier AoE deck — prioritize it in multi-enemy acts."
+    ],
+    "pitfalls": [
+      "Shivs without Accuracy or Phantom Blades barely scratch bosses.",
+      "Don't clog your deck with too many generators and no payoff.",
+      "Watch hand size — Shivs can crowd out your engine cards."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "si_discard",
+    "character": "silent",
+    "name": "Discard Tempo",
+    "tier": "B",
+    "rating": 76,
+    "difficulty": "Medium",
+    "summary": "Cycle the deck every turn and turn discards into damage and Block.",
+    "archetypeTags": ["discard", "draw-cycle"],
+    "winCondition": "Cycle your whole deck each turn; Tingsha and Tough Bandages turn every discard into damage and Block, and Memento Mori cashes the discards into one big hit.",
+    "keyCards": ["CALCULATED_GAMBLE", "ACROBATICS", "MEMENTO_MORI", "DAGGER_THROW"],
+    "keyRelics": ["TINGSHA", "TOUGH_BANDAGES"],
+    "howToPlay": "Churn your hand: Acrobatics and Calculated Gamble discard and redraw, and Tingsha plus Tough Bandages convert each discard into damage and Block. Sequence a big discard turn, then Memento Mori for a finisher that scales with everything you tossed.",
+    "gamePlan": {
+      "early": "Grab discard payoffs (Tingsha, Tough Bandages) and cheap draw. Early on you're just churning cards to find your pieces.",
+      "mid": "Calculated Gamble and Acrobatics let you redraw aggressively. With Tingsha down, each discarded card pings an enemy; Tough Bandages walls you for every discard.",
+      "late": "Memento Mori scales with discards this turn — set up a big discard turn with Calculated Gamble and drop it for a finisher."
+    },
+    "priorities": [
+      "Tingsha — damage per discard, the core engine",
+      "Tough Bandages — Block per discard",
+      "Calculated Gamble / Acrobatics — mass cycling",
+      "Memento Mori — discard-payoff finisher",
+      "Cheap draw to keep cards flowing"
+    ],
+    "tips": [
+      "Play the discard-payoff relics' enablers BEFORE discarding for full value.",
+      "Calculated Gamble before Memento Mori maximizes the discard count.",
+      "Discarding is your tempo — don't hoard cards."
+    ],
+    "pitfalls": [
+      "Without Tingsha or Tough Bandages, discarding is pure card disadvantage.",
+      "Memento Mori whiffs if you haven't discarded yet that turn.",
+      "Be careful discarding your only block when you're behind."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "de_lightning",
@@ -53,11 +251,40 @@
     "name": "Focused Lightning",
     "tier": "S",
     "rating": 88,
+    "difficulty": "Medium",
     "summary": "Channel Lightning, crank Focus, let the orbs do the work.",
     "archetypeTags": ["orb-gen", "focus", "lightning"],
-    "keyCards": ["BALL_LIGHTNING", "DEFRAGMENT", "BIASED_COGNITION", "DUALCAST"],
-    "keyRelics": ["CRACKED_CORE", "DATA_DISK"],
-    "howToPlay": "Build Focus early (Defragment, Biased Cognition) so every orb is worth more. Channel Lightning for scaling, auto-targeting AoE, and use Dualcast/evoke to spike a big single turn when needed. Data Disk gives you a Focus head start. Mind Biased Cognition's drawback and close before it bites."
+    "winCondition": "High Focus makes every Lightning orb's passive and evoke huge; auto-targeting AoE clears boards while you keep scaling.",
+    "keyCards": ["BALL_LIGHTNING", "DEFRAGMENT", "BIASED_COGNITION", "DUALCAST", "STORM"],
+    "keyRelics": ["CRACKED_CORE", "DATA_DISK", "GOLD_PLATED_CABLES"],
+    "howToPlay": "Build Focus early (Defragment, Biased Cognition) so every orb is worth more. Channel Lightning for scaling, auto-targeting AoE, and use Dualcast/evoke to spike a big single turn when needed. Data Disk gives you a Focus head start. Mind Biased Cognition's drawback and close before it bites.",
+    "gamePlan": {
+      "early": "Channel Lightning early — Cracked Core gives one for free. Pick up Defragment to start raising Focus, since every point makes all orbs stronger.",
+      "mid": "Stack Focus (Defragment, Biased Cognition, Data Disk). Storm channels Lightning whenever you play a Power, so a Power-heavy turn floods orbs. Gold-Plated Cables doubles your rightmost orb's passive.",
+      "late": "Dualcast and Multi-Cast evoke for a huge single burst when you need it. Mind Biased Cognition's -1 Focus per turn and close fights before it bites."
+    },
+    "priorities": [
+      "Defragment — cheap, repeatable Focus",
+      "A Lightning source: Ball Lightning or Zap",
+      "Biased Cognition — a big Focus spike",
+      "Storm — orb flood off Powers",
+      "Cracked Core, Data Disk, Gold-Plated Cables relics"
+    ],
+    "tips": [
+      "Raise Focus before a long fight — it retroactively buffs every orb.",
+      "Storm plus several Powers in one turn channels a wall of Lightning.",
+      "Save Dualcast for when your rightmost orb is a high-value Lightning."
+    ],
+    "pitfalls": [
+      "Biased Cognition bleeds Focus each turn — don't open with it in a grind.",
+      "Evoking too early wastes orbs you could have scaled.",
+      "Orb slots are finite; over-channeling pushes good orbs off the board."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "de_frost",
@@ -65,11 +292,81 @@
     "name": "Frost Tank",
     "tier": "B",
     "rating": 72,
+    "difficulty": "Medium",
     "summary": "Stall behind a wall of Frost while a slow win matures.",
     "archetypeTags": ["orb-gen", "focus", "frost"],
+    "winCondition": "A wall of Frost orbs makes you nearly unkillable while a slow chip or scaling source grinds the fight out.",
     "keyCards": ["GLACIER", "COOLHEADED", "HAILSTORM", "ICE_LANCE"],
-    "keyRelics": ["CRACKED_CORE", "DATA_DISK"],
-    "howToPlay": "Channel Frost for near-unkillable Block and raise Focus so each orb blocks more. Coolheaded keeps the orbs (and your draw) flowing. You won't kill fast, so pair it with a chip or scaling win condition and grind out fights you simply can't lose."
+    "keyRelics": ["CRACKED_CORE", "DATA_DISK", "RUNIC_CAPACITOR"],
+    "howToPlay": "Channel Frost for near-unkillable Block and raise Focus so each orb blocks more. Coolheaded keeps the orbs (and your draw) flowing. You won't kill fast, so pair it with a chip or scaling win condition and grind out fights you simply can't lose.",
+    "gamePlan": {
+      "early": "Channel Frost for Block and raise Focus so each Frost orb blocks more. Coolheaded keeps both orbs and draw flowing.",
+      "mid": "With several Frost orbs and Focus, you take almost no damage. Runic Capacitor's extra orb slots let you hold a bigger wall. Hailstorm adds passive chip every turn you hold Frost.",
+      "late": "You won't kill fast — pair Frost with a chip or scaling win condition (Hailstorm, a Lightning splash) and grind out fights you can't lose."
+    },
+    "priorities": [
+      "Frost sources: Glacier, Coolheaded",
+      "Focus (Defragment) to buff Frost Block",
+      "Runic Capacitor — more orb slots",
+      "Hailstorm — passive damage while tanking",
+      "A backup damage source for the long game"
+    ],
+    "tips": [
+      "Focus buffs Frost Block too — raising it makes you tankier, not just punchier.",
+      "Coolheaded is your glue: Frost plus a card keeps the engine and the wall going.",
+      "Hailstorm is your patient win condition — keep at least one Frost up each end-of-turn."
+    ],
+    "pitfalls": [
+      "Pure Frost has no kill — you'll time out fights without a damage plan.",
+      "Don't evoke your Frost wall unless you need the burst Block.",
+      "Too few orb slots cap your defense; prioritize Capacitor."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "de_dark",
+    "character": "defect",
+    "name": "Dark Orb Detonation",
+    "tier": "A",
+    "rating": 83,
+    "difficulty": "Hard",
+    "summary": "Compound Dark orbs every turn, then evoke them for one nuke.",
+    "archetypeTags": ["orb-gen", "focus", "dark", "evoke"],
+    "winCondition": "Dark orbs grow every turn; Darkness pumps them and Multi-Cast evokes for one massive nuke.",
+    "keyCards": ["CONSUMING_SHADOW", "DARKNESS", "MULTI_CAST", "DEFRAGMENT", "RAINBOW"],
+    "keyRelics": ["SYMBIOTIC_VIRUS", "CRACKED_CORE", "RUNIC_CAPACITOR"],
+    "howToPlay": "Build a board of Dark orbs and let them compound — each turn they grow, and Darkness triggers all of their passives at once for accelerated scaling. Keep slots open so they don't fall off, raise Focus to amplify them, then Multi-Cast to evoke the loaded orbs for a single enormous hit.",
+    "gamePlan": {
+      "early": "Channel Dark early (Symbiotic Virus gives one free) and start raising Focus. Dark orbs gain power each turn they sit, so an early board pays off later.",
+      "mid": "Darkness triggers every Dark orb's passive at once, accelerating their growth. Keep several orb slots open (Runic Capacitor) so the Dark orbs keep compounding instead of falling off.",
+      "late": "Once your Dark orbs are loaded, Multi-Cast (or Consuming Shadow's end-turn evoke) detonates them for a fight-ending burst. Rainbow diversifies if you want passive chip while charging."
+    },
+    "priorities": [
+      "A Dark source: Symbiotic Virus, Consuming Shadow",
+      "Darkness — multiplies all Dark orb growth",
+      "Focus (Defragment) — buffs Dark damage too",
+      "Multi-Cast — the detonator",
+      "Runic Capacitor for orb slots"
+    ],
+    "tips": [
+      "Darkness is a multiplier on a wide Dark board — channel several before spamming it.",
+      "Focus increases Dark orb damage, so it's never a wasted pick.",
+      "Hold Multi-Cast until your rightmost Dark orb is fully charged."
+    ],
+    "pitfalls": [
+      "Evoking Dark orbs early throws away all their accrued damage.",
+      "Without enough orb slots the build can't hold a board — Capacitor is near-mandatory.",
+      "Slow to come online; keep block to survive the charge-up."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "re_stars",
@@ -77,22 +374,244 @@
     "name": "Star Decrees",
     "tier": "A",
     "rating": 83,
+    "difficulty": "Medium",
     "summary": "Bank Stars and unload game-swinging payoffs.",
     "archetypeTags": ["star-gen", "star-spend", "decree"],
-    "keyCards": ["FALLING_STAR", "DYING_STAR", "CHILD_OF_THE_STARS", "GATHER_LIGHT"],
-    "keyRelics": ["REGALITE", "GALACTIC_DUST"],
-    "howToPlay": "Generate Stars consistently (Gather Light, Child of the Stars) so your big Star-cost cards stay online. Falling Star and Dying Star are your payoffs — hold Stars for the turn you need a swing. Regalite smooths your Star economy so you're never stuck unable to spend."
+    "winCondition": "Bank Stars, then unload high-Star payoffs (Comet, Dying Star) for swing turns that also debuff and block.",
+    "keyCards": ["GATHER_LIGHT", "GENESIS", "FALLING_STAR", "DYING_STAR", "COMET", "CHILD_OF_THE_STARS"],
+    "keyRelics": ["REGALITE", "GALACTIC_DUST", "LUNAR_PASTRY"],
+    "howToPlay": "Generate Stars consistently (Gather Light, Genesis) so your big Star-cost cards stay online. Falling Star, Dying Star and Comet are your payoffs — hold Stars for the turn you need a swing. Child of the Stars and Galactic Dust turn that spending into Block so big turns are also defensive.",
+    "gamePlan": {
+      "early": "Set up reliable Star generation — Gather Light and Solar Strike give Stars while doing something useful. Look for Genesis to bank Stars passively.",
+      "mid": "Genesis banks 2 Stars a turn. Child of the Stars and Galactic Dust convert Star spending into Block, so big Star turns also keep you safe. Don't spend Stars you don't need yet — hold for the payoff.",
+      "late": "Comet (5 Stars: 33 to all plus Weak and Vulnerable) and Dying Star (strips 9 Strength from all enemies) are game-swinging. Time them for the turn a boss would otherwise spike you."
+    },
+    "priorities": [
+      "Genesis — passive Star income",
+      "Star generators: Gather Light, Solar Strike, Shining Strike",
+      "Payoffs: Dying Star, Comet",
+      "Child of the Stars — Block from spending",
+      "Regalite, Galactic Dust, Lunar Pastry relics"
+    ],
+    "tips": [
+      "Stars are a savings account — bank them and spend on the highest-impact turn.",
+      "Child of the Stars and Galactic Dust make big Star dumps defensive as well as offensive.",
+      "Dying Star's mass Strength-down neuters multi-attacker boss turns."
+    ],
+    "pitfalls": [
+      "Spending Stars on weak payoffs starves your big ones.",
+      "No Star income means dead high-cost cards; prioritize generation first.",
+      "Dying Star is Ethereal — use it the turn you draw it or lose it."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "re_forge",
+    "character": "regent",
+    "name": "Sovereign Blade Forge",
+    "tier": "A",
+    "rating": 84,
+    "difficulty": "Hard",
+    "summary": "Forge the Sovereign Blade huge, then hit many times with it.",
+    "archetypeTags": ["forge", "attack"],
+    "winCondition": "Forge stacks raise Sovereign Blade's damage; Sword Sage and Seeking Edge make it hit many times or all enemies for a repeated heavy hitter.",
+    "keyCards": ["SUMMON_FORTH", "SEEKING_EDGE", "SWORD_SAGE", "CONQUEROR", "THE_SMITH", "WROUGHT_IN_WAR"],
+    "keyRelics": ["FENCING_MANUAL", "PEN_NIB"],
+    "howToPlay": "Forge is permanent attack scaling for this combat — stack it high (The Smith, Wrought in War, Fencing Manual) and deliver it through the Sovereign Blade, which you fetch with Summon Forth. Sword Sage (extra hit) and Seeking Edge (hits all) multiply every point of Forge; Conqueror doubles the Blade for a one-turn spike.",
+    "gamePlan": {
+      "early": "Forge whenever you can — Fencing Manual forges 10 at the start of every combat — and pull the Sovereign Blade out with Summon Forth. Even unbuffed it's a solid attack.",
+      "mid": "Stack Forge fast — The Smith forges 30 in one card. Sword Sage adds an extra hit and Seeking Edge makes the Blade hit all enemies, multiplying your Forge investment across the board.",
+      "late": "A heavily Forged Sovereign Blade hitting multiple times via Sword Sage deletes elites and clears packs with Seeking Edge. Conqueror doubles it for a burst boss turn."
+    },
+    "priorities": [
+      "Summon Forth — fetches the Sovereign Blade reliably",
+      "Forge sources: The Smith, Wrought in War, Fencing Manual",
+      "Sword Sage — an extra hit multiplies Forge",
+      "Seeking Edge — makes the Blade AoE",
+      "Conqueror for burst, Pen Nib relic"
+    ],
+    "tips": [
+      "Forge early and often — it carries across the whole fight.",
+      "Once you have a Forge base, Sword Sage's extra hit is worth more than more Forge.",
+      "Seeking Edge turns single-target Forge into board-wide clears."
+    ],
+    "pitfalls": [
+      "No Sovereign Blade in hand means your Forge does nothing — keep Summon Forth handy.",
+      "Forge resets between combats; don't try to 'save' it.",
+      "The engine is setup-heavy — carry block for the turns you're forging."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "re_court",
+    "character": "regent",
+    "name": "Colorless Court",
+    "tier": "B",
+    "rating": 75,
+    "difficulty": "Medium",
+    "summary": "Create cards constantly and let the 'on create' payoffs snowball.",
+    "archetypeTags": ["court-summon", "decree", "block"],
+    "winCondition": "Every card you create feeds Arsenal (Strength), Pillar of Creation and Regalite (Block), while Supermassive scales off your creation count.",
+    "keyCards": ["ARSENAL", "PILLAR_OF_CREATION", "SUPERMASSIVE", "SPECTRUM_SHIFT", "MANIFEST_AUTHORITY"],
+    "keyRelics": ["ORANGE_DOUGH", "REGALITE"],
+    "howToPlay": "The payoff cards trigger on 'create' (adding a card to your hand), so pair Arsenal (Strength), Pillar of Creation and Regalite (Block) with steady creation from Spectrum Shift, Manifest Authority and Orange Dough. Every created card quietly buffs you, and Supermassive cashes the running creation count into a big hit.",
+    "gamePlan": {
+      "early": "Pick up card-creation effects (Spectrum Shift, Manifest Authority) and the 'on create' payoffs. Orange Dough adds 2 Colorless cards each combat to prime the engine.",
+      "mid": "With Arsenal and Pillar of Creation down, every created card hands you Strength and Block automatically. Spectrum Shift creates one each turn passively, so the engine ticks on its own.",
+      "late": "Supermassive scales with total cards created this combat — by Act 3 it's a heavy finisher, and your accumulated Strength makes all attacks hit harder."
+    },
+    "priorities": [
+      "Arsenal and Pillar of Creation — Strength and Block on create",
+      "Creation engines: Spectrum Shift, Manifest Authority",
+      "Supermassive — scales with creations",
+      "Orange Dough, Regalite relics",
+      "Cheap Colorless generators"
+    ],
+    "tips": [
+      "Get an 'on create' payoff down before spamming creation effects.",
+      "Spectrum Shift makes the engine passive — it ticks every turn for free.",
+      "Supermassive's damage climbs all combat — it's strongest late in long fights."
+    ],
+    "pitfalls": [
+      "Creating cards with no payoff online just clogs your hand.",
+      "Random Colorless cards are inconsistent — don't rely on a specific hit.",
+      "Hand-size limits can waste creations; play or use them promptly."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   },
   {
     "id": "ne_minions",
     "character": "necrobinder",
-    "name": "Minion Swarm",
+    "name": "Osty Command",
     "tier": "A",
     "rating": 84,
-    "summary": "Keep a full board of minions and buff them wide.",
+    "difficulty": "Medium",
+    "summary": "Grow Osty huge and let him hit and block for you.",
     "archetypeTags": ["minion", "minion-buff", "corpse-gen", "sacrifice"],
-    "keyCards": ["REANIMATE", "LEGION_OF_BONE", "NECRO_MASTERY", "SACRIFICE"],
-    "keyRelics": ["BONE_FLUTE", "UNDYING_SIGIL"],
-    "howToPlay": "Summon early and often (Legion of Bone, Reanimate) and keep the board full — Necro Mastery buffs them all at once. Sacrifice converts dying minions into value, and corpse generation refills the engine so the swarm never runs dry."
+    "winCondition": "Pump Osty's HP huge with Summon, then his attacks — Protector (scales with his Max HP) and Squeeze — hit like a truck while Bone Flute walls you.",
+    "keyCards": ["NECRO_MASTERY", "PROTECTOR", "SQUEEZE", "CALCIFY", "REANIMATE"],
+    "keyRelics": ["BONE_FLUTE", "BOUND_PHYLACTERY"],
+    "howToPlay": "Grow Osty with Summon effects — his Max HP feeds Protector's damage and his survival keeps your attacks flowing. Calcify permanently buffs his hits, Bone Flute converts each attack into Block, and Necro Mastery reflects his HP loss onto enemies. Finish with Squeeze or Protector once he's huge.",
+    "gamePlan": {
+      "early": "Summon early and often (Bodyguard, Afterlife, Bound Phylactery) to build Osty up. Bone Flute turns each of his attacks into Block, so attacking is also defending.",
+      "mid": "Reanimate (Summon 20) and Necro Mastery balloon Osty's HP, which directly powers Protector. Calcify permanently buffs every Osty attack, and Necro Mastery reflects Osty's HP loss onto enemies.",
+      "late": "Squeeze and Protector, off a maxed-out Osty, are finishers — and Necro Mastery means even chip on Osty bleeds the whole enemy side."
+    },
+    "priorities": [
+      "Summon sources: Reanimate, Legion of Bone, Bound Phylactery",
+      "Calcify — a permanent Osty attack buff",
+      "Osty attacks: Protector, Squeeze, Rattle",
+      "Necro Mastery — Summon plus reflect",
+      "Bone Flute relic — Block per Osty attack"
+    ],
+    "tips": [
+      "Summon before you attack — a bigger Osty means bigger Protector hits.",
+      "Bone Flute makes an attacking Osty defensive; you rarely need separate block.",
+      "Calcify is permanent for the fight — play it as early as you can afford."
+    ],
+    "pitfalls": [
+      "If Osty dies, most of your Attacks (Poke, Flatten, Squeeze) go offline — protect him.",
+      "Sacrificing Osty (Sacrifice, Bone Shards) ends the engine — only do it for lethal or emergency Block.",
+      "Slow starts vs aggressive enemies — summon through the early pressure."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "ne_doom",
+    "character": "necrobinder",
+    "name": "Doom Detonation",
+    "tier": "S",
+    "rating": 88,
+    "difficulty": "Medium",
+    "summary": "Stack Doom past enemy HP and execute the whole board.",
+    "archetypeTags": ["doom", "debuff"],
+    "winCondition": "Stack Doom on enemies until it exceeds their HP — End of Days then executes the whole board.",
+    "keyCards": ["BLIGHT_STRIKE", "DEATHBRINGER", "END_OF_DAYS", "NO_ESCAPE", "COUNTDOWN", "SCOURGE"],
+    "keyRelics": ["UNDYING_SIGIL", "BOOK_REPAIR_KNIFE"],
+    "howToPlay": "Layer Doom on enemies from turn one — Countdown and Deathbringer pile it on for free or in bulk, and Undying Sigil turns high-Doom enemies into soft targets. No Escape accelerates once Doom is high. When the board's Doom is near its HP, End of Days applies a final 29 and executes everything at once.",
+    "gamePlan": {
+      "early": "Apply Doom on everything (Blight Strike, Scourge). Countdown ticks Doom onto a random enemy every turn for free.",
+      "mid": "Deathbringer dumps 21 Doom on all enemies; No Escape snowballs (more Doom the more already applied). Undying Sigil makes Doom-heavy enemies hit 50% softer, so stacking Doom is also defense.",
+      "late": "End of Days applies 29 Doom to all and instantly kills anything with Doom at or above its HP — set it up as a board wipe. Book Repair Knife heals you for each Doom kill."
+    },
+    "priorities": [
+      "Doom appliers: Blight Strike, Scourge, Deathbringer",
+      "Countdown — free per-turn Doom",
+      "No Escape — snowballs on stacked Doom",
+      "End of Days — the executioner",
+      "Undying Sigil relic — Doom equals damage reduction"
+    ],
+    "tips": [
+      "Spread Doom wide vs packs so End of Days wipes the whole board.",
+      "Undying Sigil means stacking Doom defends you too — lean on it vs hard hitters.",
+      "No Escape scales with existing Doom — play it after your bulk appliers."
+    ],
+    "pitfalls": [
+      "Doom must exceed HP to execute — half-stacked enemies still attack.",
+      "Artifact blocks the first debuff; strip it first.",
+      "Single big-HP bosses resist execution — pair Doom with direct damage there."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
+  },
+  {
+    "id": "ne_soul",
+    "character": "necrobinder",
+    "name": "Soul Harvest",
+    "tier": "B",
+    "rating": 78,
+    "difficulty": "Hard",
+    "summary": "Flood the deck with Souls; each one drains HP and grows Osty.",
+    "archetypeTags": ["soul", "corpse-gen", "minion"],
+    "winCondition": "Flood your deck with Souls; each Soul you play drains enemy HP (Haunt) and grows Osty (Devour Life), while Soul Storm scales off spent Souls.",
+    "keyCards": ["CAPTURE_SPIRIT", "DEVOUR_LIFE", "HAUNT", "SOUL_STORM", "GLIMPSE_BEYOND"],
+    "keyRelics": ["FUNERARY_MASK", "BIG_HAT"],
+    "howToPlay": "Stuff your draw pile with Souls and get the payoffs online: Haunt drains 6 HP per Soul played and Devour Life summons to Osty, so each Soul does triple duty. Capture Spirit and Glimpse Beyond keep the Souls coming, and Soul Storm turns your spent Souls into a scaling finisher.",
+    "gamePlan": {
+      "early": "Seed Souls into your deck (Capture Spirit, Funerary Mask, Glimpse Beyond). Early they're filler; the payoffs make them lethal.",
+      "mid": "With Haunt and Devour Life down, every Soul you play deals 6 to a random enemy and summons to Osty. Capture Spirit refills Souls so the engine never runs dry.",
+      "late": "Soul Storm scales with Souls in your exhaust pile — after a few turns of playing Souls it's a heavy finisher. Big Hat's Ethereal cards add tempo for the Necrobinder's ethereal synergies."
+    },
+    "priorities": [
+      "Soul generators: Capture Spirit, Glimpse Beyond, Funerary Mask",
+      "Haunt and Devour Life — per-Soul payoffs",
+      "Soul Storm — scales with spent Souls",
+      "Big Hat relic for ethereal support",
+      "Block to survive the setup"
+    ],
+    "tips": [
+      "Get Haunt or Devour Life down before flooding Souls, or they're just blanks.",
+      "Souls feed Soul Storm from the exhaust pile — the longer the fight, the bigger it hits.",
+      "Capture Spirit is your refuel — don't let your Soul supply dry up."
+    ],
+    "pitfalls": [
+      "Souls with no payoff are dead cards clogging your draws.",
+      "Haunt hits a RANDOM enemy — unreliable single-target vs packs.",
+      "Setup-heavy; carry block for the slow opening turns."
+    ],
+    "sources": [
+      { "label": "Card & relic data — spire-archive.com", "url": "https://spire-archive.com" },
+      { "label": "Community strategy — r/slaythespire", "url": "https://www.reddit.com/r/slaythespire/" },
+      { "label": "Mechanics reference — Slay the Spire Wiki", "url": "https://slay-the-spire.fandom.com/" }
+    ]
   }
 ]

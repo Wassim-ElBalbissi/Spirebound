@@ -23,7 +23,7 @@ const PROCESS_NAME = 'SlayTheSpire2'
  * Returns the on-screen rect of the Slay the Spire 2 main window, or null
  * if the game isn't running or its bounds can't be read.
  *
- * Used as a fallback for the heuristic card-slot layout when the SlayOverlay
+ * Used as a fallback for the heuristic card-slot layout when the Spirebound
  * STS2MCP fork isn't installed (i.e. no per-card `pos`). Calls PowerShell
  * once per second; subsequent calls within that window return the cached
  * value with no spawn cost.

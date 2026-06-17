@@ -24,6 +24,7 @@ import { MockStateProvider } from './services/mockStateProvider'
 import { loadTierBundle, getTierBundle } from './services/tierData/cacheStore'
 import { applyTierList } from './services/tierData/applyTierList'
 import { loadCompendium } from './services/compendium'
+import { CurrentRunDeckFetcher } from './services/compendium/currentRun'
 import { createRecommender, Recommender } from './services/recommender'
 import { StateStore, UserSettings, WindowBounds } from './services/persistedState'
 import type { CustomTierList, TierListShare } from './types/tierList'
@@ -46,9 +47,9 @@ import type { CalibrationAnchors } from './types/settings'
 import { logger } from './services/logger'
 
 const isDev = !app.isPackaged
-// The in-game overlay is paused for now; the app runs as the Hub. Flip back to
-// re-enable the overlay window, poll loop, and per-card advice.
-const OVERLAY_ENABLED = false
+// The in-game overlay is active: it owns the poll loop, the recommendation
+// pipeline, and the per-card advice surface. The Hub runs alongside it.
+const OVERLAY_ENABLED = true
 const TOGGLE_PIN_ACCELERATOR = 'CmdOrCtrl+Alt+S'
 const OPEN_HUB_ACCELERATOR = 'CmdOrCtrl+Alt+B'
 const STS2MCP_RELEASES_URL =
@@ -62,6 +63,9 @@ let mockProvider: MockStateProvider | null = null
 let store: StateStore | null = null
 let tray: Tray | null = null
 let recommender: Recommender | null = null
+let deckFetcher: CurrentRunDeckFetcher | null = null
+/** Floor we last attempted a deck fetch for (one attempt per floor). */
+let lastDeckFloor = -1
 let savedBoundsBeforeCompact: { width: number; height: number } | null = null
 let presenceTimer: NodeJS.Timeout | null = null
 let gameRunning = false
@@ -82,7 +86,7 @@ function bootstrap(): void {
   const preloadPath = join(__dirname, '../preload/index.js')
   const rendererUrl = process.env['ELECTRON_RENDERER_URL']
 
-  // The in-game overlay is paused ("coming soon"); the app ships as the Hub.
+  // The in-game overlay renders live advice; the Hub is the browse companion.
   if (OVERLAY_ENABLED) {
     overlay = createOverlayWindow({
       preloadPath,
@@ -276,6 +280,14 @@ function registerIpc(): void {
     void shell.openExternal(STS2MCP_RELEASES_URL)
   })
 
+  ipcMain.handle(IpcChannels.openExternal, (_event, url: unknown) => {
+    // Only open well-formed http(s) links in the OS browser — never
+    // file:// or app-internal schemes coming from renderer data.
+    if (typeof url !== 'string') return
+    if (!/^https?:\/\//i.test(url)) return
+    void shell.openExternal(url)
+  })
+
   ipcMain.handle(IpcChannels.modInstallBundled, async () => {
     return await installBundledMod()
   })
@@ -315,6 +327,10 @@ function registerIpc(): void {
         // Push fresh annotations so calibration grid / sliders react
         // immediately, not only on the next game-state tick.
         if (lastState) void publishAnnotations(lastState, lastRec)
+        if (partial.applyIntentModifiers !== undefined && recommender) {
+          recommender.setApplyIntentModifiers(next.applyIntentModifiers)
+          rerunCurrentRecommendation()
+        }
       }
       return next
     }
@@ -408,7 +424,10 @@ function registerIpc(): void {
   })
 
   ipcMain.handle(IpcChannels.hubClose, () => {
-    hub?.win.hide()
+    // The Hub is the whole app now — closing it should quit, not hide to tray.
+    // before-quit sets the window's _forceClose flag so the hide-on-close
+    // guard falls through and the process actually exits.
+    app.quit()
   })
 
   ipcMain.handle(IpcChannels.tierDataGet, () => {
@@ -542,16 +561,64 @@ function applyActiveTierList(): void {
   const activeId = store?.getActiveTierListId() ?? null
   const list = activeId ? store?.getTierList(activeId) : null
   recommender.setBundle(applyTierList(getTierBundle(), list))
-  if (lastState) {
-    try {
-      const rec = recommender.recommend(lastState) as RecommendationView
-      lastRec = rec
-      sendToRenderer(IpcChannels.recommendationReady, rec)
-      void publishAnnotations(lastState, rec)
-    } catch (err) {
-      logger.error({ err }, 're-recommend after tier list change failed')
-    }
+  rerunCurrentRecommendation()
+}
+
+/**
+ * Re-run the recommender against the most recent state and re-publish, so live
+ * advice reflects a changed input (tier list, fetched deck) immediately.
+ */
+function rerunCurrentRecommendation(): void {
+  if (!recommender || !lastState) return
+  try {
+    const rec = recommender.recommend(lastState) as RecommendationView
+    lastRec = rec
+    sendToRenderer(IpcChannels.recommendationReady, rec)
+    void publishAnnotations(lastState, rec)
+  } catch (err) {
+    logger.error({ err }, 're-recommend failed')
   }
+}
+
+/** Decision screens where knowing the deck improves the advice. */
+function isDeckRelevant(kind: NormalizedState['screen']['kind']): boolean {
+  return (
+    kind === 'cardReward' ||
+    kind === 'relicReward' ||
+    kind === 'shop' ||
+    kind === 'event'
+  )
+}
+
+/**
+ * Fetch the run's deck from the compendium endpoint when we reach a new floor's
+ * decision screen, then re-run the current recommendation with it. The deck only
+ * changes between floors, so we attempt at most once per floor. Failures degrade
+ * to "deck unknown" (the recommender falls back to its neutral estimate).
+ */
+function maybeRefreshDeck(state: NormalizedState): void {
+  if (!deckFetcher || !recommender) return
+  const run = state.run
+  if (!run) {
+    // Menu / game over: forget the deck so the next run refetches cleanly.
+    if (lastDeckFloor !== -1) {
+      lastDeckFloor = -1
+      deckFetcher.reset()
+      recommender.setDeck(null)
+    }
+    return
+  }
+  if (!isDeckRelevant(state.screen.kind)) return
+  if (run.floor === lastDeckFloor) return
+  lastDeckFloor = run.floor
+  void deckFetcher
+    .getDeck(run.floor)
+    .then((deck) => {
+      if (!deck || !recommender) return
+      recommender.setDeck(deck)
+      rerunCurrentRecommendation()
+    })
+    .catch((err) => logger.debug({ err }, 'deck fetch failed'))
 }
 
 function broadcastActiveTierList(): void {
@@ -575,7 +642,12 @@ function broadcastCalibrationState(): void {
 
 function startRecommendationPipeline(): void {
   const bundle = loadTierBundle()
-  recommender = createRecommender(bundle)
+  recommender = createRecommender(bundle, loadCompendium().builds)
+  recommender.setApplyIntentModifiers(
+    store?.getSettings().applyIntentModifiers ?? false
+  )
+  deckFetcher = new CurrentRunDeckFetcher(new McpClient())
+  lastDeckFloor = -1
   // Apply a previously-active custom tier list, if any, on top of the base.
   applyActiveTierList()
 
@@ -606,6 +678,8 @@ function startRecommendationPipeline(): void {
       sendToRenderer(IpcChannels.recommendationReady, { kind: 'none' })
       void publishAnnotations(state, { kind: 'none' })
     }
+    // Lazily refresh the deck on floor change; re-runs advice when it lands.
+    maybeRefreshDeck(state)
   }
 
   const mockPath = process.env['MOCK_STATE']

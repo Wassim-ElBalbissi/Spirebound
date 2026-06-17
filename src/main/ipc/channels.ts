@@ -20,6 +20,7 @@ export const IpcChannels = {
   overlayQuit: 'overlay:quit',
   // --- Hub window + browse / tier lists ---
   hubOpen: 'hub:open',
+  openExternal: 'app:openExternal',
   clipboardWrite: 'clipboard:write',
   gameStatus: 'game:status',
   hubMinimize: 'hub:minimize',

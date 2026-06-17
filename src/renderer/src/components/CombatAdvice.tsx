@@ -13,8 +13,8 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
   const max = Math.max(...result.ranked.map((r) => r.score), 1)
   return (
     <div className="flex flex-col gap-2 p-3">
-      <div className="flex items-baseline justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           Your hand · what to play
         </span>
         <ThreatBadge
@@ -24,13 +24,17 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
       </div>
 
       {result.notes.map((n, i) => (
-        <div key={i} className="text-[11px] leading-tight text-zinc-400">
+        <div key={i} className="text-sm leading-snug text-zinc-100">
           {n}
         </div>
       ))}
 
+      <ThreatPanel threats={result.threats} />
+
+      <PotionPanel potions={result.potions} />
+
       {!top && (
-        <div className="text-sm italic text-zinc-400">No playable cards.</div>
+        <div className="text-sm italic text-zinc-300">No playable cards.</div>
       )}
 
       <div className="flex flex-col gap-1.5">
@@ -47,8 +51,8 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
               }`}
             >
               <span
-                className={`w-4 shrink-0 text-center font-mono text-[11px] font-bold ${
-                  isTop ? 'text-emerald-300' : 'text-zinc-500'
+                className={`w-4 shrink-0 text-center font-mono text-xs font-bold ${
+                  isTop ? 'text-emerald-300' : 'text-zinc-400'
                 }`}
               >
                 {i + 1}
@@ -73,11 +77,11 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
                       className="h-4 min-w-[1rem] px-1 text-[10px]"
                     />
                   )}
-                  <span className="truncate text-sm font-semibold text-zinc-100">
+                  <span className="truncate text-sm font-semibold text-zinc-50">
                     {row.name}
                   </span>
                   {isTop && (
-                    <span className="ml-auto shrink-0 rounded bg-emerald-500/20 px-1.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
+                    <span className="ml-auto shrink-0 rounded bg-emerald-500/20 px-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
                       Play
                     </span>
                   )}
@@ -89,7 +93,7 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
                   />
                 </div>
                 {isTop && row.rationale.length > 0 && (
-                  <p className="mt-1 line-clamp-2 text-[10px] leading-tight text-zinc-400">
+                  <p className="mt-1 line-clamp-3 text-sm leading-snug text-zinc-100">
                     {row.rationale.join(' · ')}
                   </p>
                 )}
@@ -99,10 +103,96 @@ export function CombatAdvice({ result }: CombatAdviceProps): React.JSX.Element {
         })}
       </div>
 
-      <div className="text-[10px] italic text-zinc-500">
+      <div className="text-xs italic text-zinc-400">
         Heuristic only — treat as a starting suggestion.
       </div>
     </div>
+  )
+}
+
+function ThreatPanel({
+  threats
+}: {
+  threats: CombatPlayResultView['threats']
+}): React.JSX.Element | null {
+  const attackers = threats.filter((t) => t.adjusted !== null)
+  if (attackers.length === 0) return null
+  return (
+    <div className="rounded-md border border-zinc-700/50 bg-zinc-900/50 p-2">
+      <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+        Incoming by enemy
+      </div>
+      <div className="flex flex-col gap-1">
+        {attackers.map((t, i) => (
+          <div
+            key={`${t.entityId}-${i}`}
+            className="flex items-baseline justify-between gap-2 text-sm"
+          >
+            <span className="min-w-0 truncate text-zinc-200">{t.name}</span>
+            <span className="shrink-0 font-mono">
+              <span className="font-semibold text-rose-300">{t.adjusted}</span>
+              {t.applied.length > 0 && (
+                <span className="ml-1 text-xs text-zinc-300">
+                  ({t.applied.join(', ')})
+                </span>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function PotionPanel({
+  potions
+}: {
+  potions: CombatPlayResultView['potions']
+}): React.JSX.Element | null {
+  if (potions.length === 0) return null
+  return (
+    <div className="rounded-md border border-zinc-700/50 bg-zinc-900/50 p-2">
+      <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+        Potions
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {potions.map((p, i) => (
+          <div key={`${p.id}-${i}`} className="text-sm leading-snug">
+            <span className="inline-flex items-baseline gap-1.5">
+              <AdviceTag advice={p.advice} />
+              <span
+                className={`font-semibold ${
+                  p.advice === 'use' ? 'text-emerald-200' : 'text-zinc-100'
+                }`}
+              >
+                {p.name}
+              </span>
+            </span>
+            <span className="text-zinc-200"> — {p.rationale.join(' ')}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function AdviceTag({
+  advice
+}: {
+  advice: 'use' | 'consider' | 'hold'
+}): React.JSX.Element {
+  const style =
+    advice === 'use'
+      ? 'bg-emerald-500/25 text-emerald-200'
+      : advice === 'consider'
+        ? 'bg-sky-500/20 text-sky-200'
+        : 'bg-zinc-600/30 text-zinc-300'
+  return (
+    <span
+      className={`shrink-0 rounded px-1.5 py-px text-[10px] font-bold uppercase tracking-wide ${style}`}
+    >
+      {advice}
+    </span>
   )
 }
 
@@ -115,19 +205,19 @@ function ThreatBadge({
 }): React.JSX.Element {
   if (incoming === 0) {
     return (
-      <span className="text-[10px] uppercase tracking-wider text-zinc-500">
+      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
         No threats
       </span>
     )
   }
   const color =
     blockNeeded === 0
-      ? 'text-emerald-400'
+      ? 'text-emerald-300'
       : blockNeeded > 12
-        ? 'text-rose-400'
-        : 'text-amber-400'
+        ? 'text-rose-300'
+        : 'text-amber-300'
   return (
-    <span className={`text-[10px] uppercase tracking-wider ${color}`}>
+    <span className={`shrink-0 text-xs font-semibold uppercase tracking-wide ${color}`}>
       Incoming {incoming}
       {blockNeeded > 0 ? ` · need ${blockNeeded} block` : ' · covered'}
     </span>

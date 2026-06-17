@@ -1,5 +1,10 @@
 import type { Character, RelicInstance } from '../../types/gameState'
 import type { RelicTierEntry, TierBundle } from '../../types/tierData'
+import type { BuildMatch } from './buildMatch'
+
+/** Cap on the build-fit bonus for a key relic of the matched build. */
+const BUILD_BONUS_CAP = 10
+const BUILD_BONUS_K = 10
 
 export interface RelicPickRanked {
   offerIndex: number | null
@@ -7,6 +12,9 @@ export interface RelicPickRanked {
   name: string
   score: number
   rationale: string[]
+  /** Set when this relic is a key relic of the matched build. */
+  buildId?: string
+  buildName?: string
 }
 
 export interface RelicPickContext {
@@ -14,6 +22,8 @@ export interface RelicPickContext {
   ownedRelicIds: string[]
   archetypeTags: Set<string>
   act: number
+  /** The build the run resembles, if any — boosts its key relics. */
+  matchedBuild?: BuildMatch | null
 }
 
 export function rankRelicOffers(
@@ -30,6 +40,14 @@ export function rankRelicOffers(
       ? [`${entry.tier}-tier (${Math.round(entry.blendedScore)}/100).`]
       : ['No tier data — neutral score.']
 
+    const isKeyRelic =
+      ctx.matchedBuild?.build.keyRelics?.includes(relic.id) ?? false
+    if (isKeyRelic && ctx.matchedBuild) {
+      const bonus = Math.min(BUILD_BONUS_CAP, ctx.matchedBuild.score * BUILD_BONUS_K)
+      score += bonus
+      rationale.push(`Key relic in your ${ctx.matchedBuild.build.name} build.`)
+    }
+
     if (entry) {
       score += buildFit(entry, ctx.archetypeTags, rationale)
       score += earlyMult(entry, ctx.act, rationale)
@@ -41,7 +59,9 @@ export function rankRelicOffers(
       id: relic.id,
       name: relic.name,
       score,
-      rationale
+      rationale,
+      buildId: isKeyRelic ? ctx.matchedBuild?.build.id : undefined,
+      buildName: isKeyRelic ? ctx.matchedBuild?.build.name : undefined
     }
   })
 

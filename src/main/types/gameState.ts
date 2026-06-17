@@ -134,10 +134,28 @@ export interface HandCard {
   /** Parsed from description. */
   parsedBlock: number | null
   /**
+   * HP this card costs you — either to play (e.g. "Lose 6 HP") or, for an
+   * unplayable Status/Curse like Burn, at end of turn ("take 2 damage").
+   * null when the card doesn't harm you.
+   */
+  parsedSelfDamage: number | null
+  /**
    * Pixel rect of this card on the game viewport. Present only when the
-   * SlayOverlay STS2MCP fork is installed; absent on stock STS2MCP.
+   * Spirebound STS2MCP fork is installed; absent on stock STS2MCP.
    */
   pos?: CardPos
+}
+
+/** A potion usable during combat, with its damage/block parsed from text. */
+export interface CombatPotion {
+  id: string
+  name: string
+  description: string
+  targetType: string
+  /** Parsed from description (e.g. Fire Potion). null when not a damage potion. */
+  parsedDamage: number | null
+  /** Parsed from description (e.g. Block Potion). */
+  parsedBlock: number | null
 }
 
 export interface CombatState {
@@ -151,6 +169,8 @@ export interface CombatState {
   hand: HandCard[]
   enemies: EnemyState[]
   playerStatus: PowerInstance[]
+  /** Combat-usable potions in your belt. */
+  potions: CombatPotion[]
   /** Game viewport size. Present when mod-provided positions are. */
   viewport?: { w: number; h: number }
 }

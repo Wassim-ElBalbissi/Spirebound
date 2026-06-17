@@ -5,6 +5,12 @@ import type {
 } from '../../types/gameState'
 import type { CardTierEntry, TierBundle } from '../../types/tierData'
 import { synergyScore } from './synergy'
+import type { BuildMatch } from './buildMatch'
+
+/** Cap on the build-fit bonus so it nudges without overriding tier quality. */
+const BUILD_BONUS_CAP = 12
+/** Scales the matched-build confidence (0..1) into bonus points. */
+const BUILD_BONUS_K = 12
 
 export interface CardPickWeights {
   alpha: number
@@ -38,9 +44,13 @@ export interface CardPickRanked {
     redundancy: number
     earlyPower: number
     upgradeAttract: number
+    buildBonus: number
     base: number
   }
   rationale: string[]
+  /** Set when this card is a key card of the matched build (for deep-linking). */
+  buildId?: string
+  buildName?: string
 }
 
 export interface CardPickContext {
@@ -50,6 +60,8 @@ export interface CardPickContext {
   act: number
   floor: number
   weights?: Partial<CardPickWeights>
+  /** The build the run resembles, if any — boosts its key cards. */
+  matchedBuild?: BuildMatch | null
 }
 
 export function rankCardOffers(
@@ -79,8 +91,20 @@ export function rankCardOffers(
     const upgradeAttract =
       w.epsilon * upgradeAttractBoost(tags, dominantTag)
 
+    const isKeyCard =
+      ctx.matchedBuild?.build.keyCards?.includes(offer.id) ?? false
+    const buildBonus = isKeyCard
+      ? Math.min(BUILD_BONUS_CAP, (ctx.matchedBuild?.score ?? 0) * BUILD_BONUS_K)
+      : 0
+
     const score =
-      wrComponent + synergy - dilution - redundancy + earlyPower + upgradeAttract
+      wrComponent +
+      synergy -
+      dilution -
+      redundancy +
+      earlyPower +
+      upgradeAttract +
+      buildBonus
 
     const rationale = buildRationale({
       entry,
@@ -89,6 +113,8 @@ export function rankCardOffers(
       redundancy,
       earlyPower,
       upgradeAttract,
+      buildBonus,
+      buildName: ctx.matchedBuild?.build.name,
       dominantTag,
       deckSize,
       sweet
@@ -106,9 +132,12 @@ export function rankCardOffers(
         redundancy,
         earlyPower,
         upgradeAttract,
+        buildBonus,
         base
       },
-      rationale
+      rationale,
+      buildId: isKeyCard ? ctx.matchedBuild?.build.id : undefined,
+      buildName: isKeyCard ? ctx.matchedBuild?.build.name : undefined
     }
   })
 
@@ -126,6 +155,7 @@ export function rankCardOffers(
       redundancy: 0,
       earlyPower: 0,
       upgradeAttract: skipScore - 30,
+      buildBonus: 0,
       base: 30
     },
     rationale:
@@ -222,6 +252,8 @@ function buildRationale(p: {
   redundancy: number
   earlyPower: number
   upgradeAttract: number
+  buildBonus: number
+  buildName?: string
   dominantTag: string | null
   deckSize: number
   sweet: number
@@ -231,6 +263,9 @@ function buildRationale(p: {
     out.push(`${p.entry.tier}-tier (${Math.round(p.entry.blendedScore)}/100).`)
   } else {
     out.push('No tier data — using neutral base score.')
+  }
+  if (p.buildBonus > 0 && p.buildName) {
+    out.push(`Key card in your ${p.buildName} build.`)
   }
   if (p.synergy > 4) out.push(`Strong synergy with current deck.`)
   if (p.upgradeAttract > 0 && p.dominantTag) {
