@@ -21,7 +21,18 @@ export function useGameState(): OverlayDataState {
     const offState = api.onGameStateUpdate(setState)
     const offHealth = api.onMcpHealth(setHealth)
     const offRec = api.onRecommendation(setRecommendation)
+    // Subscriptions only deliver *future* pushes, so seed from the current
+    // snapshot — otherwise a freshly-loaded overlay sits at {ok:false} until the
+    // next state change and briefly flashes the "mod not detected" panel.
+    let cancelled = false
+    void api.getSnapshot?.().then((snap) => {
+      if (cancelled || !snap) return
+      setHealth(snap.health)
+      if (snap.state) setState(snap.state)
+      setRecommendation(snap.recommendation)
+    })
     return () => {
+      cancelled = true
       offState()
       offHealth()
       offRec()

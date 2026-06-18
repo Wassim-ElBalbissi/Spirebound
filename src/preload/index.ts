@@ -36,7 +36,10 @@ const api = {
   openModInstall(): Promise<void> {
     return ipcRenderer.invoke(IpcChannels.overlayOpenModInstall)
   },
-  installBundledMod(): Promise<{ ok: boolean; installedTo?: string; reason?: string }> {
+  installBundledMod(): Promise<{
+    mod: { ok: boolean; installedTo?: string; files?: string[]; reason?: string }
+    saves: { ok: boolean; action: string; reason?: string; backupDir?: string }
+  }> {
     return ipcRenderer.invoke(IpcChannels.modInstallBundled)
   },
   setCompact(compact: boolean): Promise<void> {
@@ -44,6 +47,14 @@ const api = {
   },
   quit(): Promise<void> {
     return ipcRenderer.invoke(IpcChannels.overlayQuit)
+  },
+  /** Current state/health/recommendation, pulled once on overlay mount. */
+  getSnapshot(): Promise<{
+    health: McpHealth
+    state: NormalizedState | null
+    recommendation: RecommendationView
+  }> {
+    return ipcRenderer.invoke(IpcChannels.overlaySnapshot)
   },
   onGameStateUpdate(cb: (state: NormalizedState) => void): () => void {
     const handler = (_: unknown, state: NormalizedState): void => cb(state)

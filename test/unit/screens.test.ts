@@ -62,6 +62,100 @@ describe('classifyScreen', () => {
     expect(s.combat.enemies[0]?.intent?.type).toBe('Attack')
   })
 
+  it('parses multi-hit counts from card text', () => {
+    const hits = (description: string): number | undefined => {
+      const raw: RawGameState = {
+        state_type: 'monster',
+        run: { act: 1, floor: 1, ascension: 0 },
+        player: {
+          character: 'The Ironclad',
+          hp: 70,
+          max_hp: 70,
+          block: 0,
+          gold: 0,
+          energy: 3,
+          max_energy: 3,
+          status: [],
+          relics: [],
+          potions: [],
+          hand: [
+            {
+              index: 0,
+              id: 'C',
+              name: 'C',
+              type: 'Attack',
+              cost: '1',
+              star_cost: null,
+              description,
+              is_upgraded: false,
+              can_play: true,
+              unplayable_reason: null,
+              keywords: []
+            }
+          ]
+        },
+        battle: { round: 1, turn: 'player', enemies: [] }
+      } as unknown as RawGameState
+      const s = classifyScreen(raw)
+      if (s.kind !== 'combat') throw new Error('not combat')
+      return s.combat.hand[0]?.parsedHits
+    }
+    expect(hits('Deal 5 damage 3 times.')).toBe(3)
+    expect(hits('Deal 5 damage to ALL enemies twice.')).toBe(2)
+    expect(hits('Deal 6 damage.')).toBe(1)
+    // A later unrelated count must not be mistaken for a hit count.
+    expect(hits('Deal 6 damage. Draw 2 cards.')).toBe(1)
+  })
+
+  it('parses card draw from card text', () => {
+    const draw = (description: string): number | undefined => {
+      const raw: RawGameState = {
+        state_type: 'monster',
+        run: { act: 1, floor: 1, ascension: 0 },
+        player: {
+          character: 'The Defect',
+          hp: 70,
+          max_hp: 70,
+          block: 0,
+          gold: 0,
+          energy: 3,
+          max_energy: 3,
+          status: [],
+          relics: [],
+          potions: [],
+          hand: [
+            {
+              index: 0,
+              id: 'C',
+              name: 'C',
+              type: 'Skill',
+              cost: '1',
+              star_cost: null,
+              description,
+              is_upgraded: false,
+              can_play: true,
+              unplayable_reason: null,
+              keywords: []
+            }
+          ]
+        },
+        battle: { round: 1, turn: 'player', enemies: [] }
+      } as unknown as RawGameState
+      const s = classifyScreen(raw)
+      if (s.kind !== 'combat') throw new Error('not combat')
+      return s.combat.hand[0]?.parsedDraw
+    }
+    expect(draw('Draw 3 cards.')).toBe(3)
+    expect(draw('Channel 1 Frost. Draw 1 card.')).toBe(1)
+    expect(draw('Draw a card.')).toBe(1)
+    expect(draw('Deal 6 damage.')).toBeUndefined()
+    // A *conditional* draw is not parsed as guaranteed — the combat scorer
+    // evaluates it from state instead.
+    expect(
+      draw('Deal 5 damage. If you have played fewer than 3 cards this turn, draw 1 card.')
+    ).toBeUndefined()
+  })
+
   it('treats transient treasure (only message) as unknown', () => {
     expect(classifyScreen(fixture('treasureTransient.json'))).toEqual({
       kind: 'unknown'

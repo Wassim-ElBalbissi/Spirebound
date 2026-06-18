@@ -25,13 +25,24 @@ export interface ImportResult {
   reason?: string
 }
 
+/** Result of the install-time setup: mod (+deps) install and save migration. */
+export interface ModSetupResult {
+  mod: { ok: boolean; installedTo?: string; files?: string[]; reason?: string }
+  saves: { ok: boolean; action: string; reason?: string; backupDir?: string }
+}
+
 export interface OverlayApi {
   setInteractive(interactive: boolean): Promise<void>
   togglePinned(): Promise<boolean>
   openModInstall(): Promise<void>
-  installBundledMod(): Promise<{ ok: boolean; installedTo?: string; reason?: string }>
+  installBundledMod(): Promise<ModSetupResult>
   setCompact(compact: boolean): Promise<void>
   quit(): Promise<void>
+  getSnapshot(): Promise<{
+    health: McpHealth
+    state: NormalizedState | null
+    recommendation: RecommendationView
+  }>
   onGameStateUpdate(cb: (state: NormalizedState) => void): () => void
   onMcpHealth(cb: (health: McpHealth) => void): () => void
   onRecommendation(cb: (rec: RecommendationView) => void): () => void

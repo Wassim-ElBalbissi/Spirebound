@@ -19,6 +19,7 @@
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "test": "vitest run",
     "test:watch": "vitest",
+    "draw:probe": "node scripts/drawProbe.mjs",
     "lint": "eslint --ext .ts,.tsx src",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "pack": "electron-vite build && electron-builder --dir",
@@ -94,7 +95,8 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "include": "build/installer.nsh"
     },
     "publish": [
       {

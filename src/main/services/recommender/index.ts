@@ -6,19 +6,53 @@ import type {
 } from '../../types/gameState'
 import type { TierBundle } from '../../types/tierData'
 import type { BuildEntry } from '../../types/compendium'
-import type { ShopAdviceItemView } from '../../types/recommendation'
+import type {
+  MatchedBuildView,
+  ShopAdviceItemView,
+  UpgradeRankedView
+} from '../../types/recommendation'
 import { rankCardOffers, CardPickRanked } from './cardPick'
 import { rankRelicOffers, RelicPickRanked } from './relicPick'
 import { rankCombatPlays, CombatPlayResult } from './combatPlay'
+import { rankMapPath, MapPathResult } from './mapPath'
 import { rankShop } from './shopAdvisor'
-import { detectBuild } from './buildMatch'
+import {
+  rankUpgrades,
+  decideRestAction,
+  parseHealAmount,
+  RestAction
+} from './restUpgrade'
+import { detectBuild, BuildMatch } from './buildMatch'
+import { deckTagCounts } from './synergy'
 
 export type Recommendation =
-  | { kind: 'cardPick'; ranked: CardPickRanked[]; canSkip: boolean }
-  | { kind: 'relicPick'; ranked: RelicPickRanked[]; canSkip: boolean }
+  | {
+      kind: 'cardPick'
+      ranked: CardPickRanked[]
+      canSkip: boolean
+      build: MatchedBuildView | null
+    }
+  | {
+      kind: 'relicPick'
+      ranked: RelicPickRanked[]
+      canSkip: boolean
+      build: MatchedBuildView | null
+    }
   | { kind: 'event'; eventName: string; choices: EventChoice[] }
   | { kind: 'combatPlay'; result: CombatPlayResult }
-  | { kind: 'shopAdvice'; items: ShopAdviceItemView[]; gold: number }
+  | {
+      kind: 'shopAdvice'
+      items: ShopAdviceItemView[]
+      gold: number
+      build: MatchedBuildView | null
+    }
+  | { kind: 'mapPath'; result: MapPathResult }
+  | {
+      kind: 'restUpgrade'
+      action: RestAction
+      cards: UpgradeRankedView[]
+      build: MatchedBuildView | null
+    }
   | { kind: 'none' }
 
 export interface Recommender {
@@ -65,13 +99,14 @@ export function createRecommender(
       switch (screen.kind) {
         case 'cardReward': {
           const resolvedDeck = deck ?? deriveDeckEstimate(run, screen.offers)
-          const archetypeTags = collectArchetypeTags(deck, run.relics, bundle)
+          const archetypeTags = collectArchetypeTags(resolvedDeck, run.relics, bundle)
           const matchedBuild = detectBuild(
             run.character,
             resolvedDeck,
             run.relics.map((r) => r.id),
             builds,
-            archetypeTags
+            archetypeTags,
+            deckTagCounts(resolvedDeck, bundle)
           )
           const ranked = rankCardOffers(
             screen.offers,
@@ -84,16 +119,23 @@ export function createRecommender(
             },
             bundle
           )
-          return { kind: 'cardPick', ranked, canSkip: screen.canSkip }
+          return {
+            kind: 'cardPick',
+            ranked,
+            canSkip: screen.canSkip,
+            build: toBuildSummary(matchedBuild)
+          }
         }
         case 'relicReward': {
-          const archetypeTags = collectArchetypeTags(deck, run.relics, bundle)
+          const resolvedDeck = deck ?? []
+          const archetypeTags = collectArchetypeTags(resolvedDeck, run.relics, bundle)
           const matchedBuild = detectBuild(
             run.character,
-            deck ?? [],
+            resolvedDeck,
             run.relics.map((r) => r.id),
             builds,
-            archetypeTags
+            archetypeTags,
+            deckTagCounts(resolvedDeck, bundle)
           )
           const ranked = rankRelicOffers(
             screen.offers,
@@ -107,7 +149,12 @@ export function createRecommender(
             bundle,
             screen.canSkip
           )
-          return { kind: 'relicPick', ranked, canSkip: screen.canSkip }
+          return {
+            kind: 'relicPick',
+            ranked,
+            canSkip: screen.canSkip,
+            build: toBuildSummary(matchedBuild)
+          }
         }
         case 'event': {
           return {
@@ -118,13 +165,14 @@ export function createRecommender(
         }
         case 'shop': {
           const resolvedDeck = deck ?? []
-          const archetypeTags = collectArchetypeTags(deck, run.relics, bundle)
+          const archetypeTags = collectArchetypeTags(resolvedDeck, run.relics, bundle)
           const matchedBuild = detectBuild(
             run.character,
             resolvedDeck,
             run.relics.map((r) => r.id),
             builds,
-            archetypeTags
+            archetypeTags,
+            deckTagCounts(resolvedDeck, bundle)
           )
           const { items, gold } = rankShop(
             screen,
@@ -140,13 +188,104 @@ export function createRecommender(
             },
             bundle
           )
-          return { kind: 'shopAdvice', items, gold }
+          return {
+            kind: 'shopAdvice',
+            items,
+            gold,
+            build: toBuildSummary(matchedBuild)
+          }
         }
         case 'combat': {
           const result = rankCombatPlays(screen.combat, bundle, {
             applyIntentModifiers
           })
           return { kind: 'combatPlay', result }
+        }
+        case 'map': {
+          if (!run.map) return { kind: 'none' }
+          const result = rankMapPath(run.map, {
+            hp: run.hp,
+            maxHp: run.maxHp
+          })
+          return result ? { kind: 'mapPath', result } : { kind: 'none' }
+        }
+        case 'rest': {
+          const resolvedDeck = deck ?? []
+          const archetypeTags = collectArchetypeTags(
+            resolvedDeck,
+            run.relics,
+            bundle
+          )
+          const matchedBuild = detectBuild(
+            run.character,
+            resolvedDeck,
+            run.relics.map((r) => r.id),
+            builds,
+            archetypeTags,
+            deckTagCounts(resolvedDeck, bundle)
+          )
+          const cards = rankUpgrades(resolvedDeck, { matchedBuild }, bundle)
+          const restOpt = screen.options.find(
+            (o) => /heal|rest/i.test(o.id) || /rest/i.test(o.name)
+          )
+          const smithOpt = screen.options.find(
+            (o) => /smith/i.test(o.id) || /smith|upgrade/i.test(o.name)
+          )
+          const action = decideRestAction({
+            hp: run.hp,
+            maxHp: run.maxHp,
+            healAmount: parseHealAmount(screen.options, run.maxHp),
+            // Options default to available when the mod doesn't enumerate them.
+            canRest: restOpt ? restOpt.enabled : true,
+            canSmith: smithOpt ? smithOpt.enabled : true,
+            upgradeTargets: cards.length,
+            deckKnown: run.deckKnown,
+            dangerAhead: nextRoomIsDangerous(run.map)
+          })
+          return {
+            kind: 'restUpgrade',
+            action,
+            cards,
+            build: toBuildSummary(matchedBuild)
+          }
+        }
+        case 'upgradeSelect': {
+          // The Smith screen gives us the full upgradeable deck directly.
+          const archetypeTags = collectArchetypeTags(
+            screen.cards,
+            run.relics,
+            bundle
+          )
+          const matchedBuild = detectBuild(
+            run.character,
+            screen.cards,
+            run.relics.map((r) => r.id),
+            builds,
+            archetypeTags,
+            deckTagCounts(screen.cards, bundle)
+          )
+          const cards = rankUpgrades(screen.cards, { matchedBuild }, bundle)
+          // On the Smith screen the choice is already made — just point at the
+          // best upgrade.
+          const action: RestAction = {
+            recommended: 'smith',
+            hp: run.hp,
+            maxHp: run.maxHp,
+            healAmount: Math.round(0.3 * run.maxHp),
+            effectiveHeal: Math.min(
+              Math.round(0.3 * run.maxHp),
+              Math.max(0, run.maxHp - run.hp)
+            ),
+            reason: 'Upgrade your highest-priority card.',
+            canRest: false,
+            canSmith: cards.length > 0
+          }
+          return {
+            kind: 'restUpgrade',
+            action,
+            cards,
+            build: toBuildSummary(matchedBuild)
+          }
         }
         default:
           return { kind: 'none' }
@@ -167,6 +306,28 @@ function deriveDeckEstimate(
   return []
 }
 
+/** True when any immediate next room on the map is an Elite or Boss. */
+function nextRoomIsDangerous(
+  map: NonNullable<NormalizedState['run']>['map']
+): boolean {
+  if (!map) return false
+  return map.nextOptionIds.some((id) => {
+    const node = map.nodes.find((n) => n.id === id)
+    return node?.room === 'elite' || node?.room === 'boss'
+  })
+}
+
+/** Compact, serializable view of the matched build for the overlay banner. */
+function toBuildSummary(match: BuildMatch | null): MatchedBuildView | null {
+  if (!match) return null
+  return {
+    id: match.build.id,
+    name: match.build.name,
+    tags: match.build.archetypeTags ?? [],
+    confidence: match.score
+  }
+}
+
 /**
  * Archetype tags that define the current run — collected from both the deck
  * (when known) and owned relics. Used to bias relic picks toward the build.
@@ -177,10 +338,7 @@ function collectArchetypeTags(
   bundle: TierBundle
 ): Set<string> {
   const tags = new Set<string>()
-  for (const card of deck ?? []) {
-    const entry = bundle.cards[card.id]
-    if (entry) for (const t of entry.tags) tags.add(t)
-  }
+  for (const t of deckTagCounts(deck ?? [], bundle).keys()) tags.add(t)
   for (const r of relics) {
     const entry = bundle.relics[r.id]
     if (entry) for (const t of entry.tags) tags.add(t)

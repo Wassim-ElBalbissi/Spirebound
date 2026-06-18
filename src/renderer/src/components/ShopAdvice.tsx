@@ -1,5 +1,9 @@
 import React from 'react'
-import type { RecommendationView } from '../../../main/types/recommendation'
+import type {
+  MatchedBuildView,
+  RecommendationView
+} from '../../../main/types/recommendation'
+import { BuildBanner } from './BuildBanner'
 
 type ShopAdviceData = Extract<RecommendationView, { kind: 'shopAdvice' }>
 type ShopItem = ShopAdviceData['items'][number]
@@ -7,9 +11,14 @@ type ShopItem = ShopAdviceData['items'][number]
 export interface ShopAdviceProps {
   items: ShopItem[]
   gold: number
+  build?: MatchedBuildView | null
 }
 
-export function ShopAdvice({ items, gold }: ShopAdviceProps): React.JSX.Element {
+export function ShopAdvice({
+  items,
+  gold,
+  build
+}: ShopAdviceProps): React.JSX.Element {
   return (
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-baseline justify-between">
@@ -18,6 +27,7 @@ export function ShopAdvice({ items, gold }: ShopAdviceProps): React.JSX.Element 
         </div>
         <div className="font-mono text-[11px] text-amber-400">{gold}g</div>
       </div>
+      <BuildBanner build={build} />
       {items.length === 0 ? (
         <div className="text-xs italic text-zinc-500">Nothing on offer.</div>
       ) : (
@@ -41,15 +51,23 @@ function ShopRow({ item, rank }: { item: ShopItem; rank: number }): React.JSX.El
     : item.saveUp
       ? 'text-amber-400'
       : 'text-rose-400'
+  // The #1 affordable item is the recommended buy — make it stand out.
+  const isTopPick = rank === 1 && item.affordable
   return (
     <div
-      className={`rounded-md border border-zinc-700/40 bg-zinc-800/40 p-2 ${
-        item.affordable ? '' : 'opacity-70'
-      }`}
+      className={`rounded-md border bg-zinc-800/40 p-2 ${
+        isTopPick
+          ? 'border-emerald-400/50 bg-emerald-500/5'
+          : 'border-zinc-700/40'
+      } ${item.affordable ? '' : 'opacity-70'}`}
     >
       <div className="flex items-baseline justify-between gap-2">
         <div className="flex items-baseline gap-2 min-w-0">
-          <span className="shrink-0 font-mono text-[10px] text-zinc-500">
+          <span
+            className={`shrink-0 font-mono text-[10px] ${
+              isTopPick ? 'text-emerald-400' : 'text-zinc-500'
+            }`}
+          >
             #{rank}
           </span>
           <span className="shrink-0 rounded bg-zinc-700/50 px-1 text-[9px] uppercase tracking-wide text-zinc-400">

@@ -25,18 +25,27 @@ import { loadTierBundle, getTierBundle } from './services/tierData/cacheStore'
 import { applyTierList } from './services/tierData/applyTierList'
 import { loadCompendium } from './services/compendium'
 import { CurrentRunDeckFetcher } from './services/compendium/currentRun'
+import { resolveDeckIds } from './services/tierData/cardNameIndex'
 import { createRecommender, Recommender } from './services/recommender'
 import { StateStore, UserSettings, WindowBounds } from './services/persistedState'
 import type { CustomTierList, TierListShare } from './types/tierList'
-import type { NormalizedState, McpHealth, GameStatus } from './types/gameState'
+import type {
+  CardInstance,
+  NormalizedState,
+  McpHealth,
+  GameStatus
+} from './types/gameState'
 import type {
   AnnotationPayload,
   CalibrationStatePayload,
   RecommendationView
 } from './types/recommendation'
 import { estimateCardSlots } from './services/cardSlotLayout'
-import { installBundledMod } from './services/modInstaller'
-import { detectGameWindow } from './services/gameWindow'
+import { runSetup } from './services/modInstaller'
+import { detectGame, detectGameWindow } from './services/gameWindow'
+import { computeRegion, toPixelStrokes } from './services/drawing/drawEngine'
+import { pickRandomShape } from './services/drawing/shapes'
+import { drawStrokes } from './services/drawing/mouseDraw'
 import {
   registerImageCacheProtocol,
   registerImageCacheScheme
@@ -52,6 +61,7 @@ const isDev = !app.isPackaged
 const OVERLAY_ENABLED = true
 const TOGGLE_PIN_ACCELERATOR = 'CmdOrCtrl+Alt+S'
 const OPEN_HUB_ACCELERATOR = 'CmdOrCtrl+Alt+B'
+const DRAW_MAP_ACCELERATOR = 'CmdOrCtrl+Alt+D'
 const STS2MCP_RELEASES_URL =
   'https://github.com/Gennadiyev/STS2MCP/releases/latest'
 
@@ -66,13 +76,23 @@ let recommender: Recommender | null = null
 let deckFetcher: CurrentRunDeckFetcher | null = null
 /** Floor we last attempted a deck fetch for (one attempt per floor). */
 let lastDeckFloor = -1
+/**
+ * Deck reconstructed from the most recent combat's piles, with ids resolved.
+ * Used as the primary deck source outside combat (the compendium endpoint is a
+ * refinement), so build-aware advice works even when that endpoint doesn't.
+ */
+let lastCombatDeck: CardInstance[] | null = null
 let savedBoundsBeforeCompact: { width: number; height: number } | null = null
 let presenceTimer: NodeJS.Timeout | null = null
 let gameRunning = false
+/** Whether the overlay/annotation windows are currently shown. */
+let overlayVisible = false
 let mcpConnected = false
 let lastModVersion: string | undefined
 let lastState: NormalizedState | null = null
 let lastRec: RecommendationView = { kind: 'none' }
+/** Last health pushed to the renderer, replayed when an overlay (re)loads. */
+let lastHealth: McpHealth = { ok: false }
 let calibrationState: CalibrationStatePayload = {
   active: false,
   step: 0,
@@ -153,37 +173,66 @@ function bootstrap(): void {
 }
 
 /**
- * Poll for whether Slay the Spire 2 is actually running and show/hide the
- * in-game overlay accordingly — it should never sit on the desktop when the
- * game is closed. Presence = mock mode (dev) OR mod connected OR the game
- * window is detectable. Also broadcasts status to the Hub.
+ * Poll for whether Slay the Spire 2 is running AND focused, and show/hide the
+ * in-game overlay accordingly. The overlay must never sit on the desktop when
+ * the game is closed, nor float over other apps when the player has alt-tabbed
+ * away — so visibility requires the game to be the foreground window. The
+ * separate `gameRunning` status (shown in the Hub) keeps a grace period so it
+ * doesn't flicker on a momentary mod hiccup.
  */
 function startPresenceLoop(): void {
+  const HIDE_GRACE_MS = 20000
+  const PRESENCE_INTERVAL_MS = 1500
+  let absentSince: number | null = null
   const tick = async (): Promise<void> => {
     const mock = !!process.env['MOCK_STATE']
-    let present = mock || mcpConnected
-    if (!present) {
-      const rect = await detectGameWindow().catch(() => null)
-      present = !!rect
+    let running: boolean
+    let foreground: boolean
+    if (mock) {
+      running = true
+      foreground = true
+    } else {
+      const game = await detectGame().catch(() => ({
+        rect: null,
+        foreground: false
+      }))
+      running = mcpConnected || !!game.rect
+      foreground = game.foreground
     }
-    applyGameRunning(present)
+    // Grace period before declaring the game gone, to ride out brief hiccups.
+    if (running) {
+      absentSince = null
+    } else {
+      if (absentSince === null) absentSince = Date.now()
+      if (Date.now() - absentSince < HIDE_GRACE_MS) running = true
+    }
+    gameRunning = running
+    // The overlay only shows while the game is the focused window.
+    setOverlayVisible(running && (mock || foreground))
+    // Re-assert top-most while visible so the HUD stays above the game.
+    if (overlayVisible) {
+      const ow = overlay?.win
+      if (ow && !ow.isDestroyed() && ow.isVisible()) {
+        ow.setAlwaysOnTop(true, 'screen-saver')
+      }
+    }
     broadcastGameStatus()
   }
   void tick()
-  presenceTimer = setInterval(() => void tick(), 2500)
+  presenceTimer = setInterval(() => void tick(), PRESENCE_INTERVAL_MS)
 }
 
-function applyGameRunning(running: boolean): void {
-  if (running === gameRunning) return
-  gameRunning = running
+function setOverlayVisible(visible: boolean): void {
+  if (visible === overlayVisible) return
+  overlayVisible = visible
   const ow = overlay?.win
   if (ow && !ow.isDestroyed()) {
-    if (running) ow.showInactive()
+    if (visible) ow.showInactive()
     else ow.hide()
   }
   const aw = annotation?.win
   if (aw && !aw.isDestroyed()) {
-    if (running) aw.showInactive()
+    if (visible) aw.showInactive()
     else aw.hide()
   }
 }
@@ -248,6 +297,39 @@ function registerHotkeys(): void {
       'hub global shortcut registration failed'
     )
   }
+
+  const drawRegistered = globalShortcut.register(DRAW_MAP_ACCELERATOR, () => {
+    void runDoodle()
+  })
+  if (!drawRegistered) {
+    logger.warn(
+      { accel: DRAW_MAP_ACCELERATOR },
+      'draw-map global shortcut registration failed'
+    )
+  }
+}
+
+/**
+ * Trace a random shape onto the map by driving the mouse with the in-game pen.
+ * Positions the drawing inside the game window (lower-middle, clear of the HUD)
+ * and falls back to the primary display when the window can't be located.
+ */
+async function runDoodle(): Promise<void> {
+  if (!store?.getSettings().enableMapDoodles) return
+  try {
+    const rect = await detectGameWindow()
+    const display = electronScreen.getPrimaryDisplay().workArea
+    const region = computeRegion(rect, display)
+    const shape = pickRandomShape()
+    const strokes = toPixelStrokes(shape, region)
+    logger.info(
+      { shape: shape.name, strokes: strokes.length },
+      'doodle: drawing on map'
+    )
+    await drawStrokes(strokes)
+  } catch (err) {
+    logger.warn({ err }, 'doodle: failed')
+  }
 }
 
 function refreshTrayMenu(): void {
@@ -289,7 +371,8 @@ function registerIpc(): void {
   })
 
   ipcMain.handle(IpcChannels.modInstallBundled, async () => {
-    return await installBundledMod()
+    if (!store) store = new StateStore()
+    return await runSetup(store)
   })
 
   ipcMain.handle(
@@ -315,6 +398,12 @@ function registerIpc(): void {
 
   ipcMain.handle(IpcChannels.settingsGet, () => {
     return store?.getSettings()
+  })
+
+  // Pull the latest known status when an overlay (re)loads, so it never has to
+  // wait for the next push — avoids flashing the "mod not detected" panel.
+  ipcMain.handle(IpcChannels.overlaySnapshot, () => {
+    return { health: lastHealth, state: lastState, recommendation: lastRec }
   })
 
   ipcMain.handle(
@@ -586,15 +675,33 @@ function isDeckRelevant(kind: NormalizedState['screen']['kind']): boolean {
     kind === 'cardReward' ||
     kind === 'relicReward' ||
     kind === 'shop' ||
-    kind === 'event'
+    kind === 'event' ||
+    kind === 'rest'
   )
 }
 
 /**
- * Fetch the run's deck from the compendium endpoint when we reach a new floor's
- * decision screen, then re-run the current recommendation with it. The deck only
- * changes between floors, so we attempt at most once per floor. Failures degrade
- * to "deck unknown" (the recommender falls back to its neutral estimate).
+ * Cache the deck reconstructed from the live combat piles (ids resolved against
+ * the bundle) and feed it to the recommender. This runs every combat tick so the
+ * deck stays fresh, and it's the deck the next non-combat screen reasons about.
+ */
+function captureCombatDeck(state: NormalizedState): void {
+  if (!recommender) return
+  const { run, screen } = state
+  if (!run || screen.kind !== 'combat') return
+  const deck = screen.combat.deck
+  if (!deck || deck.length === 0) return
+  const resolved = resolveDeckIds(deck, run.character, getTierBundle())
+  lastCombatDeck = resolved
+  recommender.setDeck(resolved)
+}
+
+/**
+ * Make the run's deck known on a new floor's decision screen so card / relic /
+ * shop advice is build-aware. The deck from the most recent combat is the
+ * primary source (always available, no network); the compendium endpoint is a
+ * refinement that only wins when it returns a plausibly-complete deck. The deck
+ * only changes between floors, so we attempt the fetch at most once per floor.
  */
 function maybeRefreshDeck(state: NormalizedState): void {
   if (!deckFetcher || !recommender) return
@@ -603,6 +710,7 @@ function maybeRefreshDeck(state: NormalizedState): void {
     // Menu / game over: forget the deck so the next run refetches cleanly.
     if (lastDeckFloor !== -1) {
       lastDeckFloor = -1
+      lastCombatDeck = null
       deckFetcher.reset()
       recommender.setDeck(null)
     }
@@ -611,10 +719,17 @@ function maybeRefreshDeck(state: NormalizedState): void {
   if (!isDeckRelevant(state.screen.kind)) return
   if (run.floor === lastDeckFloor) return
   lastDeckFloor = run.floor
+  // Seed the combat-derived deck immediately (no wait on the network).
+  if (lastCombatDeck && lastCombatDeck.length > 0) {
+    recommender.setDeck(lastCombatDeck)
+  }
   void deckFetcher
     .getDeck(run.floor)
     .then((deck) => {
       if (!deck || !recommender) return
+      // The compendium shape is unverified — don't let a truncated/garbage
+      // payload clobber the (usually complete) combat-derived deck.
+      if (deck.length < (lastCombatDeck?.length ?? 0)) return
       recommender.setDeck(deck)
       rerunCurrentRecommendation()
     })
@@ -656,15 +771,17 @@ function startRecommendationPipeline(): void {
     if (!active) return
     mcpConnected = true
     lastModVersion = state.modVersion
-    // The game is clearly running once we have state — surface it immediately.
-    applyGameRunning(true)
+    // The game is clearly running once we have state — but the presence loop
+    // owns overlay visibility (it must stay hidden when the game isn't focused).
+    gameRunning = true
     broadcastGameStatus()
     sendToRenderer(IpcChannels.gameStateUpdate, state)
-    sendToRenderer(IpcChannels.mcpHealth, {
+    lastHealth = {
       ok: true,
       version: state.modVersion,
       lastOkAt: Date.now()
-    } satisfies McpHealth)
+    }
+    sendToRenderer(IpcChannels.mcpHealth, lastHealth)
     try {
       const rec = active.recommend(state) as RecommendationView
       lastState = state
@@ -678,8 +795,13 @@ function startRecommendationPipeline(): void {
       sendToRenderer(IpcChannels.recommendationReady, { kind: 'none' })
       void publishAnnotations(state, { kind: 'none' })
     }
-    // Lazily refresh the deck on floor change; re-runs advice when it lands.
+    // Cache the live combat deck, then lazily refresh on floor change.
+    captureCombatDeck(state)
     maybeRefreshDeck(state)
+    // The map screen gets a tall left-side panel; everything else the top HUD.
+    overlay?.setLayout(
+      state.run && state.screen.kind === 'map' ? 'mapLeft' : 'hud'
+    )
   }
 
   const mockPath = process.env['MOCK_STATE']
@@ -696,6 +818,7 @@ function startRecommendationPipeline(): void {
     onHealth(health) {
       mcpConnected = health.ok
       if (health.version) lastModVersion = health.version
+      lastHealth = health
       broadcastGameStatus()
       sendToRenderer(IpcChannels.mcpHealth, health)
     }
@@ -813,10 +936,40 @@ async function publishAnnotations(
   }
 }
 
-// Custom image-cache scheme must be registered before the app is ready.
-registerImageCacheScheme()
+// Headless one-shot used by the Windows installer (ExecWait'd from the NSIS
+// customInstall step): install the mod + dependencies and migrate the unmodded
+// save profile into the modded scope, then exit. Best-effort — never throws so
+// the installer can't be blocked, and never opens a window.
+const SETUP_MODE = process.argv.includes('--spirebound-setup')
 
-app.whenReady().then(bootstrap)
+if (SETUP_MODE) {
+  app.whenReady().then(async () => {
+    try {
+      const s = new StateStore()
+      const result = await runSetup(s)
+      s.flush()
+      logger.info({ result }, 'spirebound-setup finished')
+    } catch (err) {
+      logger.error({ err }, 'spirebound-setup crashed')
+    } finally {
+      app.exit(0)
+    }
+  })
+} else if (!app.requestSingleInstanceLock()) {
+  // Another Spirebound is already running. A second instance can't re-register
+  // the global shortcuts (Ctrl+Alt+S / B / D), so it would silently break them
+  // — quit and let the existing instance keep ownership.
+  logger.warn('another instance is already running; quitting this one')
+  app.quit()
+} else {
+  // Surface the existing instance if the user launches Spirebound again.
+  app.on('second-instance', () => {
+    hub?.openFocus()
+  })
+  // Custom image-cache scheme must be registered before the app is ready.
+  registerImageCacheScheme()
+  app.whenReady().then(bootstrap)
+}
 
 app.on('before-quit', () => {
   // Let the Hub's hide-on-close guard fall through so the app can exit.

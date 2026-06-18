@@ -3,6 +3,8 @@ export const IpcChannels = {
   gameStateScreenChange: 'gameState:screenChange',
   mcpHealth: 'mcp:health',
   recommendationReady: 'recommendation:ready',
+  /** Pull the current state/health/recommendation when an overlay (re)loads. */
+  overlaySnapshot: 'overlay:snapshot',
   overlaySetInteractive: 'overlay:setInteractive',
   overlayTogglePinned: 'overlay:togglePinned',
   overlayPinnedChanged: 'overlay:pinnedChanged',

@@ -9,6 +9,7 @@ import type {
   TierBundle
 } from '../../types/tierData'
 import { logger } from '../logger'
+import { deriveArchetypeTags } from './deriveArchetypeTags'
 
 /**
  * Raw shape of `cards.json` from github.com/nkhoit/spire-archive (data/sts2/).
@@ -323,12 +324,25 @@ function deriveTags(raw: RawArchiveCard): string[] {
   for (const k of raw.keywords ?? []) tags.add(k.toLowerCase())
   for (const t of raw.tags ?? []) tags.add(t.toLowerCase())
   for (const v of Object.keys(raw.vars ?? {})) {
-    const mapped = VAR_TO_TAG[v.toLowerCase()]
+    // Real `vars` keys are prefixed (e.g. `power_focus`, `power_lightning_rod`);
+    // strip a leading `power_` so the lookup matches the canonical mechanic name.
+    const key = v.toLowerCase().replace(/^power_/, '')
+    const mapped = VAR_TO_TAG[key]
     if (mapped) tags.add(mapped)
   }
   if (raw.type === 'Attack') tags.add('attack')
   if (raw.type === 'Skill') tags.add('skill')
   if (raw.type === 'Power') tags.add('power')
+  // Archetype tags (orb-gen/lightning/frost/poison/strength/…) live in the rules
+  // text, not in keywords/vars — derive them so synergy + buildMatch come alive.
+  for (const t of deriveArchetypeTags({
+    description: raw.description,
+    descriptionTemplate: raw.description_template,
+    keywords: raw.keywords,
+    type: raw.type
+  })) {
+    tags.add(t)
+  }
   return [...tags]
 }
 

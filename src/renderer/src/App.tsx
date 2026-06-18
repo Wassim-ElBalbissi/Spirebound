@@ -1,128 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import type { CalibrationSource } from '../../main/types/recommendation'
-import { Header } from './components/Header'
-import { ConnectionBadge, ConnectionState } from './components/ConnectionBadge'
+import React from 'react'
 import { CardPickAdvice } from './components/CardPickAdvice'
 import { RelicEventAdvice } from './components/RelicEventAdvice'
 import { ShopAdvice } from './components/ShopAdvice'
+import { MapPathAdvice } from './components/MapPathAdvice'
+import { RestAdvice } from './components/RestAdvice'
 import { CombatAdvice } from './components/CombatAdvice'
-import { CombatThreatChip } from './components/CombatThreatChip'
 import { OnboardingPanel } from './components/OnboardingPanel'
-import { SettingsPanel } from './components/SettingsPanel'
-import { useHoverInteractive } from './hooks/useHoverInteractive'
 import { useGameState } from './hooks/useGameState'
 import { useOnboarding } from './hooks/useOnboarding'
-import { usePinned } from './hooks/usePinned'
-import { useSettings } from './hooks/useSettings'
 
-const STALE_MS = 2000
-const BASE_FONT_PX = 14
-
+/**
+ * The in-game overlay is a fixed, click-through HUD anchored to the top-center
+ * of the screen. It has no chrome and no background of its own — only the
+ * advice content shows. All settings live in the Hub.
+ */
 export function App(): React.JSX.Element {
   const { state, health, recommendation } = useGameState()
   const showOnboarding = useOnboarding(health)
-  const pinned = usePinned()
-  const { settings, set } = useSettings()
-  const [showSettings, setShowSettings] = useState(false)
-  // The advice body is read-only, so keep it click-through and only make the
-  // title bar interactive/draggable. When a panel with controls is up
-  // (onboarding or settings), make the whole card interactive instead.
-  const bodyInteractive = showOnboarding || showSettings
-  const headerRef = useHoverInteractive<HTMLDivElement>(!bodyInteractive)
-  // Panels with controls take over the whole card — force it interactive while
-  // they're open rather than waiting for a hover that may never re-fire (the
-  // cursor is already inside the card when the panel opens).
-  useEffect(() => {
-    if (!bodyInteractive) return
-    void window.overlay?.setInteractive(true)
-    return () => void window.overlay?.setInteractive(false)
-  }, [bodyInteractive])
-  const [calibrationSource, setCalibrationSource] =
-    useState<CalibrationSource>('heuristic')
-  useEffect(() => {
-    return window.overlay?.onAnnotations((p) =>
-      setCalibrationSource(p.calibrationSource ?? 'heuristic')
-    )
-  }, [])
-
-  // Compact the corner window during combat when per-card badges are active.
-  const compactMode =
-    state?.screen.kind === 'combat' &&
-    settings.showPerCardBadges &&
-    !showSettings
-  useEffect(() => {
-    void window.overlay?.setCompact(compactMode)
-  }, [compactMode])
-
-  // UI scale is applied in main via webContents.setZoomFactor — it scales
-  // hardcoded Tailwind pixel sizes uniformly. Inline fontSize can't.
-  void BASE_FONT_PX
-  void settings.uiScale
-  const cardBg = `rgba(24, 24, 27, ${settings.opacity})`
 
   return (
-    <div
-      className="h-screen w-screen p-2"
-    >
-      <div
-        style={{ backgroundColor: cardBg }}
-        className={`h-full w-full rounded-xl border text-zinc-100 shadow-2xl backdrop-blur-md flex flex-col overflow-hidden ${
-          pinned ? 'border-sky-500/70' : 'border-zinc-700/60'
-        }`}
-      >
-        <div ref={headerRef}>
-        <Header
-          right={
-            <span className="flex items-center gap-2">
-              {pinned && (
-                <span className="text-[10px] uppercase tracking-wider text-sky-400">
-                  Pinned
-                </span>
-              )}
-              <ConnectionBadge
-                state={connState(health)}
-                version={health.version}
-              />
-              <button
-                type="button"
-                aria-label="Open browser / tier lists"
-                title="Open browser / tier lists (Ctrl+Alt+B)"
-                onClick={() => void window.overlay?.openHub()}
-                className="rounded p-0.5 text-zinc-400 hover:bg-zinc-700/40 hover:text-zinc-100"
-              >
-                <BrowseIcon />
-              </button>
-              <button
-                type="button"
-                aria-label="Settings"
-                onClick={() => setShowSettings((v) => !v)}
-                className="rounded p-0.5 text-zinc-400 hover:bg-zinc-700/40 hover:text-zinc-100"
-              >
-                <GearIcon />
-              </button>
-            </span>
-          }
-        />
-        </div>
-        <main className="flex-1 overflow-y-auto">
-          {showSettings ? (
-            <SettingsPanel
-              settings={settings}
-              onChange={set}
-              onClose={() => setShowSettings(false)}
-              calibrationSource={calibrationSource}
-            />
-          ) : (
-            <Body
-              screenKind={state?.screen.kind ?? null}
-              recommendation={recommendation}
-              health={health}
-              showOnboarding={showOnboarding}
-              compactMode={compactMode}
-            />
-          )}
-        </main>
-      </div>
+    <div className="flex h-screen w-screen items-start justify-center overflow-hidden text-zinc-100">
+      <Body
+        screenKind={state?.screen.kind ?? null}
+        recommendation={recommendation}
+        health={health}
+        showOnboarding={showOnboarding}
+      />
     </div>
   )
 }
@@ -131,68 +34,93 @@ function Body({
   screenKind,
   recommendation,
   health,
-  showOnboarding,
-  compactMode
+  showOnboarding
 }: {
   screenKind: string | null
   recommendation: ReturnType<typeof useGameState>['recommendation']
   health: ReturnType<typeof useGameState>['health']
   showOnboarding: boolean
-  compactMode: boolean
 }): React.JSX.Element {
   if (showOnboarding) {
-    return <OnboardingPanel errorMessage={health.error} />
+    return (
+      <Chip>
+        <OnboardingPanel errorMessage={health.error} />
+      </Chip>
+    )
   }
 
   if (!health.ok && !screenKind) {
     return (
-      <div className="flex h-full flex-col items-center justify-center p-4 text-center text-sm text-zinc-400">
-        <p className="font-medium text-zinc-300">Waiting for STS2MCP…</p>
-        <p className="mt-2 text-xs opacity-70">
-          Launch Slay the Spire 2 with the STS2MCP mod installed.
-        </p>
+      <Chip>
+        <div className="px-4 py-3 text-center text-sm text-zinc-200">
+          Waiting for STS2MCP — launch Slay the Spire 2 with the mod.
+        </div>
+      </Chip>
+    )
+  }
+
+  // Combat takes the full horizontal strip; other screens float as a chip.
+  if (recommendation.kind === 'combatPlay') {
+    return (
+      <div className="w-full">
+        <CombatAdvice result={recommendation.result} />
       </div>
     )
   }
 
-  switch (recommendation.kind) {
-    case 'cardPick':
-      return (
+  // The map route sits in the tall left-side panel the overlay switches to,
+  // vertically centered so the compact card mirrors the in-game Legend.
+  if (recommendation.kind === 'mapPath') {
+    return (
+      <div className="flex h-full w-full items-center">
+        <MapPathAdvice result={recommendation.result} />
+      </div>
+    )
+  }
+
+  return (
+    <Chip>
+      {recommendation.kind === 'cardPick' ? (
         <CardPickAdvice
           ranked={recommendation.ranked}
           canSkip={recommendation.canSkip}
+          build={recommendation.build}
         />
-      )
-    case 'relicPick':
-    case 'event':
-      return <RelicEventAdvice recommendation={recommendation} />
-    case 'shopAdvice':
-      return <ShopAdvice items={recommendation.items} gold={recommendation.gold} />
-    case 'combatPlay':
-      return compactMode ? (
-        <CombatThreatChip result={recommendation.result} />
+      ) : recommendation.kind === 'relicPick' || recommendation.kind === 'event' ? (
+        <RelicEventAdvice recommendation={recommendation} />
+      ) : recommendation.kind === 'shopAdvice' ? (
+        <ShopAdvice
+          items={recommendation.items}
+          gold={recommendation.gold}
+          build={recommendation.build}
+        />
+      ) : recommendation.kind === 'restUpgrade' ? (
+        <RestAdvice
+          action={recommendation.action}
+          cards={recommendation.cards}
+          build={recommendation.build}
+        />
       ) : (
-        <CombatAdvice result={recommendation.result} />
-      )
-    case 'none':
-    default:
-      return <Idle screenKind={screenKind} />
-  }
+        <Idle screenKind={screenKind} />
+      )}
+    </Chip>
+  )
 }
 
-function Idle({
-  screenKind
-}: {
-  screenKind: string | null
-}): React.JSX.Element {
+/** A translucent container for the non-combat advice panels. */
+function Chip({ children }: { children: React.ReactNode }): React.JSX.Element {
+  return (
+    <div className="mt-1 max-h-[196px] w-auto max-w-[480px] overflow-y-auto rounded-xl bg-zinc-900/80 shadow-xl ring-1 ring-white/10 backdrop-blur-sm">
+      {children}
+    </div>
+  )
+}
+
+function Idle({ screenKind }: { screenKind: string | null }): React.JSX.Element {
   const copy = (() => {
     switch (screenKind) {
-      case 'combat':
-        return 'Combat — no playable cards.'
       case 'rest':
         return 'Rest site — rest or smith based on your build.'
-      case 'shop':
-        return 'Shop — reading the stock…'
       case 'rewards':
         return 'Pick a reward to see card advice.'
       case 'menu':
@@ -203,54 +131,6 @@ function Idle({
     }
   })()
   return (
-    <div className="flex h-full flex-col items-center justify-center p-4 text-center text-xs text-zinc-400">
-      <span>{copy}</span>
-      <span className="mt-3 text-[10px] uppercase tracking-wider text-zinc-600">
-        Ctrl+Alt+S to pin overlay
-      </span>
-    </div>
-  )
-}
-
-function connState(health: { ok: boolean; lastOkAt?: number }): ConnectionState {
-  if (!health.ok) return 'offline'
-  if (health.lastOkAt && Date.now() - health.lastOkAt > STALE_MS) return 'stale'
-  return 'connected'
-}
-
-function BrowseIcon(): React.JSX.Element {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <path d="M3 9h18" />
-      <path d="M9 21V9" />
-    </svg>
-  )
-}
-
-function GearIcon(): React.JSX.Element {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    </svg>
+    <div className="px-4 py-3 text-center text-sm text-zinc-300">{copy}</div>
   )
 }

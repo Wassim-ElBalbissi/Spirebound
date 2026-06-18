@@ -1,8 +1,11 @@
 import { app } from 'electron'
 import { promises as fs } from 'fs'
 import { existsSync, readFileSync } from 'fs'
-import { dirname, join } from 'path'
+import { join } from 'path'
 import { logger } from './logger'
+import { migrateSaves, type SaveMigrationResult } from './saveMigrator'
+import { candidateSteamRoots } from './steamPaths'
+import type { StateStore } from './persistedState'
 
 const STS2_DIR_NAME = 'Slay the Spire 2'
 const MOD_DLL_NAME = 'STS2_MCP.dll'
@@ -11,7 +14,15 @@ const MOD_MANIFEST_NAME = 'STS2_MCP.json'
 export interface ModInstallResult {
   ok: boolean
   installedTo?: string
+  /** Names of the files copied into the game's mods folder. */
+  files?: string[]
   reason?: string
+}
+
+/** Combined result of the install-time setup: mod (+deps) install and save migration. */
+export interface SetupResult {
+  mod: ModInstallResult
+  saves: SaveMigrationResult
 }
 
 /** Resource folder shipped with the installer / present in dev. */
@@ -41,15 +52,6 @@ export function findSts2Install(): string | null {
   return null
 }
 
-function candidateSteamRoots(): string[] {
-  const out: string[] = []
-  const pf86 = process.env['ProgramFiles(x86)']
-  const pf = process.env['ProgramFiles']
-  if (pf86) out.push(join(pf86, 'Steam'))
-  if (pf) out.push(join(pf, 'Steam'))
-  return out.filter(existsSync)
-}
-
 function readLibraryFolders(steamRoot: string): string[] {
   const libs: string[] = [steamRoot]
   const vdfPath = join(steamRoot, 'config', 'libraryfolders.vdf')
@@ -71,6 +73,12 @@ function readLibraryFolders(steamRoot: string): string[] {
   return libs
 }
 
+/**
+ * Copies the bundled mod AND its dependencies into the game's mods folder.
+ * Everything in `resources/mod` is copied verbatim, so shipping an extra
+ * dependency (e.g. `0Harmony.dll`, which the mod references) is just a matter of
+ * dropping the file into that folder — no code change here.
+ */
 export async function installBundledMod(): Promise<ModInstallResult> {
   const gameDir = findSts2Install()
   if (!gameDir) {
@@ -82,13 +90,22 @@ export async function installBundledMod(): Promise<ModInstallResult> {
   }
 
   const bundled = bundledModDir()
-  const dllSrc = join(bundled, MOD_DLL_NAME)
-  const manifestSrc = join(bundled, MOD_MANIFEST_NAME)
-  if (!existsSync(dllSrc) || !existsSync(manifestSrc)) {
-    return {
-      ok: false,
-      reason: `Bundled mod files missing at ${bundled}.`
-    }
+  if (!existsSync(bundled)) {
+    return { ok: false, reason: `Bundled mod folder missing at ${bundled}.` }
+  }
+
+  let files: string[]
+  try {
+    files = (await fs.readdir(bundled, { withFileTypes: true }))
+      .filter((e) => e.isFile())
+      .map((e) => e.name)
+  } catch (err) {
+    return { ok: false, reason: `Could not read bundled mod folder: ${(err as Error).message}` }
+  }
+
+  // The DLL + manifest are the mod itself; any other files are dependencies.
+  if (!files.includes(MOD_DLL_NAME) || !files.includes(MOD_MANIFEST_NAME)) {
+    return { ok: false, reason: `Bundled mod files missing at ${bundled}.` }
   }
 
   const modsDir = join(gameDir, 'mods')
@@ -102,8 +119,9 @@ export async function installBundledMod(): Promise<ModInstallResult> {
   }
 
   try {
-    await fs.copyFile(dllSrc, join(modsDir, MOD_DLL_NAME))
-    await fs.copyFile(manifestSrc, join(modsDir, MOD_MANIFEST_NAME))
+    for (const name of files) {
+      await fs.copyFile(join(bundled, name), join(modsDir, name))
+    }
   } catch (err) {
     const code = (err as NodeJS.ErrnoException).code
     if (code === 'EBUSY') {
@@ -118,9 +136,29 @@ export async function installBundledMod(): Promise<ModInstallResult> {
     }
   }
 
-  logger.info({ modsDir }, 'mod installed')
-  return { ok: true, installedTo: modsDir }
+  logger.info({ modsDir, files }, 'mod installed')
+  return { ok: true, installedTo: modsDir, files }
 }
 
-// keep dirname referenced so unused-import lint is happy if we extend later
-void dirname
+/**
+ * One-shot install-time setup: install the mod + its dependencies, then migrate
+ * the unmodded save profile into the modded scope so progress isn't lost.
+ *
+ * Best-effort and non-fatal: each step reports its own result and a failure in
+ * one never throws past this boundary. Used both by the headless installer step
+ * (`--spirebound-setup`) and the in-app onboarding button.
+ */
+export async function runSetup(store: StateStore): Promise<SetupResult> {
+  const mod = await installBundledMod().catch(
+    (err): ModInstallResult => ({ ok: false, reason: (err as Error).message })
+  )
+  const saves = await migrateSaves(store).catch(
+    (err): SaveMigrationResult => ({
+      ok: false,
+      action: 'error',
+      reason: (err as Error).message
+    })
+  )
+  logger.info({ mod, saves }, 'spirebound setup complete')
+  return { mod, saves }
+}

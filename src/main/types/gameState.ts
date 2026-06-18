@@ -20,6 +20,13 @@ export interface CardInstance {
   rarity?: string
   type?: string
   description?: string
+  /**
+   * Archetype/mechanic tags (e.g. orb-gen, lightning, poison). Set when the
+   * card is reconstructed from the live combat deck, where the tier-data id may
+   * be unresolved — lets synergy/build detection read tags off the card itself.
+   * Falls back to the bundle's tags when absent.
+   */
+  tags?: string[]
 }
 
 export interface RelicInstance {
@@ -90,10 +97,19 @@ export interface EventChoice {
   wasChosen: boolean
 }
 
+/** An action offered at a rest site (Rest/heal, Smith/upgrade, Dig, …). */
+export interface RestOption {
+  id: string
+  name: string
+  description: string
+  enabled: boolean
+}
+
 export interface PowerInstance {
   name: string
   amount?: number
   type?: 'Buff' | 'Debuff'
+  description?: string
 }
 
 export interface EnemyState {
@@ -131,6 +147,13 @@ export interface HandCard {
   unplayableReason: string | null
   /** Parsed from description; null when not an attack or unparseable. */
   parsedDamage: number | null
+  /**
+   * Hit count for a multi-hit attack ("Deal X damage 3 times" / "twice").
+   * Absent or 1 for single-hit cards. Strength/Vigor apply per hit.
+   */
+  parsedHits?: number
+  /** Cards drawn by this card ("Draw N cards"); absent when it draws none. */
+  parsedDraw?: number
   /** Parsed from description. */
   parsedBlock: number | null
   /**
@@ -139,11 +162,26 @@ export interface HandCard {
    * null when the card doesn't harm you.
    */
   parsedSelfDamage: number | null
+  /** Card keyword names (e.g. "Retain", "Evoke", "Channel", "Exhaust"). */
+  keywords: string[]
   /**
    * Pixel rect of this card on the game viewport. Present only when the
    * Spirebound STS2MCP fork is installed; absent on stock STS2MCP.
    */
   pos?: CardPos
+}
+
+/** A Defect orb, with its passive effect classified for the combat math. */
+export interface OrbInstance {
+  id: string
+  name: string
+  description: string
+  /** End-of-turn passive trigger value. */
+  passiveValue: number
+  /** Value released when the orb is evoked. */
+  evokeValue: number
+  /** What the passive does, parsed from the description. */
+  passiveKind: 'damage' | 'block' | 'energy' | 'other'
 }
 
 /** A potion usable during combat, with its damage/block parsed from text. */
@@ -171,6 +209,15 @@ export interface CombatState {
   playerStatus: PowerInstance[]
   /** Combat-usable potions in your belt. */
   potions: CombatPotion[]
+  /** Defect orbs currently channeled (empty for other characters). */
+  orbs: OrbInstance[]
+  /**
+   * Full deck reconstructed from hand + draw/discard/exhaust piles, tagged for
+   * archetype detection. Present only when the mod emits pile contents; the
+   * pipeline uses it to keep deck-aware advice working on the following
+   * non-combat screens. Card ids may be unresolved (the pipeline resolves them).
+   */
+  deck?: CardInstance[]
   /** Game viewport size. Present when mod-provided positions are. */
   viewport?: { w: number; h: number }
 }
@@ -181,7 +228,8 @@ export type Screen =
   | { kind: 'event'; eventId: string; eventName: string; choices: EventChoice[] }
   | { kind: 'map' }
   | { kind: 'combat'; combat: CombatState }
-  | { kind: 'rest' }
+  | { kind: 'rest'; options: RestOption[] }
+  | { kind: 'upgradeSelect'; cards: CardInstance[] }
   | {
       kind: 'shop'
       cards: (CardInstance & { price: number })[]

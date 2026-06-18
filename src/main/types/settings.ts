@@ -32,6 +32,11 @@ export interface UserSettings {
    * final post-modifier number, so this would double-count until verified.
    */
   applyIntentModifiers: boolean
+  /**
+   * Enable the Ctrl+Alt+D "doodle on the map" hotkey, which briefly takes over
+   * the mouse to trace a random shape with the in-game pen (hold right-click).
+   */
+  enableMapDoodles: boolean
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -42,5 +47,6 @@ export const DEFAULT_SETTINGS: UserSettings = {
   horizontalStretchPct: 0,
   showCalibrationGrid: false,
   calibration: null,
-  applyIntentModifiers: false
+  applyIntentModifiers: false,
+  enableMapDoodles: true
 }

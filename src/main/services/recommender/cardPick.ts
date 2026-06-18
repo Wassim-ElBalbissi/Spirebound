@@ -4,7 +4,7 @@ import type {
   RunState
 } from '../../types/gameState'
 import type { CardTierEntry, TierBundle } from '../../types/tierData'
-import { synergyScore } from './synergy'
+import { synergyScore, deckTagCounts } from './synergy'
 import type { BuildMatch } from './buildMatch'
 
 /** Cap on the build-fit bonus so it nudges without overriding tier quality. */
@@ -72,9 +72,9 @@ export function rankCardOffers(
   const w = { ...DEFAULT_WEIGHTS, ...ctx.weights }
   const deckSize = ctx.deck.length
   const sweet = sweetDeckSize(ctx.act)
-  const deckTagCounts = countDeckTags(ctx.deck, bundle)
+  const tagCounts = deckTagCounts(ctx.deck, bundle)
 
-  const dominantTag = topTag(ctx.character, deckTagCounts)
+  const dominantTag = topTag(ctx.character, tagCounts)
 
   const ranked: CardPickRanked[] = offers.map((offer, idx) => {
     const entry = bundle.cards[offer.id]
@@ -83,7 +83,7 @@ export function rankCardOffers(
     const wrComponent = base // already 0..100
     const tags = entry?.tags ?? []
 
-    const synergy = w.alpha * synergyScore(ctx.character, tags, deckTagCounts)
+    const synergy = w.alpha * synergyScore(ctx.character, tags, tagCounts)
     const dilution = w.beta * dilutionPenalty(deckSize, sweet)
     const redundancy =
       w.gamma * redundancyPenalty(offer.id, ctx.deck, tags)
@@ -180,21 +180,6 @@ function neutralBaseScore(offer: CardInstance): number {
   return offer.upgraded ? 50 : 40
 }
 
-function countDeckTags(
-  deck: CardInstance[],
-  bundle: TierBundle
-): Map<string, number> {
-  const counts = new Map<string, number>()
-  for (const card of deck) {
-    const entry = bundle.cards[card.id]
-    if (!entry) continue
-    for (const tag of entry.tags) {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1)
-    }
-  }
-  return counts
-}
-
 function topTag(
   character: Character,
   deckTagCounts: Map<string, number>
@@ -216,8 +201,17 @@ function redundancyPenalty(
   deck: CardInstance[],
   candidateTags: string[]
 ): number {
-  // Don't penalize stacking archetypes.
-  const STACKING_TAGS = new Set(['poison', 'strength', 'focus', 'shiv'])
+  // Don't penalize stacking archetypes (including orbs — more is better).
+  const STACKING_TAGS = new Set([
+    'poison',
+    'strength',
+    'focus',
+    'shiv',
+    'orb-gen',
+    'lightning',
+    'frost',
+    'dark'
+  ])
   if (candidateTags.some((t) => STACKING_TAGS.has(t))) return 0
   const dupes = deck.filter((c) => c.id === candidateId).length
   return 0.1 * dupes

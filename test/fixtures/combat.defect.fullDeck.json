@@ -1,0 +1,112 @@
+{
+  "state_type": "monster",
+  "run": { "act": 1, "floor": 6, "ascension": 0 },
+  "player": {
+    "character": "The Defect",
+    "hp": 70,
+    "max_hp": 75,
+    "block": 0,
+    "gold": 120,
+    "energy": 3,
+    "max_energy": 3,
+    "status": [],
+    "relics": [
+      {
+        "id": "CRACKED_CORE",
+        "name": "Cracked Core",
+        "description": "At the start of each combat, Channel 1 Lightning.",
+        "counter": null,
+        "keywords": []
+      }
+    ],
+    "potions": [],
+    "max_potion_slots": 3,
+    "orbs": [
+      {
+        "id": "LIGHTNING_ORB",
+        "name": "Lightning",
+        "description": "Passive: At the end of turn, deal 3 damage to a random enemy.\nEvoke: Deal 8 damage to a random enemy.",
+        "passive_val": 3,
+        "evoke_val": 8
+      }
+    ],
+    "orb_slots": 3,
+    "orb_empty_slots": 2,
+    "hand": [
+      {
+        "index": 0,
+        "id": "ZAP",
+        "name": "Zap",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Channel 1 Lightning.",
+        "target_type": "None",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "id": "BALL_LIGHTNING",
+        "name": "Ball Lightning",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 7 damage.\nChannel 1 Lightning.",
+        "target_type": "Enemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": []
+      },
+      {
+        "index": 2,
+        "id": "STRIKE_DEFECT",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage.",
+        "target_type": "Enemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": []
+      }
+    ],
+    "draw_pile": [
+      { "name": "Strike", "cost": "1", "star_cost": null, "type": "Attack", "description": "Deal 6 damage." },
+      { "name": "Strike", "cost": "1", "star_cost": null, "type": "Attack", "description": "Deal 6 damage." },
+      { "name": "Defend", "cost": "1", "star_cost": null, "type": "Skill", "description": "Gain 5 Block." },
+      { "name": "Dualcast", "cost": "1", "star_cost": null, "type": "Skill", "description": "Evoke your rightmost Orb twice." },
+      { "name": "Defragment", "cost": "1", "star_cost": null, "type": "Power", "description": "Gain 1 Focus." }
+    ],
+    "discard_pile": [
+      { "name": "Defend", "cost": "1", "star_cost": null, "type": "Skill", "description": "Gain 5 Block." }
+    ],
+    "exhaust_pile": [
+      { "name": "Defend", "cost": "1", "star_cost": null, "type": "Skill", "description": "Gain 5 Block." }
+    ]
+  },
+  "battle": {
+    "round": 1,
+    "turn": "player",
+    "is_play_phase": true,
+    "enemies": [
+      {
+        "entity_id": "CULTIST_0",
+        "combat_id": 7,
+        "name": "Cultist",
+        "hp": 50,
+        "max_hp": 50,
+        "block": 0,
+        "status": [],
+        "intents": [
+          { "type": "Buff", "label": "", "title": "Incantation", "description": "Gains Ritual." }
+        ]
+      }
+    ]
+  }
+}

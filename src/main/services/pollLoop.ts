@@ -44,6 +44,10 @@ export class PollLoop {
   private backoffMs: number
   private useMpEndpoint = false
   private running = false
+  /** Whether we've already told listeners the mod is healthy (avoids re-emit
+   *  every tick, but ensures the *first* success is reported, not just a
+   *  recovery from backoff). Reset on any failure. */
+  private healthyReported = false
 
   constructor(
     client: McpClient,
@@ -121,14 +125,17 @@ export class PollLoop {
 
   private handleFailure(reason: string): void {
     logger.debug({ reason }, 'mcp poll failure')
+    this.healthyReported = false
     this.events.onHealth({ ok: false, error: reason })
     this.backoffMs = Math.min(this.backoffMs * 2, this.opts.maxBackoffMs)
     this.scheduleNext(this.backoffMs)
   }
 
   private markHealthy(): void {
-    if (this.backoffMs !== this.opts.baseTickMs) {
-      this.backoffMs = this.opts.baseTickMs
+    this.backoffMs = this.opts.baseTickMs
+    // Report on the first success and after any recovery — but not every tick.
+    if (!this.healthyReported) {
+      this.healthyReported = true
       this.events.onHealth({ ok: true, lastOkAt: Date.now() })
     }
   }

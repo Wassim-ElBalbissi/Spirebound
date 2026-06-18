@@ -1,14 +1,20 @@
 import React from 'react'
-import type { CardPickRankedView } from '../../../main/types/recommendation'
+import type {
+  CardPickRankedView,
+  MatchedBuildView
+} from '../../../main/types/recommendation'
+import { BuildBanner } from './BuildBanner'
 
 export interface CardPickAdviceProps {
   ranked: CardPickRankedView[]
   canSkip: boolean
+  build?: MatchedBuildView | null
 }
 
 export function CardPickAdvice({
   ranked,
-  canSkip: _canSkip
+  canSkip: _canSkip,
+  build
 }: CardPickAdviceProps): React.JSX.Element {
   const max = Math.max(...ranked.map((r) => r.score), 1)
   return (
@@ -16,6 +22,7 @@ export function CardPickAdvice({
       <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
         Card Reward
       </div>
+      <BuildBanner build={build} />
       {ranked.map((row, i) => (
         <Row key={`${row.id}-${i}`} row={row} max={max} rank={i + 1} />
       ))}

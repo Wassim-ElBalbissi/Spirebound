@@ -1,0 +1,168 @@
+{
+  "state_type": "monster",
+  "run": { "act": 1, "floor": 15, "ascension": 0 },
+  "player": {
+    "character": "The Defect",
+    "hp": 2,
+    "max_hp": 81,
+    "block": 0,
+    "gold": 458,
+    "energy": 3,
+    "max_energy": 3,
+    "status": [
+      {
+        "id": "PLATING_POWER",
+        "name": "Plating",
+        "amount": 3,
+        "type": "Buff",
+        "description": "At the end of your turn, gain 3 Block. Plating is reduced by 1 at the start of your turn."
+      }
+    ],
+    "relics": [
+      {
+        "id": "CRACKED_CORE",
+        "name": "Cracked Core",
+        "description": "At the start of each combat, Channel 1 Lightning.",
+        "counter": null,
+        "keywords": []
+      },
+      {
+        "id": "GORGET",
+        "name": "Gorget",
+        "description": "At the start of each combat, gain 4 Plating.",
+        "counter": null,
+        "keywords": []
+      }
+    ],
+    "potions": [
+      {
+        "id": "STRENGTH_POTION",
+        "name": "Strength Potion",
+        "description": "Gain 2 Strength.",
+        "slot": 1,
+        "can_use_in_combat": true,
+        "target_type": "AnyPlayer",
+        "keywords": []
+      }
+    ],
+    "max_potion_slots": 3,
+    "orbs": [
+      {
+        "id": "LIGHTNING_ORB",
+        "name": "Lightning",
+        "description": "Passive: At the end of turn, deal 3 damage to a random enemy.\nEvoke: Deal 8 damage to a random enemy.",
+        "passive_val": 3,
+        "evoke_val": 8
+      }
+    ],
+    "orb_slots": 3,
+    "orb_empty_slots": 2,
+    "hand": [
+      {
+        "index": 0,
+        "id": "FTL",
+        "name": "FTL",
+        "type": "Attack",
+        "cost": "0",
+        "star_cost": null,
+        "description": "Deal 5 damage. If you have played fewer than 3 cards this turn, draw 1 card.",
+        "target_type": "AnyEnemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": []
+      },
+      {
+        "index": 1,
+        "id": "DEFEND_DEFECT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": ["Block"]
+      },
+      {
+        "index": 2,
+        "id": "DEFEND_DEFECT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": ["Block"]
+      },
+      {
+        "index": 3,
+        "id": "STRIKE_DEFECT",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage.",
+        "target_type": "AnyEnemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": false,
+        "keywords": []
+      },
+      {
+        "index": 4,
+        "id": "CAPACITOR",
+        "name": "Capacitor+",
+        "type": "Power",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 3 Orb Slots.",
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "is_upgraded": true,
+        "keywords": []
+      }
+    ],
+    "draw_pile": [],
+    "discard_pile": [],
+    "exhaust_pile": []
+  },
+  "battle": {
+    "round": 2,
+    "turn": "player",
+    "is_play_phase": true,
+    "enemies": [
+      {
+        "entity_id": "FOSSIL_STALKER_0",
+        "combat_id": 1,
+        "name": "Fossil Stalker",
+        "hp": 37,
+        "max_hp": 52,
+        "block": 0,
+        "status": [
+          {
+            "id": "SUCK_POWER",
+            "name": "Suck",
+            "amount": 3,
+            "type": "Buff",
+            "description": "Whenever Fossil Stalker deals unblocked attack damage, it gains 3 Strength."
+          }
+        ],
+        "intents": [
+          {
+            "type": "Attack",
+            "label": "12",
+            "title": "Aggressive",
+            "description": "This enemy intends to Attack for 12 damage."
+          }
+        ]
+      }
+    ]
+  }
+}

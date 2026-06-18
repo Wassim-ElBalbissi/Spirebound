@@ -48,11 +48,61 @@ describe('detectBuild', () => {
     expect(match!.build.id).toBe('ic_strength')
   })
 
-  it('returns null when no build exists for the character', () => {
+  it('does not throw for a character/deck with no matching build', () => {
     const deck = [card('INFLAME'), ...FILLER, card('DEMON_FORM')]
-    // 'defect' may have no curated builds; if it does, this still must not throw.
     const match = detectBuild('defect', deck, [], builds, new Set(['strength']))
     if (match) expect(match.build.character).toBe('defect')
     else expect(match).toBeNull()
+  })
+
+  // Tags carried on the card (set when reconstructed from the combat piles).
+  const taggedCard = (id: string, tags: string[]): CardInstance => ({
+    id,
+    name: id,
+    upgraded: false,
+    tags
+  })
+
+  it('picks the lightning build for a lightning-leaning orb deck', () => {
+    const deck = [
+      taggedCard('BALL_LIGHTNING', ['lightning', 'orb-gen', 'attack']),
+      taggedCard('ZAP', ['lightning', 'orb-gen']),
+      taggedCard('DEFRAGMENT', ['focus']),
+      taggedCard('BIASED_COGNITION', ['focus']),
+      taggedCard('STORM', ['lightning', 'orb-gen']),
+      taggedCard('DUALCAST', ['evoke', 'orb-gen']),
+      ...Array.from({ length: 4 }, () => taggedCard('STRIKE_B', ['attack']))
+    ]
+    const tags = new Set(['orb-gen', 'focus', 'lightning', 'evoke', 'attack'])
+    const counts = new Map<string, number>([
+      ['lightning', 3],
+      ['orb-gen', 5],
+      ['focus', 2],
+      ['evoke', 1]
+    ])
+    const match = detectBuild('defect', deck, ['CRACKED_CORE'], builds, tags, counts)
+    expect(match).not.toBeNull()
+    expect(match!.build.id).toBe('de_lightning')
+  })
+
+  it('picks the frost build for a frost-leaning orb deck', () => {
+    const deck = [
+      taggedCard('CHILL', ['frost', 'orb-gen']),
+      taggedCard('GLACIER', ['frost', 'orb-gen', 'block']),
+      taggedCard('COOLHEADED', ['frost', 'orb-gen', 'draw-cycle']),
+      taggedCard('DEFRAGMENT', ['focus']),
+      taggedCard('GENETIC_ALGORITHM', ['block']),
+      taggedCard('DUALCAST', ['evoke', 'orb-gen']),
+      ...Array.from({ length: 4 }, () => taggedCard('DEFEND_B', ['block']))
+    ]
+    const tags = new Set(['orb-gen', 'focus', 'frost', 'block', 'evoke'])
+    const counts = new Map<string, number>([
+      ['frost', 3],
+      ['orb-gen', 4],
+      ['focus', 1]
+    ])
+    const match = detectBuild('defect', deck, ['CRACKED_CORE'], builds, tags, counts)
+    expect(match).not.toBeNull()
+    expect(match!.build.id).toBe('de_frost')
   })
 })

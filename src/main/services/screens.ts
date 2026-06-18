@@ -4,17 +4,22 @@ import type {
   RawEnemy,
   RawGameState,
   RawIntent,
+  RawOrb,
+  RawPileCard,
+  RawPlayer,
   RawPotion,
   RawPower,
   RawShop,
   RoomType
 } from '../types/rawState'
 import { canonicalCharacter } from '../types/rawState'
+import { deriveArchetypeTags } from './tierData/deriveArchetypeTags'
 import type {
   CardInstance,
   CombatPotion,
   CombatState,
   EnemyState,
+  OrbInstance,
   EventChoice,
   HandCard,
   MapNode,
@@ -109,7 +114,25 @@ export function classifyScreen(raw: RawGameState): Screen {
     }
 
     case 'rest_site':
-      return { kind: 'rest' }
+      return {
+        kind: 'rest',
+        options: (raw.rest_site?.options ?? []).map((o) => ({
+          id: o.id,
+          name: o.name,
+          description: o.description,
+          enabled: o.is_enabled
+        }))
+      }
+
+    case 'card_select':
+      // The Smith screen ("upgrade") hands us the full upgradeable deck.
+      if (raw.card_select?.screen_type === 'upgrade' && raw.card_select.cards) {
+        return {
+          kind: 'upgradeSelect',
+          cards: raw.card_select.cards.map(toCard)
+        }
+      }
+      return { kind: 'unknown' }
 
     case 'shop':
     case 'fake_merchant': {
@@ -138,7 +161,6 @@ export function classifyScreen(raw: RawGameState): Screen {
 
     case 'unknown':
     case 'overlay':
-    case 'card_select':
     case 'bundle_select':
     case 'crystal_sphere':
     case 'game_over':
@@ -297,8 +319,62 @@ function buildCombatState(raw: RawGameState): CombatState | null {
     potions: (player.potions ?? [])
       .filter((p) => p.can_use_in_combat)
       .map(toCombatPotion),
+    orbs: (player.orbs ?? []).map(toOrb),
+    deck: buildCombatDeck(player),
     viewport: player.viewport
   }
+}
+
+/**
+ * Reconstruct the full deck from the combat piles (hand + draw + discard +
+ * exhaust) so deck-aware advice survives outside combat even when the
+ * compendium endpoint is unavailable. Pile cards carry no id, so each card is
+ * tagged from its description here (the pipeline resolves ids against the
+ * bundle later). Returns an empty array when the mod emits no pile contents.
+ */
+export function buildCombatDeck(player: RawPlayer): CardInstance[] {
+  const all: (RawCard | RawPileCard)[] = [
+    ...(player.hand ?? []),
+    ...(player.draw_pile ?? []),
+    ...(player.discard_pile ?? []),
+    ...(player.exhaust_pile ?? [])
+  ]
+  return all.map(toDeckCard)
+}
+
+function toDeckCard(c: RawCard | RawPileCard): CardInstance {
+  const description = c.description ?? ''
+  const keywords = (c.keywords ?? []).map((k) => k.name)
+  return {
+    // Hand cards carry a real id; pile cards don't — keep the name as a
+    // placeholder id so the pipeline can resolve it against the bundle.
+    id: c.id && c.id.length > 0 ? c.id : c.name,
+    name: c.name,
+    upgraded: c.is_upgraded ?? false,
+    type: c.type,
+    description,
+    tags: deriveArchetypeTags({ description, keywords, type: c.type })
+  }
+}
+
+function toOrb(o: RawOrb): OrbInstance {
+  return {
+    id: o.id,
+    name: o.name,
+    description: o.description,
+    passiveValue: o.passive_val ?? 0,
+    evokeValue: o.evoke_val ?? 0,
+    passiveKind: classifyOrbPassive(o.description)
+  }
+}
+
+function classifyOrbPassive(description: string): OrbInstance['passiveKind'] {
+  // Only look at the passive portion (before the "Evoke:" sentence).
+  const passive = description.split(/evoke/i)[0] ?? description
+  if (/\d+\s*block/i.test(passive)) return 'block'
+  if (/\d+\s*damage/i.test(passive)) return 'damage'
+  if (/energy/i.test(passive)) return 'energy'
+  return 'other'
 }
 
 function toCombatPotion(p: RawPotion): CombatPotion {
@@ -319,6 +395,10 @@ function normalizeTurn(turn: string | undefined): 'player' | 'enemy' | 'other' {
 }
 
 function toHandCard(card: RawCard): HandCard {
+  // Base numbers are parsed from the *unconditional* text only; conditional
+  // riders ("If X, deal/gain/draw …") are evaluated against live state by the
+  // combat scorer, so stripping them here prevents double-counting.
+  const base = stripConditionals(card.description)
   return {
     index: card.index,
     id: card.id,
@@ -329,9 +409,12 @@ function toHandCard(card: RawCard): HandCard {
     upgraded: card.is_upgraded,
     canPlay: card.can_play,
     unplayableReason: card.unplayable_reason,
-    parsedDamage: parseDamage(card.description),
-    parsedBlock: parseBlock(card.description),
+    parsedDamage: parseDamage(base),
+    parsedHits: parseHits(base),
+    parsedDraw: parseDraw(base) ?? undefined,
+    parsedBlock: parseBlock(base),
     parsedSelfDamage: parseSelfDamage(card.description),
+    keywords: (card.keywords ?? []).map((k) => k.name),
     pos: card.pos
   }
 }
@@ -345,12 +428,40 @@ function parseCost(cost: string): number | 'X' | null {
 
 const DAMAGE_RE = /Deal\s+(\d+)\s+damage/i
 const BLOCK_RE = /Gain\s+(\d+)\s+Block/i
+// Multi-hit, within the same clause as the damage: "Deal 5 damage 3 times" or
+// "Deal 5 damage to ALL enemies twice". `[^.]*?` keeps us inside the sentence.
+const HITS_RE = /Deal\s+\d+\s+damage[^.]*?\b(\d+)\s+times/i
+const TWICE_RE = /Deal\s+\d+\s+damage[^.]*?\btwice\b/i
+// Card draw: "Draw 1 card", "Draw 3 cards", or "Draw a card".
+const DRAW_RE = /Draw\s+(?:(\d+)|a)\s+cards?/i
 // Self-harm: "Lose 6 HP", "lose 3 Health", or "take 2 damage" (e.g. Burn).
 const SELF_DAMAGE_RE = /(?:Lose|Take)\s+(\d+)\s+(?:HP|Health|damage)/i
 
 function parseDamage(description: string): number | null {
   const m = description.match(DAMAGE_RE)
   return m ? Number(m[1]) : null
+}
+
+function parseHits(description: string): number {
+  const m = description.match(HITS_RE)
+  if (m) return Number(m[1])
+  if (TWICE_RE.test(description)) return 2
+  return 1
+}
+
+function parseDraw(description: string): number | null {
+  const m = description.match(DRAW_RE)
+  if (!m) return null
+  return m[1] ? Number(m[1]) : 1
+}
+
+// A conditional clause: "If <condition>, <effect>" up to the sentence end.
+// Stripped before base parsing so a conditional effect isn't read as guaranteed.
+const CONDITIONAL_CLAUSE_RE = /\bIf\b[^.]*?,\s*[^.]*?(?=\.|$)/gi
+
+/** Remove "If …, …" clauses so base parsers only see unconditional effects. */
+export function stripConditionals(description: string): string {
+  return description.replace(CONDITIONAL_CLAUSE_RE, ' ')
 }
 
 function parseBlock(description: string): number | null {
@@ -389,7 +500,8 @@ function toPower(p: RawPower): PowerInstance {
   return {
     name: p.name,
     amount: p.amount,
-    type: p.type
+    type: p.type,
+    description: p.description
   }
 }
 

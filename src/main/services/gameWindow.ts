@@ -8,37 +8,51 @@ export interface GameWindowRect {
   height: number
 }
 
-interface Cached {
+export interface GameWindowInfo {
+  /** On-screen rect of the game's main window, or null if not running. */
   rect: GameWindowRect | null
+  /** True when the game's window is the active (foreground) window. */
+  foreground: boolean
+}
+
+interface Cached {
+  info: GameWindowInfo
   at: number
 }
 
 const CACHE_MS = 1000
-let cached: Cached = { rect: null, at: 0 }
-let inflight: Promise<GameWindowRect | null> | null = null
+let cached: Cached = { info: { rect: null, foreground: false }, at: 0 }
+let inflight: Promise<GameWindowInfo> | null = null
 
 const PROCESS_NAME = 'SlayTheSpire2'
+
+/**
+ * Returns the game window rect plus whether it's the foreground window.
+ * Calls PowerShell at most once per second; subsequent calls within that
+ * window return the cached value with no spawn cost.
+ */
+export async function detectGame(): Promise<GameWindowInfo> {
+  const now = Date.now()
+  if (now - cached.at < CACHE_MS) return cached.info
+  if (inflight) return await inflight
+
+  inflight = readGame().then((info) => {
+    cached = { info, at: Date.now() }
+    inflight = null
+    return info
+  })
+  return await inflight
+}
 
 /**
  * Returns the on-screen rect of the Slay the Spire 2 main window, or null
  * if the game isn't running or its bounds can't be read.
  *
  * Used as a fallback for the heuristic card-slot layout when the Spirebound
- * STS2MCP fork isn't installed (i.e. no per-card `pos`). Calls PowerShell
- * once per second; subsequent calls within that window return the cached
- * value with no spawn cost.
+ * STS2MCP fork isn't installed (i.e. no per-card `pos`).
  */
 export async function detectGameWindow(): Promise<GameWindowRect | null> {
-  const now = Date.now()
-  if (now - cached.at < CACHE_MS) return cached.rect
-  if (inflight) return await inflight
-
-  inflight = readWindowRect().then((rect) => {
-    cached = { rect, at: Date.now() }
-    inflight = null
-    return rect
-  })
-  return await inflight
+  return (await detectGame()).rect
 }
 
 const PS_SCRIPT = `
@@ -48,23 +62,31 @@ using System;
 using System.Runtime.InteropServices;
 public class W {
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r);
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+  [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
   [StructLayout(LayoutKind.Sequential)] public struct RECT { public int L, T, R, B; }
 }
 '@
 $p = Get-Process -Name '${PROCESS_NAME}' | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1
-if ($null -eq $p) { Write-Output 'null'; exit 0 }
+if ($null -eq $p) { Write-Output '{"fg":false}'; exit 0 }
+$fgh = [W]::GetForegroundWindow()
+$fgpid = 0
+[void][W]::GetWindowThreadProcessId($fgh, [ref]$fgpid)
+$fgStr = if ($fgpid -eq $p.Id) { 'true' } else { 'false' }
 $r = New-Object W+RECT
 $ok = [W]::GetWindowRect($p.MainWindowHandle, [ref]$r)
-if (-not $ok) { Write-Output 'null'; exit 0 }
-"{""x"":$($r.L),""y"":$($r.T),""w"":$($r.R - $r.L),""h"":$($r.B - $r.T)}"
+if (-not $ok) { Write-Output "{""fg"":$fgStr}"; exit 0 }
+"{""x"":$($r.L),""y"":$($r.T),""w"":$($r.R - $r.L),""h"":$($r.B - $r.T),""fg"":$fgStr}"
 `.trim()
 
-function readWindowRect(): Promise<GameWindowRect | null> {
+const NONE: GameWindowInfo = { rect: null, foreground: false }
+
+function readGame(): Promise<GameWindowInfo> {
   return new Promise((resolve) => {
     let stdout = ''
     let stderr = ''
     let done = false
-    const finish = (v: GameWindowRect | null): void => {
+    const finish = (v: GameWindowInfo): void => {
       if (done) return
       done = true
       resolve(v)
@@ -78,40 +100,45 @@ function readWindowRect(): Promise<GameWindowRect | null> {
       )
     } catch (err) {
       logger.warn({ err }, 'gameWindow: spawn failed')
-      finish(null)
+      finish(NONE)
       return
     }
     const timer = setTimeout(() => {
       try { proc?.kill() } catch { /* noop */ }
-      finish(null)
+      finish(NONE)
     }, 2000)
     proc.stdout.on('data', (d) => { stdout += d.toString() })
     proc.stderr.on('data', (d) => { stderr += d.toString() })
     proc.on('close', () => {
       clearTimeout(timer)
       const txt = stdout.trim()
-      if (txt === 'null' || txt === '') return finish(null)
+      if (txt === '' || txt === 'null') return finish(NONE)
       try {
         const parsed = JSON.parse(txt) as {
-          x: number; y: number; w: number; h: number
+          x?: number; y?: number; w?: number; h?: number; fg?: boolean
         }
+        const foreground = parsed.fg === true
         if (
           typeof parsed.x !== 'number' || typeof parsed.y !== 'number' ||
           typeof parsed.w !== 'number' || typeof parsed.h !== 'number' ||
           parsed.w <= 0 || parsed.h <= 0
         ) {
-          return finish(null)
+          // Game running but rect unreadable — still report foreground.
+          return finish({ rect: null, foreground })
         }
-        finish({ x: parsed.x, y: parsed.y, width: parsed.w, height: parsed.h })
+        finish({
+          rect: { x: parsed.x, y: parsed.y, width: parsed.w, height: parsed.h },
+          foreground
+        })
       } catch (err) {
         logger.warn({ err, stdout, stderr }, 'gameWindow: parse failed')
-        finish(null)
+        finish(NONE)
       }
     })
     proc.on('error', (err) => {
       clearTimeout(timer)
       logger.warn({ err }, 'gameWindow: proc error')
-      finish(null)
+      finish(NONE)
     })
   })
 }

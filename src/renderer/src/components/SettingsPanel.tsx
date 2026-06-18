@@ -92,6 +92,23 @@ export function SettingsPanel({
         </div>
       </div>
 
+      <div className="border-t border-zinc-700/40 pt-2">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+          Map doodles
+        </div>
+        <ToggleRow
+          label="Enable doodle hotkey"
+          value={settings.enableMapDoodles}
+          onChange={(enableMapDoodles) => onChange({ enableMapDoodles })}
+        />
+        <div className="mt-1 text-[10px] leading-snug text-zinc-500">
+          Press <span className="font-mono text-zinc-400">Ctrl+Alt+D</span> on
+          the map to doodle a random shape — the app briefly takes over the
+          mouse and draws by holding right-click. Move the mouse to resume
+          control.
+        </div>
+      </div>
+
       {!modProvidesPositions && (
         <div className="rounded-md border border-zinc-700/40 bg-zinc-800/30">
           <button

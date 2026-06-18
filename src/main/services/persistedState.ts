@@ -17,6 +17,21 @@ export interface WindowBounds {
   displayId?: number
 }
 
+/**
+ * One-time record of the vanilla→modded save migration. STS2 keeps modded-run
+ * progress in a scope separate from vanilla, so we copy the vanilla scope over
+ * once (when the modded scope is empty). This record stops it from repeating.
+ */
+export interface SaveMigrationRecord {
+  done: boolean
+  /** Outcome of the migration attempt (see saveMigrator SaveMigrationResult). */
+  action: string
+  migratedAt: string
+  vanillaDir?: string
+  moddedDir?: string
+  backupDir?: string
+}
+
 export interface PersistedState {
   schemaVersion: 1
   windowBounds: Record<string, WindowBounds>
@@ -24,6 +39,8 @@ export interface PersistedState {
   hubBounds?: Record<string, WindowBounds>
   pinnedInteractive?: boolean
   lastModVersion?: string
+  /** Set once the unmodded save profile has been migrated into the modded scope. */
+  saveMigration?: SaveMigrationRecord
   settings?: UserSettings
   /** User-authored tier lists, keyed by id. */
   customTierLists?: Record<string, CustomTierList>

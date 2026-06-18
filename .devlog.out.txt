@@ -1,0 +1,73 @@
+
+> spirebound@0.1.0 dev
+> electron-vite dev
+
+[36mvite v7.3.5 [32mbuilding ssr environment for development...[36m[39m
+transforming...
+[32m✓[39m 44 modules transformed.
+rendering chunks...
+[2mout/main/[22m[36mindex.js  [39m[1m[2m151.90 kB[22m[1m[22m
+[32m✓ built in 441ms[39m
+[32m
+electron main process built successfully[39m
+[90m
+-----
+[39m
+[36mvite v7.3.5 [32mbuilding ssr environment for development...[36m[39m
+transforming...
+[32m✓[39m 2 modules transformed.
+rendering chunks...
+[2mout/preload/[22m[36mindex.js  [39m[1m[2m6.28 kB[22m[1m[22m
+[32m✓ built in 12ms[39m
+[32m
+electron preload scripts built successfully[39m
+[90m
+-----
+[39m
+[32mdev server running for the electron renderer process at:
+[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[32m
+starting electron app...
+[39m
+
+{"level":30,"time":1781761960092,"pid":45760,"hostname":"Wass_PC","msg":"poll loop started"}
+{"level":20,"time":1781761960117,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761960630,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761961640,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761963657,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761967665,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761972671,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761977677,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761982685,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761987695,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761992707,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781761997713,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762002723,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762007735,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762012751,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762017762,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762022771,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762027782,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762032799,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762037812,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762042816,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762047831,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762052844,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762057859,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762062863,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762067875,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762072878,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762077895,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762082907,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762087912,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762092925,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762097930,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762102943,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762107948,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762112950,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762117959,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762122968,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762127976,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}
+{"level":20,"time":1781762132979,"pid":45760,"hostname":"Wass_PC","reason":"ECONNREFUSED","msg":"mcp poll failure"}

@@ -2,6 +2,24 @@ import React from 'react'
 
 const STS2MCP_REPO_URL = 'https://github.com/Gennadiyev/STS2MCP'
 
+/** Short, user-facing note about what the save migration did. */
+function describeSaveMigration(action: string): string {
+  switch (action) {
+    case 'migrated':
+      return 'Your existing unmodded progress was copied into the modded save, so nothing is lost.'
+    case 'mixed':
+      return 'Unmodded progress was carried over for the profiles whose modded save was empty.'
+    case 'skipped-modded-not-empty':
+    case 'already-done':
+      return 'Your modded saves were already present and left untouched.'
+    case 'error':
+      return "Couldn't copy your unmodded progress automatically — see logs."
+    default:
+      // scopes-not-found — nothing to report.
+      return ''
+  }
+}
+
 export interface OnboardingPanelProps {
   errorMessage?: string
 }
@@ -24,14 +42,15 @@ export function OnboardingPanel({
       setResult({ ok: false, text: 'Install handler did not respond.' })
       return
     }
-    setResult(
-      r.ok
-        ? {
-            ok: true,
-            text: `Installed to ${r.installedTo}. Launch Slay the Spire 2 and choose Load with Mods.`
-          }
-        : { ok: false, text: r.reason ?? 'Install failed.' }
-    )
+    if (!r.mod.ok) {
+      setResult({ ok: false, text: r.mod.reason ?? 'Install failed.' })
+      return
+    }
+    const saveNote = describeSaveMigration(r.saves.action)
+    setResult({
+      ok: true,
+      text: `Installed to ${r.mod.installedTo}.${saveNote ? ' ' + saveNote : ''} Launch Slay the Spire 2 and choose Load with Mods.`
+    })
   }
 
   const openReleases = (): void => {

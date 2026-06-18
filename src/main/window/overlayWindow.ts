@@ -9,21 +9,41 @@ export interface OverlayWindowOptions {
   onBoundsChanged?: (bounds: WindowBounds) => void
 }
 
+/**
+ * Where the overlay sits. `hud` is the default top-center strip; `mapLeft`
+ * is a tall, left-anchored panel used on the map screen so the route plan can
+ * live in the empty space beside the map (mirroring the in-game Legend on the
+ * right) instead of overlapping the map itself.
+ */
+export type OverlayLayout = 'hud' | 'mapLeft'
+
 export interface OverlayWindowHandle {
   win: BrowserWindow
   setInteractive(interactive: boolean): void
   setPinned(pinned: boolean): void
   isPinned(): boolean
+  /** Switch the window between the top-strip HUD and the left map panel. */
+  setLayout(layout: OverlayLayout): void
 }
 
-const DEFAULT_WIDTH = 360
-const DEFAULT_HEIGHT = 480
-const EDGE_MARGIN = 24
+// Fixed horizontal HUD anchored to the top-center of the screen.
+const HUD_HEIGHT = 260
+// Pushed down a fraction of the screen so it clears the game's top header bar.
+const HUD_TOP_FRACTION = 0.07
+const HUD_MAX_WIDTH = 1320
+const HUD_SIDE_MARGIN = 60
+
+// Left panel for the map screen. Tall enough to hold a full route; the content
+// is compact and vertically centered within it.
+const MAP_PANEL_WIDTH = 300
+const MAP_PANEL_HEIGHT_FRACTION = 0.78
+const MAP_PANEL_LEFT_MARGIN = 24
 
 export function createOverlayWindow(
   opts: OverlayWindowOptions
 ): OverlayWindowHandle {
-  const bounds = resolveBounds(opts.initialBounds)
+  let layout: OverlayLayout = 'hud'
+  const bounds = resolveBounds(layout)
 
   const win = new BrowserWindow({
     width: bounds.width,
@@ -34,9 +54,11 @@ export function createOverlayWindow(
     frame: false,
     hasShadow: false,
     skipTaskbar: true,
-    resizable: true,
-    minWidth: 220,
-    minHeight: 80,
+    // Fixed HUD: anchored top-center, never moved or resized by the user.
+    // All controls live in the Hub.
+    resizable: false,
+    movable: false,
+    focusable: false,
     alwaysOnTop: true,
     show: false,
     backgroundColor: '#00000000',
@@ -96,6 +118,17 @@ export function createOverlayWindow(
     },
     isPinned() {
       return pinned
+    },
+    setLayout(next: OverlayLayout) {
+      if (next === layout || win.isDestroyed()) return
+      layout = next
+      // A window created with resizable/movable:false ignores programmatic
+      // setBounds on Windows, so briefly re-enable them around the resize.
+      win.setResizable(true)
+      win.setMovable(true)
+      win.setBounds(resolveBounds(next))
+      win.setMovable(false)
+      win.setResizable(false)
     }
   }
 }
@@ -113,48 +146,31 @@ function applyInteractivity(
 }
 
 function resolveBounds(
-  saved: WindowBounds | undefined
+  layout: OverlayLayout
 ): { x: number; y: number; width: number; height: number } {
-  const all = screen.getAllDisplays()
+  // Anchor to the primary display — saved bounds are ignored so the overlay
+  // never drifts; the layout is driven entirely by the current screen.
+  const { workArea } = screen.getPrimaryDisplay()
 
-  if (saved && all.some((d) => d.id === saved.displayId)) {
-    if (boundsOnScreen(saved, all)) {
-      return {
-        x: saved.x,
-        y: saved.y,
-        width: saved.width,
-        height: saved.height
-      }
+  if (layout === 'mapLeft') {
+    const height = Math.round(workArea.height * MAP_PANEL_HEIGHT_FRACTION)
+    return {
+      width: MAP_PANEL_WIDTH,
+      height,
+      x: workArea.x + MAP_PANEL_LEFT_MARGIN,
+      y: workArea.y + Math.round((workArea.height - height) / 2)
     }
   }
 
-  const display = screen.getPrimaryDisplay()
-  const { workArea } = display
-  const width = DEFAULT_WIDTH
-  const height = DEFAULT_HEIGHT
+  // hud: fixed horizontal strip, top-center.
+  const width = Math.min(
+    HUD_MAX_WIDTH,
+    Math.max(720, workArea.width - HUD_SIDE_MARGIN * 2)
+  )
   return {
     width,
-    height,
-    x: workArea.x + workArea.width - width - EDGE_MARGIN,
-    y: workArea.y + EDGE_MARGIN
+    height: HUD_HEIGHT,
+    x: Math.round(workArea.x + (workArea.width - width) / 2),
+    y: workArea.y + Math.round(workArea.height * HUD_TOP_FRACTION)
   }
-}
-
-function boundsOnScreen(
-  b: WindowBounds,
-  displays: Electron.Display[]
-): boolean {
-  // Require ≥40px of the window to be visible on some display.
-  return displays.some((d) => {
-    const wa = d.workArea
-    const overlapX = Math.max(
-      0,
-      Math.min(b.x + b.width, wa.x + wa.width) - Math.max(b.x, wa.x)
-    )
-    const overlapY = Math.max(
-      0,
-      Math.min(b.y + b.height, wa.y + wa.height) - Math.max(b.y, wa.y)
-    )
-    return overlapX >= 40 && overlapY >= 40
-  })
 }

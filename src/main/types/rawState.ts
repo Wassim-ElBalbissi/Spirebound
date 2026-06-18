@@ -61,6 +61,23 @@ export interface RawCard {
   pos?: RawCardPos
 }
 
+/**
+ * A card in a draw/discard/exhaust pile. The mod emits a lighter shape than
+ * combat `hand` cards — notably **no `id`** and no per-card position — so most
+ * fields are optional. Reconstructed-deck code resolves the id from the name.
+ */
+export interface RawPileCard {
+  id?: string
+  name: string
+  cost?: string
+  star_cost?: string | null
+  description?: string
+  type?: RawCard['type']
+  is_upgraded?: boolean
+  rarity?: RawCard['rarity']
+  keywords?: RawKeyword[]
+}
+
 export interface RawRelic {
   id: string
   name: string
@@ -86,6 +103,28 @@ export interface RawRunInfo {
   ascension: number
 }
 
+export interface RawRestOption {
+  index: number
+  id: string
+  name: string
+  description: string
+  is_enabled: boolean
+}
+
+export interface RawRestSite {
+  options?: RawRestOption[]
+}
+
+/** A Defect orb. `passive_val` triggers at end of turn; `evoke_val` on Evoke. */
+export interface RawOrb {
+  id: string
+  name: string
+  description: string
+  passive_val?: number
+  evoke_val?: number
+  keywords?: RawKeyword[]
+}
+
 export interface RawPlayer {
   character: string
   hp: number
@@ -98,6 +137,14 @@ export interface RawPlayer {
   draw_pile_count?: number
   discard_pile_count?: number
   exhaust_pile_count?: number
+  /** Full pile contents (Spirebound fork). Lighter shape than `hand` — no ids. */
+  draw_pile?: RawPileCard[]
+  discard_pile?: RawPileCard[]
+  exhaust_pile?: RawPileCard[]
+  /** Defect orbs currently channeled. */
+  orbs?: RawOrb[]
+  orb_slots?: number
+  orb_empty_slots?: number
   status: RawPower[]
   relics: RawRelic[]
   potions: RawPotion[]
@@ -218,6 +265,18 @@ export interface RawEventState {
   options: RawEventOption[]
 }
 
+/**
+ * A "choose a card" sub-screen (e.g. Smith at a rest site). `screen_type`
+ * discriminates the action; for `"upgrade"` the `cards` are the full set of
+ * upgradeable deck cards.
+ */
+export interface RawCardSelect {
+  screen_type?: string
+  prompt?: string
+  cards?: RawCard[]
+  can_skip?: boolean
+}
+
 export interface RawRelicSelect {
   prompt: string
   relics: (RawRelic & { index: number })[]
@@ -292,10 +351,10 @@ export interface RawGameState {
   fake_merchant?: { shop?: RawShop }
   treasure?: RawTreasure
   rewards?: RawRewards
-  rest_site?: unknown
+  rest_site?: RawRestSite
   battle?: RawBattle
   hand_select?: unknown
-  card_select?: unknown
+  card_select?: RawCardSelect
   bundle_select?: unknown
   crystal_sphere?: unknown
   game_over?: unknown

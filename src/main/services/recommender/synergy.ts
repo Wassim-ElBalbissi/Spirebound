@@ -1,5 +1,5 @@
-import type { Character } from '../../types/gameState'
-import type { ArchetypeTagTable } from '../../types/tierData'
+import type { CardInstance, Character } from '../../types/gameState'
+import type { ArchetypeTagTable, TierBundle } from '../../types/tierData'
 
 /**
  * Archetype weights per character. Heuristic, hand-curated.
@@ -46,6 +46,23 @@ export const ARCHETYPE_TAGS: ArchetypeTagTable = {
 
 export function tagWeight(character: Character, tag: string): number {
   return ARCHETYPE_TAGS[character]?.[tag] ?? 0
+}
+
+/**
+ * Count archetype tags across a deck. Prefers tags carried on the card (set when
+ * the deck is reconstructed from the live combat piles, where the id may not
+ * resolve) and falls back to the bundle's tags for the card id.
+ */
+export function deckTagCounts(
+  deck: CardInstance[],
+  bundle: TierBundle
+): Map<string, number> {
+  const counts = new Map<string, number>()
+  for (const card of deck) {
+    const tags = card.tags ?? bundle.cards[card.id]?.tags ?? []
+    for (const t of tags) counts.set(t, (counts.get(t) ?? 0) + 1)
+  }
+  return counts
 }
 
 /**
