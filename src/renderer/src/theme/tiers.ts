@@ -4,9 +4,8 @@ import type { Tier } from '../../../main/types/tierData'
 export const TIER_ORDER: Tier[] = ['S', 'A', 'B', 'C', 'D', 'F']
 
 /**
- * Canonical tier color classes, shared between the overlay's per-card badges
- * and the Hub's tier lists so a card looks the same everywhere.
- * Mirrors the mapping in components/HandBadge.tsx.
+ * Canonical tier color classes, shared across the overlay advice panels and the
+ * Hub's tier lists so a card looks the same everywhere.
  */
 export const TIER_BADGE: Record<Tier, string> = {
   S: 'text-fuchsia-300 bg-fuchsia-500/20 border-fuchsia-400/60',

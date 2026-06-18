@@ -11,10 +11,6 @@ import {
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { createOverlayWindow, OverlayWindowHandle } from './window/overlayWindow'
-import {
-  createAnnotationWindow,
-  AnnotationWindowHandle
-} from './window/annotationWindow'
 import { createHubWindow, HubWindowHandle } from './window/hubWindow'
 import { createTray, refreshMenu } from './window/trayMenu'
 import { IpcChannels } from './ipc/channels'
@@ -35,12 +31,7 @@ import type {
   McpHealth,
   GameStatus
 } from './types/gameState'
-import type {
-  AnnotationPayload,
-  CalibrationStatePayload,
-  RecommendationView
-} from './types/recommendation'
-import { estimateCardSlots } from './services/cardSlotLayout'
+import type { RecommendationView } from './types/recommendation'
 import { runSetup } from './services/modInstaller'
 import { detectGame, detectGameWindow } from './services/gameWindow'
 import { computeRegion, toPixelStrokes } from './services/drawing/drawEngine'
@@ -52,7 +43,7 @@ import {
 } from './services/imageCache'
 import { initAutoUpdate } from './services/updater'
 import { screen as electronScreen } from 'electron'
-import type { CalibrationAnchors } from './types/settings'
+import type { HotkeyInfo } from './types/settings'
 import { logger } from './services/logger'
 
 const isDev = !app.isPackaged
@@ -66,7 +57,6 @@ const STS2MCP_RELEASES_URL =
   'https://github.com/Gennadiyev/STS2MCP/releases/latest'
 
 let overlay: OverlayWindowHandle | null = null
-let annotation: AnnotationWindowHandle | null = null
 let hub: HubWindowHandle | null = null
 let pollLoop: PollLoop | null = null
 let mockProvider: MockStateProvider | null = null
@@ -84,8 +74,10 @@ let lastDeckFloor = -1
 let lastCombatDeck: CardInstance[] | null = null
 let savedBoundsBeforeCompact: { width: number; height: number } | null = null
 let presenceTimer: NodeJS.Timeout | null = null
+/** Set once a quit is underway so we only tear down once. */
+let isQuitting = false
 let gameRunning = false
-/** Whether the overlay/annotation windows are currently shown. */
+/** Whether the overlay window is currently shown. */
 let overlayVisible = false
 let mcpConnected = false
 let lastModVersion: string | undefined
@@ -93,11 +85,6 @@ let lastState: NormalizedState | null = null
 let lastRec: RecommendationView = { kind: 'none' }
 /** Last health pushed to the renderer, replayed when an overlay (re)loads. */
 let lastHealth: McpHealth = { ok: false }
-let calibrationState: CalibrationStatePayload = {
-  active: false,
-  step: 0,
-  handSize: 0
-}
 
 function bootstrap(): void {
   registerImageCacheProtocol()
@@ -120,14 +107,6 @@ function bootstrap(): void {
           store?.setWindowBounds(bounds.displayId, bounds)
         }
       }
-    })
-
-    annotation = createAnnotationWindow({
-      preloadPath,
-      rendererUrl: isDev ? rendererUrl : undefined,
-      rendererFile: !isDev
-        ? join(__dirname, '../renderer/annotations.html')
-        : undefined
     })
 
     // Push initial settings + apply saved zoom factor on first paint.
@@ -154,13 +133,16 @@ function bootstrap(): void {
       if (bounds.displayId !== undefined) {
         store?.setHubBounds(bounds.displayId, bounds)
       }
-    }
+    },
+    // Closing the Hub by any means quits the whole app.
+    onCloseRequest: () => quitApp()
   })
 
   tray = createTray({
     overlay: overlay ?? undefined,
     onOpenHub: () => hub?.openFocus(),
-    onQuit: () => app.quit()
+    onQuit: () => quitApp(),
+    iconPath: appIconPath()
   })
 
   registerHotkeys()
@@ -170,6 +152,23 @@ function bootstrap(): void {
     startRecommendationPipeline()
     startPresenceLoop()
   }
+}
+
+/**
+ * Quit the whole app. The Hub is the primary window now, so closing it (the
+ * custom title-bar X, the tray "Quit", or the overlay) must terminate the
+ * process — not hide to tray. Destroying every window directly bypasses the
+ * Hub's hide-on-close guard, so no window's `close` handler can veto the quit
+ * (a single vetoed close aborts the entire `app.quit()`); `will-quit` then runs
+ * the rest of the teardown.
+ */
+function quitApp(): void {
+  if (isQuitting) return
+  isQuitting = true
+  for (const win of BrowserWindow.getAllWindows()) {
+    if (!win.isDestroyed()) win.destroy()
+  }
+  app.quit()
 }
 
 /**
@@ -230,11 +229,6 @@ function setOverlayVisible(visible: boolean): void {
     if (visible) ow.showInactive()
     else ow.hide()
   }
-  const aw = annotation?.win
-  if (aw && !aw.isDestroyed()) {
-    if (visible) aw.showInactive()
-    else aw.hide()
-  }
 }
 
 function broadcastGameStatus(): void {
@@ -272,8 +266,35 @@ function pickInitialBounds(): WindowBounds | undefined {
   return store.getWindowBounds(id)
 }
 
+/** Live registration status of each global hotkey (read by the Hub settings). */
+const hotkeyStatus: HotkeyInfo[] = []
+
 function registerHotkeys(): void {
-  const registered = globalShortcut.register(TOGGLE_PIN_ACCELERATOR, () => {
+  // Re-registering on a relaunch: drop stale entries first. globalShortcut owns
+  // the OS binding, so a failure here means another app (or a leftover
+  // instance) holds the combo — surfaced to the user via hotkeysGet.
+  hotkeyStatus.length = 0
+  const bind = (
+    accelerator: string,
+    label: string,
+    handler: () => void
+  ): void => {
+    let ok = false
+    try {
+      ok = globalShortcut.register(accelerator, handler)
+    } catch (err) {
+      logger.warn({ err, accelerator }, 'global shortcut registration threw')
+    }
+    if (!ok) {
+      logger.warn(
+        { accelerator, label },
+        'global shortcut unavailable — already held by another app or instance'
+      )
+    }
+    hotkeyStatus.push({ accelerator, label, registered: ok })
+  }
+
+  bind(TOGGLE_PIN_ACCELERATOR, 'Pin / unpin overlay', () => {
     if (!overlay) return
     overlay.setPinned(!overlay.isPinned())
     refreshTrayMenu()
@@ -281,32 +302,14 @@ function registerHotkeys(): void {
       pinned: overlay.isPinned()
     })
   })
-  if (!registered) {
-    logger.warn(
-      { accel: TOGGLE_PIN_ACCELERATOR },
-      'global shortcut registration failed'
-    )
-  }
 
-  const hubRegistered = globalShortcut.register(OPEN_HUB_ACCELERATOR, () => {
+  bind(OPEN_HUB_ACCELERATOR, 'Open Hub', () => {
     hub?.openFocus()
   })
-  if (!hubRegistered) {
-    logger.warn(
-      { accel: OPEN_HUB_ACCELERATOR },
-      'hub global shortcut registration failed'
-    )
-  }
 
-  const drawRegistered = globalShortcut.register(DRAW_MAP_ACCELERATOR, () => {
+  bind(DRAW_MAP_ACCELERATOR, 'Doodle on map', () => {
     void runDoodle()
   })
-  if (!drawRegistered) {
-    logger.warn(
-      { accel: DRAW_MAP_ACCELERATOR },
-      'draw-map global shortcut registration failed'
-    )
-  }
 }
 
 /**
@@ -336,7 +339,7 @@ function refreshTrayMenu(): void {
   refreshMenu({
     overlay: overlay ?? undefined,
     onOpenHub: () => hub?.openFocus(),
-    onQuit: () => app.quit()
+    onQuit: () => quitApp()
   })
 }
 
@@ -400,6 +403,8 @@ function registerIpc(): void {
     return store?.getSettings()
   })
 
+  ipcMain.handle(IpcChannels.hotkeysGet, () => hotkeyStatus)
+
   // Pull the latest known status when an overlay (re)loads, so it never has to
   // wait for the next push — avoids flashing the "mod not detected" panel.
   ipcMain.handle(IpcChannels.overlaySnapshot, () => {
@@ -413,9 +418,6 @@ function registerIpc(): void {
       if (next) {
         applyZoom(next.uiScale)
         sendToRenderer(IpcChannels.settingsChanged, next)
-        // Push fresh annotations so calibration grid / sliders react
-        // immediately, not only on the next game-state tick.
-        if (lastState) void publishAnnotations(lastState, lastRec)
         if (partial.applyIntentModifiers !== undefined && recommender) {
           recommender.setApplyIntentModifiers(next.applyIntentModifiers)
           rerunCurrentRecommendation()
@@ -425,66 +427,8 @@ function registerIpc(): void {
     }
   )
 
-  ipcMain.handle(IpcChannels.calibrationStart, () => {
-    const handSize =
-      lastState?.screen.kind === 'combat'
-        ? lastState.screen.combat.hand.length
-        : 0
-    if (handSize < 2) {
-      calibrationState = { active: false, step: 0, handSize: 0 }
-      broadcastCalibrationState()
-      return {
-        ok: false,
-        reason: 'Need ≥2 cards in hand to calibrate. Enter combat and try again.'
-      }
-    }
-    calibrationState = { active: true, step: 1, handSize }
-    annotation?.setInteractive(true)
-    broadcastCalibrationState()
-    return { ok: true }
-  })
-
-  ipcMain.handle(IpcChannels.calibrationCancel, () => {
-    calibrationState = { active: false, step: 0, handSize: 0 }
-    annotation?.setInteractive(false)
-    broadcastCalibrationState()
-  })
-
-  ipcMain.handle(
-    IpcChannels.calibrationClick,
-    (_event, point: { x: number; y: number }) => {
-      if (!calibrationState.active) return
-      if (calibrationState.step === 1) {
-        calibrationState = {
-          ...calibrationState,
-          step: 2,
-          leftCard: point
-        }
-        broadcastCalibrationState()
-        return
-      }
-      if (calibrationState.step === 2 && calibrationState.leftCard) {
-        const display = electronScreen.getPrimaryDisplay().workArea
-        const anchors: CalibrationAnchors = {
-          handSize: calibrationState.handSize,
-          leftCard: calibrationState.leftCard,
-          rightCard: point,
-          display: { width: display.width, height: display.height },
-          capturedAt: Date.now()
-        }
-        const next = store?.setSettings({ calibration: anchors })
-        if (next) sendToRenderer(IpcChannels.settingsChanged, next)
-
-        calibrationState = { active: false, step: 0, handSize: 0 }
-        annotation?.setInteractive(false)
-        broadcastCalibrationState()
-        if (lastState) void publishAnnotations(lastState, lastRec)
-      }
-    }
-  )
-
   ipcMain.handle(IpcChannels.overlayQuit, () => {
-    app.quit()
+    quitApp()
   })
 
   // --- Hub: open / browse data / tier lists ---
@@ -514,9 +458,9 @@ function registerIpc(): void {
 
   ipcMain.handle(IpcChannels.hubClose, () => {
     // The Hub is the whole app now — closing it should quit, not hide to tray.
-    // before-quit sets the window's _forceClose flag so the hide-on-close
-    // guard falls through and the process actually exits.
-    app.quit()
+    // quitApp() destroys every window directly so the hide-on-close guard can't
+    // veto the quit and the process actually exits.
+    quitApp()
   })
 
   ipcMain.handle(IpcChannels.tierDataGet, () => {
@@ -663,7 +607,6 @@ function rerunCurrentRecommendation(): void {
     const rec = recommender.recommend(lastState) as RecommendationView
     lastRec = rec
     sendToRenderer(IpcChannels.recommendationReady, rec)
-    void publishAnnotations(lastState, rec)
   } catch (err) {
     logger.error({ err }, 're-recommend failed')
   }
@@ -744,17 +687,6 @@ function broadcastActiveTierList(): void {
   }
 }
 
-function broadcastCalibrationState(): void {
-  const annoWin = annotation?.win
-  const overlayWin = overlay?.win
-  if (annoWin && !annoWin.isDestroyed()) {
-    annoWin.webContents.send(IpcChannels.calibrationState, calibrationState)
-  }
-  if (overlayWin && !overlayWin.isDestroyed()) {
-    overlayWin.webContents.send(IpcChannels.calibrationState, calibrationState)
-  }
-}
-
 function startRecommendationPipeline(): void {
   const bundle = loadTierBundle()
   recommender = createRecommender(bundle, loadCompendium().builds)
@@ -787,13 +719,11 @@ function startRecommendationPipeline(): void {
       lastState = state
       lastRec = rec
       sendToRenderer(IpcChannels.recommendationReady, rec)
-      void publishAnnotations(state, rec)
     } catch (err) {
       logger.error({ err }, 'recommender failure')
       lastState = state
       lastRec = { kind: 'none' }
       sendToRenderer(IpcChannels.recommendationReady, { kind: 'none' })
-      void publishAnnotations(state, { kind: 'none' })
     }
     // Cache the live combat deck, then lazily refresh on floor change.
     captureCombatDeck(state)
@@ -841,101 +771,6 @@ function applyZoom(scale: number): void {
   win.webContents.setZoomFactor(scale)
 }
 
-async function publishAnnotations(
-  state: NormalizedState,
-  rec: RecommendationView
-): Promise<void> {
-  const win = annotation?.win
-  if (!win || win.isDestroyed()) return
-
-  const settings = store?.getSettings()
-  if (!settings) return
-
-  const isCombat =
-    state.screen.kind === 'combat' && rec.kind === 'combatPlay'
-  const visible = isCombat && settings.showPerCardBadges
-
-  const display = electronScreen.getPrimaryDisplay()
-  const annotations =
-    isCombat && rec.kind === 'combatPlay' ? rec.result.hand : []
-
-  // When the calibration grid is on, always render reference slots even out
-  // of combat so the user can dial in alignment against the in-game UI.
-  const slotsForLayout =
-    annotations.length > 0
-      ? annotations.length
-      : settings.showCalibrationGrid
-        ? 5
-        : 0
-
-  const anchors = settings.calibration
-    ? {
-        handSize: settings.calibration.handSize,
-        leftCenter: settings.calibration.leftCard,
-        rightCenter: settings.calibration.rightCard,
-        display: settings.calibration.display
-      }
-    : null
-
-  // Mod-provided positions take priority when every annotation has a pos.
-  const combatViewport =
-    state.screen.kind === 'combat' ? state.screen.combat.viewport : undefined
-  const modPositions =
-    annotations.length > 0 && annotations.every((a) => !!a.pos)
-      ? annotations.map((a) => a.pos)
-      : undefined
-
-  // Game-window fallback: when there's no mod-provided pos AND no manual
-  // anchors, scale the heuristic to the game's actual window rect (handles
-  // windowed-mode + non-primary monitors). Cached at 1Hz.
-  let layoutWidth = display.workArea.width
-  let layoutHeight = display.workArea.height
-  let usedWindow = false
-  if (!modPositions && !anchors) {
-    const gameRect = await detectGameWindow().catch(() => null)
-    if (gameRect && gameRect.width > 0 && gameRect.height > 0) {
-      layoutWidth = gameRect.width
-      layoutHeight = gameRect.height
-      usedWindow = true
-    }
-  }
-
-  const slots = estimateCardSlots({
-    handSize: slotsForLayout,
-    displayWidth: layoutWidth,
-    displayHeight: layoutHeight,
-    calibration: {
-      verticalOffsetPct: settings.verticalOffsetPct,
-      horizontalStretchPct: settings.horizontalStretchPct
-    },
-    anchors,
-    modPositions,
-    modViewport: combatViewport
-  })
-
-  const calibrationSource: AnnotationPayload['calibrationSource'] =
-    modPositions ? 'mod' : anchors ? 'manual' : usedWindow ? 'window' : 'heuristic'
-
-  const payload: AnnotationPayload = {
-    visible,
-    display: {
-      width: display.workArea.width,
-      height: display.workArea.height
-    },
-    slots,
-    annotations,
-    showCalibrationGrid: settings.showCalibrationGrid,
-    calibrationSource
-  }
-  win.webContents.send(IpcChannels.annotationsUpdate, payload)
-  // Also send to the corner overlay so the Settings panel can show the
-  // current calibration source pill.
-  const cornerWin = overlay?.win
-  if (cornerWin && !cornerWin.isDestroyed()) {
-    cornerWin.webContents.send(IpcChannels.annotationsUpdate, payload)
-  }
-}
-
 // Headless one-shot used by the Windows installer (ExecWait'd from the NSIS
 // customInstall step): install the mod + dependencies and migrate the unmodded
 // save profile into the modded scope, then exit. Best-effort — never throws so
@@ -972,8 +807,11 @@ if (SETUP_MODE) {
 }
 
 app.on('before-quit', () => {
-  // Let the Hub's hide-on-close guard fall through so the app can exit.
-  if (hub) {
+  // Belt-and-suspenders for OS-initiated quits (Windows shutdown, Cmd+Q) that
+  // don't route through quitApp(): let the Hub's hide-on-close guard fall
+  // through so the app can exit instead of hiding to tray.
+  isQuitting = true
+  if (hub && !hub.win.isDestroyed()) {
     ;(hub.win as BrowserWindow & { _forceClose?: boolean })._forceClose = true
   }
 })

@@ -66,9 +66,7 @@ export function OnboardingPanel({
         <div className="mt-1 text-xs text-zinc-400">
           The overlay reads run state from a small mod that exposes the game's
           state on{' '}
-          <span className="font-mono text-zinc-300">localhost:15526</span>. The
-          Spirebound build also emits hand-card pixel positions for
-          auto-calibration — no clicks required.
+          <span className="font-mono text-zinc-300">localhost:15526</span>.
         </div>
       </div>
 

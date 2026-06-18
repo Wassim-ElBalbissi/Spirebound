@@ -9,18 +9,31 @@ export interface TrayContext {
   overlay?: OverlayWindowHandle
   onOpenHub?: () => void
   onQuit: () => void
+  /** Absolute path to the tray icon PNG; falls back to an empty image. */
+  iconPath?: string
 }
 
 let tray: Tray | null = null
 
 export function createTray(ctx: TrayContext): Tray {
-  // 16×16 transparent dot — placeholder icon. A bundled .ico can replace this
-  // once we have art assets.
-  const image = nativeImage.createEmpty()
-  tray = new Tray(image)
+  tray = new Tray(resolveTrayImage(ctx.iconPath))
   tray.setToolTip('Spirebound')
   refreshMenu(ctx)
   return tray
+}
+
+/**
+ * Build the tray image from the app icon. Windows renders tray icons at 16×16
+ * (logical), so a full-size app icon is resized rather than cropped. Falls back
+ * to an empty image when the path is missing or unreadable, so the tray still
+ * exists (just invisible) instead of throwing.
+ */
+function resolveTrayImage(iconPath?: string): Electron.NativeImage {
+  if (iconPath) {
+    const img = nativeImage.createFromPath(iconPath)
+    if (!img.isEmpty()) return img.resize({ width: 16, height: 16 })
+  }
+  return nativeImage.createEmpty()
 }
 
 export function refreshMenu(ctx: TrayContext): void {

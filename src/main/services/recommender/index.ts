@@ -1,19 +1,21 @@
 import type {
   CardInstance,
-  EventChoice,
   NormalizedState,
   RelicInstance
 } from '../../types/gameState'
 import type { TierBundle } from '../../types/tierData'
 import type { BuildEntry } from '../../types/compendium'
 import type {
+  CardPickRankedView,
   MatchedBuildView,
   ShopAdviceItemView,
   UpgradeRankedView
 } from '../../types/recommendation'
 import { rankCardOffers, CardPickRanked } from './cardPick'
+import { rankHandSelect } from './cardChoiceAdvisor'
 import { rankRelicOffers, RelicPickRanked } from './relicPick'
 import { rankCombatPlays, CombatPlayResult } from './combatPlay'
+import { rankEventChoices, EventChoiceRanked } from './eventAdvisor'
 import { rankMapPath, MapPathResult } from './mapPath'
 import { rankShop } from './shopAdvisor'
 import {
@@ -38,7 +40,7 @@ export type Recommendation =
       canSkip: boolean
       build: MatchedBuildView | null
     }
-  | { kind: 'event'; eventName: string; choices: EventChoice[] }
+  | { kind: 'event'; eventName: string; choices: EventChoiceRanked[] }
   | { kind: 'combatPlay'; result: CombatPlayResult }
   | {
       kind: 'shopAdvice'
@@ -47,6 +49,13 @@ export type Recommendation =
       build: MatchedBuildView | null
     }
   | { kind: 'mapPath'; result: MapPathResult }
+  | {
+      kind: 'cardSelect'
+      title: string
+      verb: string
+      ranked: CardPickRankedView[]
+      canSkip: boolean
+    }
   | {
       kind: 'restUpgrade'
       action: RestAction
@@ -157,10 +166,18 @@ export function createRecommender(
           }
         }
         case 'event': {
+          const ranked = rankEventChoices(screen.choices, {
+            hp: run.hp,
+            maxHp: run.maxHp,
+            act: run.act,
+            floor: run.floor,
+            deckSize: deck?.length ?? 0,
+            gold: run.gold
+          })
           return {
             kind: 'event',
             eventName: screen.eventName,
-            choices: screen.choices
+            choices: ranked
           }
         }
         case 'shop': {
@@ -208,6 +225,77 @@ export function createRecommender(
             maxHp: run.maxHp
           })
           return result ? { kind: 'mapPath', result } : { kind: 'none' }
+        }
+        case 'handSelect': {
+          // In-combat "choose a card to Discard/Exhaust" (or a fetch). Ranked
+          // against the live board so #1 is the card to pick.
+          const ranked = rankHandSelect(
+            screen.cards,
+            screen.combat,
+            screen.action,
+            bundle
+          )
+          const verb =
+            screen.action === 'exhaust'
+              ? 'Exhaust'
+              : screen.action === 'discard'
+                ? 'Discard'
+                : 'Pick'
+          return {
+            kind: 'cardSelect',
+            title: screen.prompt || `${verb} a card`,
+            verb,
+            ranked,
+            canSkip: screen.canSkip
+          }
+        }
+        case 'cardSelect': {
+          // Out-of-combat "choose a card" (Discovery potion, transform, etc.).
+          // Ranked by deck-fit quality; removal flips to worst-first.
+          const resolvedDeck = deck ?? []
+          const archetypeTags = collectArchetypeTags(
+            resolvedDeck,
+            run.relics,
+            bundle
+          )
+          const matchedBuild = detectBuild(
+            run.character,
+            resolvedDeck,
+            run.relics.map((r) => r.id),
+            builds,
+            archetypeTags,
+            deckTagCounts(resolvedDeck, bundle)
+          )
+          const scored = rankCardOffers(
+            screen.cards,
+            {
+              character: run.character,
+              deck: resolvedDeck,
+              act: run.act,
+              floor: run.floor,
+              matchedBuild
+            },
+            bundle
+          ).filter((r) => r.id !== '__SKIP__') // a forced pick from these candidates
+          const ranked: CardPickRankedView[] =
+            screen.mode === 'remove'
+              ? [...scored].reverse().map((r) => ({
+                  offerIndex: r.offerIndex,
+                  id: r.id,
+                  name: r.name,
+                  score: r.score,
+                  rationale: ['Lowest-value card — best to remove.'],
+                  buildId: r.buildId,
+                  buildName: r.buildName
+                }))
+              : scored
+          return {
+            kind: 'cardSelect',
+            title: screen.prompt || (screen.mode === 'remove' ? 'Remove a card' : 'Add a card'),
+            verb: screen.mode === 'remove' ? 'Remove' : 'Add',
+            ranked,
+            canSkip: screen.canSkip
+          }
         }
         case 'rest': {
           const resolvedDeck = deck ?? []

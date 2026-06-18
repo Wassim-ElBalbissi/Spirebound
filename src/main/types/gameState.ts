@@ -231,6 +231,31 @@ export type Screen =
   | { kind: 'rest'; options: RestOption[] }
   | { kind: 'upgradeSelect'; cards: CardInstance[] }
   | {
+      /**
+       * A "choose a card" sub-screen that isn't the Smith — e.g. a Discovery
+       * potion (add a card), a fetch/duplicate, or a remove/transform. `mode`
+       * decides whether we want the best card (`add`) or the worst (`remove`).
+       */
+      kind: 'cardSelect'
+      prompt: string
+      mode: 'add' | 'remove'
+      cards: CardInstance[]
+      canSkip: boolean
+    }
+  | {
+      /**
+       * In-combat card selection (`hand_select`) — "Choose a card to Discard /
+       * Exhaust", a fetch from the draw pile, etc. Carries the live `combat` so
+       * the pick can be judged against the current board.
+       */
+      kind: 'handSelect'
+      prompt: string
+      action: 'discard' | 'exhaust' | 'keep'
+      cards: CardInstance[]
+      combat: CombatState
+      canSkip: boolean
+    }
+  | {
       kind: 'shop'
       cards: (CardInstance & { price: number })[]
       relics: (RelicInstance & { price: number })[]

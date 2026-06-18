@@ -1,11 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { IpcChannels } from '../main/ipc/channels'
 import type { NormalizedState, McpHealth, GameStatus } from '../main/types/gameState'
-import type {
-  AnnotationPayload,
-  RecommendationView
-} from '../main/types/recommendation'
-import type { UserSettings } from '../main/types/settings'
+import type { RecommendationView } from '../main/types/recommendation'
+import type { UserSettings, HotkeyInfo } from '../main/types/settings'
 import type { TierBundle } from '../main/types/tierData'
 import type { Compendium } from '../main/types/compendium'
 import type { CustomTierList } from '../main/types/tierList'
@@ -82,34 +79,13 @@ const api = {
   setSettings(partial: Partial<UserSettings>): Promise<UserSettings> {
     return ipcRenderer.invoke(IpcChannels.settingsSet, partial)
   },
+  getHotkeys(): Promise<HotkeyInfo[]> {
+    return ipcRenderer.invoke(IpcChannels.hotkeysGet)
+  },
   onSettingsChanged(cb: (settings: UserSettings) => void): () => void {
     const handler = (_: unknown, s: UserSettings): void => cb(s)
     ipcRenderer.on(IpcChannels.settingsChanged, handler)
     return () => ipcRenderer.off(IpcChannels.settingsChanged, handler)
-  },
-  onAnnotations(cb: (payload: AnnotationPayload) => void): () => void {
-    const handler = (_: unknown, p: AnnotationPayload): void => cb(p)
-    ipcRenderer.on(IpcChannels.annotationsUpdate, handler)
-    return () => ipcRenderer.off(IpcChannels.annotationsUpdate, handler)
-  },
-  calibrationStart(): Promise<{ ok: boolean; reason?: string }> {
-    return ipcRenderer.invoke(IpcChannels.calibrationStart)
-  },
-  calibrationCancel(): Promise<void> {
-    return ipcRenderer.invoke(IpcChannels.calibrationCancel)
-  },
-  calibrationClick(point: { x: number; y: number }): Promise<void> {
-    return ipcRenderer.invoke(IpcChannels.calibrationClick, point)
-  },
-  onCalibrationState(
-    cb: (state: import('../main/types/recommendation').CalibrationStatePayload) => void
-  ): () => void {
-    const handler = (
-      _: unknown,
-      s: import('../main/types/recommendation').CalibrationStatePayload
-    ): void => cb(s)
-    ipcRenderer.on(IpcChannels.calibrationState, handler)
-    return () => ipcRenderer.off(IpcChannels.calibrationState, handler)
   },
 
   // --- Hub: open / browse data / tier lists ---

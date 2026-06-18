@@ -28,6 +28,28 @@ describe('rankCombatPlays', () => {
     expect(res.ranked[0]?.rationale.join(' ')).toMatch(/lethal/i)
   })
 
+  it('does not rank a big non-lethal attack above survival blocks (live boss lethal turn)', () => {
+    // Captured live: Ironclad at 20/84 HP, 0 block, 3 energy vs Vantom (129 HP)
+    // intending a 29 attack. Bludgeon (deal 32) is the highest-damage card but
+    // spends all energy, grants no block, and can't kill — playing it is lethal
+    // to yourself. The top pick must be the block that survives the turn.
+    const combat = combatFromFixture('combat.survivalUrgent.bigAttack.json')
+    const res = rankCombatPlays(combat)
+
+    expect(res.incomingDamage).toBe(29)
+    expect(res.notes.join(' ')).toMatch(/survival risk/i)
+
+    // Defend+ (8 block) leads; the do-nothing-for-survival Bludgeon must not.
+    expect(res.ranked[0]?.name).toBe('Defend+')
+    const bludgeon = res.ranked.find((r) => r.id === 'BLUDGEON')!
+    const defendPlus = res.ranked.find((r) => r.name === 'Defend+')!
+    const defend = res.ranked.find((r) => r.name === 'Defend')!
+    expect(defendPlus.score).toBeGreaterThan(bludgeon.score)
+    expect(defend.score).toBeGreaterThan(bludgeon.score)
+    // The muted attack still surfaces, but is explained as not saving you.
+    expect(bludgeon.rationale.join(' ')).toMatch(/survive first/i)
+  })
+
   it('reports incoming damage and required block', () => {
     const combat = combatFromFixture('combat.lethal.json')
     const res = rankCombatPlays(combat)

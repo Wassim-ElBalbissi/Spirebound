@@ -1,10 +1,6 @@
 import type { NormalizedState, McpHealth, GameStatus } from '../../main/types/gameState'
-import type {
-  AnnotationPayload,
-  CalibrationStatePayload,
-  RecommendationView
-} from '../../main/types/recommendation'
-import type { UserSettings } from '../../main/types/settings'
+import type { RecommendationView } from '../../main/types/recommendation'
+import type { UserSettings, HotkeyInfo } from '../../main/types/settings'
 import type { TierBundle } from '../../main/types/tierData'
 import type { Compendium } from '../../main/types/compendium'
 import type { CustomTierList } from '../../main/types/tierList'
@@ -49,12 +45,8 @@ export interface OverlayApi {
   onPinnedChanged(cb: (state: { pinned: boolean }) => void): () => void
   getSettings(): Promise<UserSettings>
   setSettings(partial: Partial<UserSettings>): Promise<UserSettings>
+  getHotkeys(): Promise<HotkeyInfo[]>
   onSettingsChanged(cb: (settings: UserSettings) => void): () => void
-  onAnnotations(cb: (payload: AnnotationPayload) => void): () => void
-  calibrationStart(): Promise<{ ok: boolean; reason?: string }>
-  calibrationCancel(): Promise<void>
-  calibrationClick(point: { x: number; y: number }): Promise<void>
-  onCalibrationState(cb: (state: CalibrationStatePayload) => void): () => void
   openHub(): Promise<void>
   openExternal(url: string): Promise<void>
   copyText(text: string): Promise<void>

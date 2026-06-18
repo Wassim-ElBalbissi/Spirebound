@@ -2,24 +2,9 @@
  * Shape mirrored to the renderer over IPC. Kept in a separate file so the
  * preload can import the types without dragging in the main-process modules.
  */
-import type { EventChoice, RoomKind } from './gameState'
+import type { RoomKind } from './gameState'
 
 export type TierLetter = 'S' | 'A' | 'B' | 'C' | 'D' | 'F'
-
-export interface CombatHandAnnotation {
-  handIndex: number
-  rank: number
-  tier: TierLetter | null
-  score: number
-  isLethal: boolean
-  name: string
-  cost: number | 'X' | null
-  /**
-   * Pixel rect from the Spirebound STS2MCP fork (viewport coordinates).
-   * Absent on stock STS2MCP.
-   */
-  pos?: { x: number; y: number; w: number; h: number }
-}
 
 export interface CombatPlayRankedView {
   index: number
@@ -68,7 +53,6 @@ export interface CombatPlayResultView {
   incomingDamage: number
   blockNeeded: number
   notes: string[]
-  hand: CombatHandAnnotation[]
   threats: EnemyThreatView[]
   /** End-of-turn HP loss from held Status/Curse cards (e.g. Burn). */
   selfDamage: number
@@ -76,35 +60,6 @@ export interface CombatPlayResultView {
   potions: PotionPlayView[]
   /** Defect orbs in play. */
   orbs: OrbView[]
-}
-
-export interface AnnotationSlotRect {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-export type CalibrationSource = 'mod' | 'manual' | 'window' | 'heuristic'
-
-export interface AnnotationPayload {
-  visible: boolean
-  display: { width: number; height: number }
-  slots: AnnotationSlotRect[]
-  annotations: CombatHandAnnotation[]
-  showCalibrationGrid: boolean
-  /** Where the slot rects came from, surfaced to the Settings status pill. */
-  calibrationSource: CalibrationSource
-}
-
-export interface CalibrationStatePayload {
-  active: boolean
-  /** 1 = clicking leftmost, 2 = clicking rightmost. */
-  step: 0 | 1 | 2
-  /** Hand size we expect the user to calibrate against (frozen on start). */
-  handSize: number
-  /** Click captured for step 1, if any. */
-  leftCard?: { x: number; y: number }
 }
 
 export interface CardPickRankedView {
@@ -127,6 +82,17 @@ export interface RelicPickRankedView {
   /** The build this relic is key to, if any — for deep-linking to the Hub. */
   buildId?: string
   buildName?: string
+}
+
+/** A single event option, scored by the heuristic event advisor. */
+export interface EventChoiceRankedView {
+  index: number
+  title: string
+  description: string
+  score: number
+  rationale: string[]
+  isLocked: boolean
+  wasChosen: boolean
 }
 
 /** The curated build the current run resembles, surfaced on the advice panel. */
@@ -214,7 +180,11 @@ export type RecommendationView =
       canSkip: boolean
       build?: MatchedBuildView | null
     }
-  | { kind: 'event'; eventName: string; choices: EventChoice[] }
+  | {
+      kind: 'event'
+      eventName: string
+      choices: EventChoiceRankedView[]
+    }
   | { kind: 'combatPlay'; result: CombatPlayResultView }
   | {
       kind: 'shopAdvice'
@@ -223,6 +193,18 @@ export type RecommendationView =
       build?: MatchedBuildView | null
     }
   | { kind: 'mapPath'; result: MapPathResultView }
+  | {
+      /**
+       * "Choose a card" surfaces — a Discovery potion (out of combat) or an
+       * in-combat discard/exhaust/fetch (`hand_select`). `ranked` is already
+       * ordered so #1 is the card to pick for `verb` (e.g. "Discard").
+       */
+      kind: 'cardSelect'
+      title: string
+      verb: string
+      ranked: CardPickRankedView[]
+      canSkip: boolean
+    }
   | {
       kind: 'restUpgrade'
       action: RestActionView

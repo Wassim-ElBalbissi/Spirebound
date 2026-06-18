@@ -13,12 +13,8 @@ export const IpcChannels = {
   settingsGet: 'settings:get',
   settingsSet: 'settings:set',
   settingsChanged: 'settings:changed',
-  annotationsUpdate: 'annotations:update',
+  hotkeysGet: 'hotkeys:get',
   overlaySetCompact: 'overlay:setCompact',
-  calibrationStart: 'calibration:start',
-  calibrationCancel: 'calibration:cancel',
-  calibrationClick: 'calibration:click',
-  calibrationState: 'calibration:state',
   overlayQuit: 'overlay:quit',
   // --- Hub window + browse / tier lists ---
   hubOpen: 'hub:open',

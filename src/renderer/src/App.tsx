@@ -1,5 +1,6 @@
 import React from 'react'
 import { CardPickAdvice } from './components/CardPickAdvice'
+import { CardChoiceAdvice } from './components/CardChoiceAdvice'
 import { RelicEventAdvice } from './components/RelicEventAdvice'
 import { ShopAdvice } from './components/ShopAdvice'
 import { MapPathAdvice } from './components/MapPathAdvice'
@@ -88,6 +89,12 @@ function Body({
         />
       ) : recommendation.kind === 'relicPick' || recommendation.kind === 'event' ? (
         <RelicEventAdvice recommendation={recommendation} />
+      ) : recommendation.kind === 'cardSelect' ? (
+        <CardChoiceAdvice
+          title={recommendation.title}
+          verb={recommendation.verb}
+          ranked={recommendation.ranked}
+        />
       ) : recommendation.kind === 'shopAdvice' ? (
         <ShopAdvice
           items={recommendation.items}

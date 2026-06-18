@@ -149,9 +149,6 @@ export class StateStore {
   setSettings(partial: Partial<UserSettings>): UserSettings {
     const next: UserSettings = { ...this.getSettings(), ...partial }
     next.uiScale = clamp(next.uiScale, 0.75, 1.5)
-    next.opacity = clamp(next.opacity, 0.4, 1.0)
-    next.verticalOffsetPct = clamp(next.verticalOffsetPct, -25, 25)
-    next.horizontalStretchPct = clamp(next.horizontalStretchPct, -30, 30)
     this.state.settings = next
     this.scheduleWrite()
     return next

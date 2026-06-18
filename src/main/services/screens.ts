@@ -106,11 +106,30 @@ export function classifyScreen(raw: RawGameState): Screen {
 
     case 'monster':
     case 'elite':
-    case 'boss':
-    case 'hand_select': {
+    case 'boss': {
       const combat = buildCombatState(raw)
       if (!combat) return { kind: 'unknown' }
       return { kind: 'combat', combat }
+    }
+
+    case 'hand_select': {
+      // "Choose a card to Discard/Exhaust" (or a fetch) mid-combat. The full
+      // battle rides along, so we surface a pick judged against the board. When
+      // there's no real prompt/candidates, it's just a combat sub-state.
+      const hs = raw.hand_select
+      const combat = buildCombatState(raw)
+      if (combat && hs?.prompt && hs.cards && hs.cards.length > 0) {
+        return {
+          kind: 'handSelect',
+          prompt: hs.prompt,
+          action: handSelectAction(hs.prompt),
+          cards: hs.cards.map(toCard),
+          combat,
+          canSkip: false
+        }
+      }
+      if (combat) return { kind: 'combat', combat }
+      return { kind: 'unknown' }
     }
 
     case 'rest_site':
@@ -124,15 +143,29 @@ export function classifyScreen(raw: RawGameState): Screen {
         }))
       }
 
-    case 'card_select':
+    case 'card_select': {
+      const sel = raw.card_select
       // The Smith screen ("upgrade") hands us the full upgradeable deck.
-      if (raw.card_select?.screen_type === 'upgrade' && raw.card_select.cards) {
+      if (sel?.screen_type === 'upgrade' && sel.cards) {
         return {
           kind: 'upgradeSelect',
-          cards: raw.card_select.cards.map(toCard)
+          cards: sel.cards.map(toCard)
+        }
+      }
+      // Any other "choose a card" screen with candidates — a Discovery potion,
+      // a fetch/duplicate, or a remove/transform. Rank them so the screen isn't
+      // a blank overlay. `screen_type`/`prompt` decides which end we want.
+      if (sel?.cards && sel.cards.length > 0) {
+        return {
+          kind: 'cardSelect',
+          prompt: sel.prompt ?? '',
+          mode: cardSelectMode(sel.screen_type, sel.prompt),
+          cards: sel.cards.map(toCard),
+          canSkip: sel.can_skip ?? false
         }
       }
       return { kind: 'unknown' }
+    }
 
     case 'shop':
     case 'fake_merchant': {
@@ -298,6 +331,35 @@ const ROOM_KIND: Record<RoomType, RoomKind> = {
 
 export function nodeId(col: number, row: number): string {
   return `${col},${row}`
+}
+
+/**
+ * Decide whether a "choose a card" screen wants your best card or your worst.
+ * Remove / purge / transform / exhaust target a card you want *gone* (worst);
+ * everything else (Discovery, fetch, duplicate, add-to-hand) wants your best.
+ */
+function cardSelectMode(
+  screenType: string | undefined,
+  prompt: string | undefined
+): 'add' | 'remove' {
+  const hay = `${screenType ?? ''} ${prompt ?? ''}`.toLowerCase()
+  return /remov|purge|transform|exhaust|destroy|discard/.test(hay)
+    ? 'remove'
+    : 'add'
+}
+
+/**
+ * Read the in-combat hand-selection action from its prompt. Discard/exhaust want
+ * your *worst* card; a fetch ("put a card into your hand", "top of draw") wants
+ * your *best*, which we model as the `keep` action.
+ */
+function handSelectAction(
+  prompt: string
+): 'discard' | 'exhaust' | 'keep' {
+  const p = prompt.toLowerCase()
+  if (/exhaust/.test(p)) return 'exhaust'
+  if (/discard/.test(p)) return 'discard'
+  return 'keep'
 }
 
 function buildCombatState(raw: RawGameState): CombatState | null {

@@ -1,0 +1,314 @@
+{
+  "state_type": "hand_select",
+  "hand_select": {
+    "mode": "simple_select",
+    "prompt": "Choose a card to Discard.",
+    "cards": [
+      {
+        "id": "DEFEND_SILENT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 0
+      },
+      {
+        "id": "DEFEND_SILENT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 1
+      },
+      {
+        "id": "SHADOWMELD",
+        "name": "Shadowmeld",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Double your Block gain this turn.",
+        "rarity": "Rare",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 2
+      },
+      {
+        "id": "STRIKE_SILENT",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 4 damage.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [],
+        "index": 3
+      }
+    ],
+    "can_confirm": false
+  },
+  "battle": {
+    "round": 3,
+    "turn": "player",
+    "is_play_phase": true,
+    "enemies": [
+      {
+        "entity_id": "SHRINKER_BEETLE_0",
+        "combat_id": 1,
+        "name": "Shrinker Beetle",
+        "hp": 23,
+        "max_hp": 40,
+        "block": 0,
+        "status": [],
+        "intents": [
+          {
+            "type": "Attack",
+            "label": "13",
+            "title": "Aggressive",
+            "description": "This enemy intends to Attack for 13 damage."
+          }
+        ]
+      }
+    ]
+  },
+  "run": {
+    "act": 1,
+    "floor": 2,
+    "ascension": 0
+  },
+  "player": {
+    "character": "The Silent",
+    "hp": 68,
+    "max_hp": 70,
+    "block": 8,
+    "energy": 2,
+    "max_energy": 3,
+    "hand": [
+      {
+        "id": "DEFEND_SILENT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 0,
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "pos": {
+          "x": 595,
+          "y": 705,
+          "w": 250,
+          "h": 350
+        }
+      },
+      {
+        "id": "DEFEND_SILENT",
+        "name": "Defend",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 1,
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "pos": {
+          "x": 755,
+          "y": 680,
+          "w": 250,
+          "h": 350
+        }
+      },
+      {
+        "id": "SHADOWMELD",
+        "name": "Shadowmeld",
+        "type": "Skill",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Double your Block gain this turn.",
+        "rarity": "Rare",
+        "is_upgraded": false,
+        "keywords": [
+          {
+            "name": "Block",
+            "description": "Until next turn, prevents damage."
+          }
+        ],
+        "index": 2,
+        "target_type": "Self",
+        "can_play": true,
+        "unplayable_reason": null,
+        "pos": {
+          "x": 915,
+          "y": 680,
+          "w": 250,
+          "h": 350
+        }
+      },
+      {
+        "id": "STRIKE_SILENT",
+        "name": "Strike",
+        "type": "Attack",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 4 damage.",
+        "rarity": "Basic",
+        "is_upgraded": false,
+        "keywords": [],
+        "index": 3,
+        "target_type": "AnyEnemy",
+        "can_play": true,
+        "unplayable_reason": null,
+        "pos": {
+          "x": 1075,
+          "y": 705,
+          "w": 250,
+          "h": 350
+        }
+      }
+    ],
+    "viewport": {
+      "w": 1920,
+      "h": 1080
+    },
+    "draw_pile_count": 8,
+    "discard_pile_count": 0,
+    "exhaust_pile_count": 0,
+    "draw_pile": [
+      {
+        "name": "Defend",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 10 Block."
+      },
+      {
+        "name": "Defend",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block."
+      },
+      {
+        "name": "Defend",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Gain 5 Block."
+      },
+      {
+        "name": "Neutralize",
+        "cost": "0",
+        "star_cost": null,
+        "description": "Deal 3 damage. Apply 1 Weak."
+      },
+      {
+        "name": "Strike",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage."
+      },
+      {
+        "name": "Strike",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage."
+      },
+      {
+        "name": "Strike",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 6 damage."
+      },
+      {
+        "name": "Strike",
+        "cost": "1",
+        "star_cost": null,
+        "description": "Deal 4 damage."
+      }
+    ],
+    "discard_pile": [],
+    "exhaust_pile": [],
+    "gold": 99,
+    "status": [
+      {
+        "id": "SHRINK_POWER",
+        "name": "Shrink",
+        "amount": -1,
+        "type": "Debuff",
+        "description": "While Shrinker Beetle is alive, your Attacks deal 30% less damage.",
+        "keywords": []
+      }
+    ],
+    "relics": [
+      {
+        "id": "RING_OF_THE_SNAKE",
+        "name": "Ring of the Snake",
+        "description": "At the start of each combat, draw 2 additional cards.",
+        "counter": null,
+        "keywords": []
+      },
+      {
+        "id": "LOST_COFFER",
+        "name": "Lost Coffer",
+        "description": "Upon pickup, gain 1 card reward and procure 1 random potion.",
+        "counter": null,
+        "keywords": []
+      }
+    ],
+    "potions": [
+      {
+        "id": "STRENGTH_POTION",
+        "name": "Strength Potion",
+        "description": "Gain 2 Strength.",
+        "slot": 0,
+        "can_use_in_combat": true,
+        "target_type": "AnyPlayer",
+        "keywords": [
+          {
+            "name": "Strength",
+            "description": "Strength adds additional damage to Attacks."
+          }
+        ]
+      }
+    ],
+    "max_potion_slots": 3
+  }
+}

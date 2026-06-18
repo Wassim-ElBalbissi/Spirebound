@@ -10,6 +10,12 @@ export interface HubWindowOptions {
   showOnReady?: boolean
   initialBounds?: WindowBounds
   onBoundsChanged?: (bounds: WindowBounds) => void
+  /**
+   * Called when the user closes the Hub by any means (custom title-bar X,
+   * Alt+F4, taskbar "Close window"). The Hub is the whole app, so this should
+   * quit rather than hide to tray.
+   */
+  onCloseRequest?: () => void
 }
 
 export interface HubWindowHandle {
@@ -72,12 +78,15 @@ export function createHubWindow(opts: HubWindowOptions): HubWindowHandle {
     void win.loadFile(opts.rendererFile)
   }
 
-  // Hide instead of destroy so reopen is instant and React state survives.
+  // The Hub is the whole app — closing it (custom X, Alt+F4, taskbar close)
+  // quits rather than hiding to tray. _forceClose is set once the app is
+  // already tearing down (e.g. an OS-initiated app.quit), so that close is
+  // allowed straight through; otherwise we defer to the quit routine, which
+  // destroys windows so the quit can't be vetoed.
   win.on('close', (e) => {
-    if (!(win as BrowserWindow & { _forceClose?: boolean })._forceClose) {
-      e.preventDefault()
-      win.hide()
-    }
+    if ((win as BrowserWindow & { _forceClose?: boolean })._forceClose) return
+    e.preventDefault()
+    opts.onCloseRequest?.()
   })
 
   if (opts.onBoundsChanged) {

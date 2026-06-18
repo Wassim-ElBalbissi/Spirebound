@@ -29,7 +29,6 @@ export default defineConfig({
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'src/renderer/index.html'),
-          annotations: resolve(__dirname, 'src/renderer/annotations.html'),
           hub: resolve(__dirname, 'src/renderer/hub.html')
         }
       }

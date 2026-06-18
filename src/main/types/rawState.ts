@@ -277,6 +277,18 @@ export interface RawCardSelect {
   can_skip?: boolean
 }
 
+/**
+ * In-combat "choose a card from your hand" sub-screen (`hand_select`): discard,
+ * exhaust, put-on-top, etc. The full `battle`/`player` payload rides alongside
+ * it, so the pick can be judged against the live combat. `prompt` names the
+ * action ("Choose a card to Discard."); `cards` are the eligible candidates.
+ */
+export interface RawHandSelect {
+  mode?: string
+  prompt?: string
+  cards?: RawCard[]
+}
+
 export interface RawRelicSelect {
   prompt: string
   relics: (RawRelic & { index: number })[]
@@ -353,7 +365,7 @@ export interface RawGameState {
   rewards?: RawRewards
   rest_site?: RawRestSite
   battle?: RawBattle
-  hand_select?: unknown
+  hand_select?: RawHandSelect
   card_select?: RawCardSelect
   bundle_select?: unknown
   crystal_sphere?: unknown

@@ -7,10 +7,7 @@ import type {
   PowerInstance
 } from '../../types/gameState'
 import type { TierBundle } from '../../types/tierData'
-import type {
-  CombatHandAnnotation,
-  TierLetter
-} from '../../types/recommendation'
+import type { TierLetter } from '../../types/recommendation'
 import { stripConditionals } from '../screens'
 
 export interface CombatPlayOptions {
@@ -71,8 +68,6 @@ export interface CombatPlayResult {
   /** Block needed beyond current to fully mitigate incoming damage. */
   blockNeeded: number
   notes: string[]
-  /** Per-card annotations indexed by hand slot, for the annotation window. */
-  hand: CombatHandAnnotation[]
   /** Per-enemy incoming-damage breakdown for the threat panel. */
   threats: EnemyThreat[]
   /** End-of-turn HP loss from unplayable Status/Curse cards held (e.g. Burn). */
@@ -185,7 +180,6 @@ export function rankCombatPlays(
       incomingDamage,
       blockNeeded,
       notes: ['Enemy turn.'],
-      hand: [],
       threats,
       selfDamage,
       potions,
@@ -198,7 +192,6 @@ export function rankCombatPlays(
       incomingDamage,
       blockNeeded,
       notes: ['Empty hand.'],
-      hand: [],
       threats,
       selfDamage,
       potions,
@@ -341,30 +334,11 @@ export function rankCombatPlays(
     )
   }
 
-  // Per-card annotations: rank by hand index for the per-card badges window.
-  const rankByIndex = new Map<number, number>()
-  ranked.forEach((r, i) => rankByIndex.set(r.index, i + 1))
-  const hand: CombatHandAnnotation[] = combat.hand.map((card) => {
-    const rank = rankByIndex.get(card.index) ?? 0
-    const scoreRow = ranked.find((r) => r.index === card.index)
-    return {
-      handIndex: card.index,
-      rank,
-      tier: lookupTier(card.id, bundle),
-      score: scoreRow?.score ?? 0,
-      isLethal: (scoreRow?.rationale ?? []).includes('Lethal!'),
-      name: card.name,
-      cost: card.cost,
-      pos: card.pos
-    }
-  })
-
   return {
     ranked,
     incomingDamage,
     blockNeeded,
     notes,
-    hand,
     threats,
     selfDamage,
     potions,
@@ -673,8 +647,24 @@ function scoreCard(
     })
     isLethal = dmg + ctx.orbDamageToTarget >= target.hp
     const effective = Math.min(dmg, target.hp)
-    score += effective * 1.0
-    rationale.push(`~${effective} damage to ${ctx.targetLabel ?? target.name}`)
+
+    // On a turn you can't survive — `survivalUrgent` means you can't kill the
+    // attacker AND even your best block leaves ≥ half your HP exposed — chip
+    // damage that doesn't *finish* the enemy does nothing to keep you alive, so
+    // it must not outrank the blocks that do. Demote the damage portion hard
+    // (and cap it) while still surfacing the card for an override. A block-
+    // bearing attack (e.g. Iron Wave) keeps its block value, scored separately
+    // below — only its offensive contribution is muted here.
+    const offenseMoot = ctx.survivalUrgent && !isLethal
+    if (offenseMoot) {
+      score += Math.min(effective * 0.1, 6)
+      rationale.push(
+        `~${effective} damage to ${ctx.targetLabel ?? target.name} — won't kill; survive first`
+      )
+    } else {
+      score += effective * 1.0
+      rationale.push(`~${effective} damage to ${ctx.targetLabel ?? target.name}`)
+    }
 
     if (isLethal) {
       // Prefer cheaper kills so leftover energy goes to defense / setup.
@@ -684,6 +674,7 @@ function scoreCard(
         ctx.orbDamageToTarget > 0 && dmg < target.hp ? 'Lethal! (with orb)' : 'Lethal!'
       )
     } else if (
+      !offenseMoot &&
       target.status.some((s) => s.name.toLowerCase().includes('vulnerable'))
     ) {
       rationale.push('Target is Vulnerable.')
