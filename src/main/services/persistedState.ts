@@ -24,6 +24,12 @@ export interface WindowBounds {
  */
 export interface SaveMigrationRecord {
   done: boolean
+  /**
+   * Version of the migration logic that wrote this record. Bumped when the
+   * logic changes so installs locked by an older (buggy) record re-run once.
+   * Absent on records written before this field existed.
+   */
+  schemaVersion?: number
   /** Outcome of the migration attempt (see saveMigrator SaveMigrationResult). */
   action: string
   migratedAt: string

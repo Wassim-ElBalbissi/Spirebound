@@ -17,8 +17,23 @@ vi.mock('../../src/main/services/stateDiff', () => ({
   }
 }))
 
+// normalize() is exercised in screens.test.ts; here we make it a controllable
+// spy (passthrough by default) so we can simulate a body that fails to parse.
+vi.mock('../../src/main/services/screens', () => ({
+  normalize: vi.fn((body: unknown) => body)
+}))
+
 import { PollLoop } from '../../src/main/services/pollLoop'
+import { normalize } from '../../src/main/services/screens'
 import type { McpClient } from '../../src/main/services/mcpClient'
+
+function httpResult(status: number, body: unknown = undefined) {
+  return {
+    status,
+    body,
+    rawBytes: Buffer.from(body === undefined ? '' : JSON.stringify(body))
+  }
+}
 
 function okResult() {
   const body = { state_type: 'menu' }
@@ -71,6 +86,84 @@ describe('PollLoop health reporting', () => {
 
     const okCalls = onHealth.mock.calls.filter((c) => c[0]?.ok === true)
     expect(okCalls).toHaveLength(1)
+  })
+
+  it('stays healthy when the mod responds but the body fails to normalize', async () => {
+    // The regression: a co-op/MP body of an unexpected shape made normalize()
+    // throw, which was wrongly treated as a disconnect → "Waiting for STS2MCP".
+    vi.useFakeTimers()
+    vi.mocked(normalize).mockImplementationOnce(() => {
+      throw new Error('unexpected body shape')
+    })
+    const client = {
+      get: vi.fn().mockResolvedValue(okResult()),
+      close: vi.fn()
+    }
+    const onHealth = vi.fn()
+    const onState = vi.fn()
+    const loop = new PollLoop(
+      client as unknown as McpClient,
+      { onState, onHealth },
+      { baseTickMs: 10 }
+    )
+    loop.start()
+    await vi.advanceTimersByTimeAsync(5) // single tick: 200 response, normalize throws
+    loop.stop()
+
+    // The mod answered 200, so it's reachable → healthy.
+    expect(onHealth).toHaveBeenCalledWith(expect.objectContaining({ ok: true }))
+    // A parse failure is NOT a disconnect.
+    expect(onHealth).not.toHaveBeenCalledWith(
+      expect.objectContaining({ ok: false })
+    )
+    // And the unparseable tick produced no state.
+    expect(onState).not.toHaveBeenCalled()
+  })
+
+  it('marks healthy and flips the endpoint on a 409 (run-mode mismatch)', async () => {
+    vi.useFakeTimers()
+    const get = vi
+      .fn()
+      .mockResolvedValueOnce(httpResult(409))
+      .mockResolvedValue(okResult())
+    const client = { get, close: vi.fn() }
+    const onHealth = vi.fn()
+    const loop = new PollLoop(
+      client as unknown as McpClient,
+      { onState: vi.fn(), onHealth },
+      { baseTickMs: 10, spPath: '/sp', mpPath: '/mp' }
+    )
+    loop.start()
+    await vi.advanceTimersByTimeAsync(5) // first tick → 409
+    // A 409 is a real response → healthy, never a failure.
+    expect(onHealth).toHaveBeenCalledWith(expect.objectContaining({ ok: true }))
+    expect(onHealth).not.toHaveBeenCalledWith(
+      expect.objectContaining({ ok: false })
+    )
+    expect(get.mock.calls[0]?.[0]).toBe('/sp')
+    await vi.advanceTimersByTimeAsync(10) // next tick uses the flipped endpoint
+    loop.stop()
+    expect(get.mock.calls[1]?.[0]).toBe('/mp')
+  })
+
+  it('reports unhealthy on a 5xx (the mod itself errored)', async () => {
+    vi.useFakeTimers()
+    const client = {
+      get: vi.fn().mockResolvedValue(httpResult(500, { error: 'boom' })),
+      close: vi.fn()
+    }
+    const onHealth = vi.fn()
+    const loop = new PollLoop(
+      client as unknown as McpClient,
+      { onState: vi.fn(), onHealth },
+      { baseTickMs: 10 }
+    )
+    loop.start()
+    await vi.advanceTimersByTimeAsync(5)
+    loop.stop()
+    expect(onHealth).toHaveBeenLastCalledWith(
+      expect.objectContaining({ ok: false })
+    )
   })
 
   it('re-reports healthy after a failure recovers', async () => {

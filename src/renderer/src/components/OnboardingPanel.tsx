@@ -9,7 +9,7 @@ function describeSaveMigration(action: string): string {
       return 'Your existing unmodded progress was copied into the modded save, so nothing is lost.'
     case 'mixed':
       return 'Unmodded progress was carried over for the profiles whose modded save was empty.'
-    case 'skipped-modded-not-empty':
+    case 'already-correct':
     case 'already-done':
       return 'Your modded saves were already present and left untouched.'
     case 'error':

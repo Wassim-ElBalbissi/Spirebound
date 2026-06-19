@@ -201,4 +201,34 @@ describe('normalize', () => {
     const defect = normalize(fixture('event.neow.json'))
     expect(defect.run?.character).toBe('defect')
   })
+
+  it('does not throw on a sparse body missing relics/potions/run fields', () => {
+    // A co-op/MP body can omit arrays the single-player shape always has. This
+    // used to throw (`.map` on undefined) → the poll loop read it as a
+    // disconnect. It must degrade gracefully instead.
+    const raw = {
+      state_type: 'map',
+      run: {},
+      player: { character: 'The Ironclad', hp: 50, max_hp: 70 }
+    } as unknown as RawGameState
+    const out = normalize(raw)
+    expect(out.run?.character).toBe('ironclad')
+    expect(out.run?.relics).toEqual([])
+    expect(out.run?.potions).toEqual([])
+    expect(out.run?.act).toBe(0)
+    expect(out.run?.floor).toBe(0)
+    expect(out.run?.gold).toBe(0)
+    expect(out.screen.kind).toBe('map')
+  })
+
+  it('keeps the classified screen when the character is unknown', () => {
+    const raw = {
+      state_type: 'map',
+      run: { act: 1, floor: 1, ascension: 0 },
+      player: { character: 'Stranger', hp: 50, max_hp: 70, relics: [], potions: [] }
+    } as unknown as RawGameState
+    const out = normalize(raw)
+    expect(out.run).toBeNull()
+    expect(out.screen.kind).toBe('map')
+  })
 })

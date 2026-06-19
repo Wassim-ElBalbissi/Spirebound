@@ -1,4 +1,4 @@
-import { McpClient, McpUnavailableError } from './mcpClient'
+import { McpClient, McpUnavailableError, type McpFetchResult } from './mcpClient'
 import { StateDiffer } from './stateDiff'
 import { normalize } from './screens'
 import type { RawGameState } from '../types/rawState'
@@ -87,30 +87,12 @@ export class PollLoop {
 
     const path = this.useMpEndpoint ? this.opts.mpPath : this.opts.spPath
 
+    // Network layer — only a *thrown* request (connection refused / timeout)
+    // means the mod is unreachable. Any HTTP response (even a 409 or a body we
+    // can't parse) proves the mod is alive, so it must NOT trip handleFailure.
+    let res: McpFetchResult<RawGameState>
     try {
-      const res = await this.client.get<RawGameState>(path, abort.signal)
-
-      if (res.status === 409) {
-        // SP/MP mismatch — flip endpoint and retry next tick.
-        this.useMpEndpoint = !this.useMpEndpoint
-        this.scheduleNext(this.opts.baseTickMs)
-        return
-      }
-
-      if (res.status >= 500) {
-        this.handleFailure(`status ${res.status}`)
-        return
-      }
-
-      const { changed } = await this.differ.diff(res.rawBytes)
-      this.markHealthy()
-
-      if (changed) {
-        const normalized = normalize(res.body)
-        this.events.onState(normalized)
-      }
-
-      this.scheduleNext(this.opts.baseTickMs)
+      res = await this.client.get<RawGameState>(path, abort.signal)
     } catch (err) {
       if (abort.signal.aborted) return
       const msg =
@@ -120,7 +102,56 @@ export class PollLoop {
             ? err.message
             : String(err)
       this.handleFailure(msg)
+      return
     }
+
+    // SP/MP mismatch: the requested run mode isn't the active one. The mod
+    // answered, so it's reachable (healthy) — flip to the other endpoint and
+    // let a successful poll settle us there (useMpEndpoint stays sticky on 2xx).
+    if (res.status === 409) {
+      this.useMpEndpoint = !this.useMpEndpoint
+      this.markHealthy()
+      this.scheduleNext(this.opts.baseTickMs)
+      return
+    }
+
+    // 5xx is the mod erroring on a request it accepted — back off and surface.
+    if (res.status >= 500) {
+      this.handleFailure(`status ${res.status}`)
+      return
+    }
+
+    // Any other response (2xx, or an unexpected non-409 4xx) means the mod is
+    // up. Report health BEFORE touching the body so reachability never depends
+    // on the payload shape.
+    this.markHealthy()
+
+    // Parse layer — a body we can't diff/normalize must not mark the mod
+    // unhealthy (the connection is fine; the payload just has an unexpected
+    // shape, e.g. a multiplayer/co-op body). Log a sample so the new shape is
+    // recoverable from logs. The differ advances its hash inside diff() even on
+    // a later parse failure, so an unchanged bad body won't be retried in a
+    // loop — only a genuinely changed body re-attempts normalize.
+    let changed = false
+    try {
+      ;({ changed } = await this.differ.diff(res.rawBytes))
+    } catch (err) {
+      logger.debug({ err }, 'state diff failed; treating as unchanged')
+    }
+
+    if (changed) {
+      try {
+        const normalized = normalize(res.body)
+        this.events.onState(normalized)
+      } catch (err) {
+        logger.warn(
+          { err, sample: sampleBody(res.rawBytes) },
+          'normalize failed; mod still reachable, skipping this state'
+        )
+      }
+    }
+
+    this.scheduleNext(this.opts.baseTickMs)
   }
 
   private handleFailure(reason: string): void {
@@ -139,6 +170,11 @@ export class PollLoop {
       this.events.onHealth({ ok: true, lastOkAt: Date.now() })
     }
   }
+}
+
+/** First 512 chars of a response body, for diagnosing an unexpected shape. */
+function sampleBody(buf: Buffer): string {
+  return buf.toString('utf-8').slice(0, 512)
 }
 
 function formatErr(cause: unknown): string {

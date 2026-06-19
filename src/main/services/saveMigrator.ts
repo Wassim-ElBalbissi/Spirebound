@@ -4,11 +4,18 @@ import { join } from 'path'
 import { logger } from './logger'
 import type { StateStore, SaveMigrationRecord } from './persistedState'
 import {
-  copyVanillaToModdedIfEmpty,
+  copyVanillaToModdedIfNoSaveData,
   listProfileDirs,
   type SaveCopyResult
 } from './saveCopy'
 import { candidateSteamRoots, STS2_STEAM_APP_ID } from './steamPaths'
+
+/**
+ * Version of the save-migration logic. Bumped whenever the copy/lock behavior
+ * changes so installs already locked by an older (buggy) record re-run once.
+ * v2: content-aware "real save data" gate + non-destructive merge.
+ */
+export const SAVE_MIGRATION_SCHEMA = 2
 
 export interface SaveMigrationResult {
   ok: boolean
@@ -98,10 +105,14 @@ export function resolveCopyPairs(): CopyPair[] {
  * the outcome and no-ops once done).
  */
 export async function migrateSaves(
-  store: StateStore
+  store: StateStore,
+  /** Override the backup root (injected for tests so electron isn't needed). */
+  backupBaseDir?: string
 ): Promise<SaveMigrationResult> {
   const prior = store.get('saveMigration')
-  if (prior?.done) {
+  // Only honor the lock when it was written by the *current* logic. A record
+  // from older, buggy logic (no schemaVersion, or an earlier one) re-runs once.
+  if (prior?.done && prior.schemaVersion === SAVE_MIGRATION_SCHEMA) {
     return { ok: true, action: 'already-done', backupDir: prior.backupDir }
   }
 
@@ -116,7 +127,8 @@ export async function migrateSaves(
   }
 
   const stamp = new Date().toISOString().replace(/[:.]/g, '-')
-  const backupBase = join(app.getPath('userData'), 'backups', `saves-${stamp}`)
+  const backupBase =
+    backupBaseDir ?? join(app.getPath('userData'), 'backups', `saves-${stamp}`)
 
   try {
     const details: Array<{
@@ -125,7 +137,7 @@ export async function migrateSaves(
     }> = []
     let firstBackup: string | undefined
     for (const p of pairs) {
-      const res = await copyVanillaToModdedIfEmpty({
+      const res = await copyVanillaToModdedIfNoSaveData({
         vanillaDir: p.vanillaDir,
         moddedDir: p.moddedDir,
         backupRoot: join(backupBase, p.label),
@@ -136,26 +148,46 @@ export async function migrateSaves(
     }
 
     const migrated = details.filter((d) => d.action === 'migrated')
-    const allSkippedFull = details.every(
-      (d) => d.action === 'skipped-modded-not-empty'
+    // At least one profile ended up with real progress in the modded scope.
+    const settledProgress = details.some(
+      (d) => d.action === 'migrated' || d.action === 'already-correct'
     )
+    // "Terminal" = every profile reached a state a retry won't change: copied,
+    // already had data, an unresolvable overlap, or simply no vanilla data to
+    // copy. (`scopes-not-found` short-circuits earlier and never reaches here.)
+    const terminal = details.every((d) =>
+      [
+        'migrated',
+        'already-correct',
+        'skipped-overlapping-paths',
+        'skipped-no-vanilla'
+      ].includes(d.action)
+    )
+
     const action: SaveMigrationResult['action'] =
       migrated.length > 0 && migrated.length === details.length
         ? 'migrated'
         : migrated.length > 0
           ? 'mixed'
-          : allSkippedFull
-            ? 'skipped-modded-not-empty'
+          : details.every((d) => d.action === 'already-correct')
+            ? 'already-correct'
             : 'mixed'
 
     const record: SaveMigrationRecord = {
-      done: true,
+      // Only lock the migration once it has genuinely settled. A transient
+      // "no saves synced yet" (settledProgress=false) must be retryable, so we
+      // leave done=false and re-attempt on a later setup run.
+      done: terminal && settledProgress,
+      schemaVersion: SAVE_MIGRATION_SCHEMA,
       action,
       migratedAt: stamp,
       backupDir: firstBackup
     }
     store.set('saveMigration', record)
-    logger.info({ action, details, backupBase }, 'save migration results')
+    logger.info(
+      { action, details, backupBase, done: record.done },
+      'save migration results'
+    )
     return { ok: true, action, details, backupDir: firstBackup }
   } catch (err) {
     logger.error({ err }, 'save migration failed')

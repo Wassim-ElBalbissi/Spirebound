@@ -49,20 +49,29 @@ export function normalize(raw: RawGameState, ts = Date.now()): NormalizedState {
 
   const character = canonicalCharacter(raw.player.character)
   if (!character) {
-    return { run: null, screen: { kind: 'unknown' }, ts }
+    // Unknown/absent character (e.g. a co-op body that omits the local
+    // player's character). Keep the classified screen rather than collapsing
+    // to `unknown` — we just can't attach run/build context to it.
+    return { run: null, screen, ts }
   }
 
+  // Multiplayer / co-op bodies can be sparser than the single-player shape, so
+  // guard every field. A missing array here used to throw (`.map` on
+  // undefined), which the poll loop read as a disconnect → "Waiting for
+  // STS2MCP". Degrade gracefully instead.
+  const player = raw.player
+  const run = raw.run
   return {
     run: {
       character,
-      ascension: raw.run.ascension,
-      act: raw.run.act,
-      floor: raw.run.floor,
-      hp: raw.player.hp,
-      maxHp: raw.player.max_hp,
-      gold: raw.player.gold,
-      relics: raw.player.relics.map(toRelic),
-      potions: raw.player.potions.map(toPotion),
+      ascension: run.ascension ?? 0,
+      act: run.act ?? 0,
+      floor: run.floor ?? 0,
+      hp: player.hp ?? 0,
+      maxHp: player.max_hp ?? 0,
+      gold: player.gold ?? 0,
+      relics: Array.isArray(player.relics) ? player.relics.map(toRelic) : [],
+      potions: Array.isArray(player.potions) ? player.potions.map(toPotion) : [],
       map: normalizeMap(raw),
       deckKnown: false
     },
